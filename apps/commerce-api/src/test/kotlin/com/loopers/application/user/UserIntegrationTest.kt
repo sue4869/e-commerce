@@ -30,7 +30,6 @@ class UserIntegrationTest(
         databaseCleanUp.truncateAllTables()
     }
 
-
     @DisplayName("회원가입")
     @Nested
     inner class Join {
@@ -72,8 +71,47 @@ class UserIntegrationTest(
             //assert
             assertThat(result.errorType).isEqualTo(ErrorType.CONFLICT)
         }
+    }
 
+    @DisplayName("내 정보")
+    @Nested
+    inner class MyInfo {
 
+        @Test
+        @DisplayName("해당 ID 의 회원이 존재할 경우, 회원 정보가 반환된다.")
+        fun return_user_info_when_success() {
+            //arrange
+            val spyRepository = spy(userRepository)
+            val spyUserService = UserService(spyRepository)
+            val command = UserFixture.Normal.createUserCommand()
+            val savedUser = spyUserService.create(command)
+
+            //act
+            val result = spyUserService.findByUserId(savedUser.userId)
+
+            //arrange
+            assertAll(
+                { assertThat(result?.userId).isEqualTo(savedUser.userId)},
+                { assertThat(result?.birth).isEqualTo(savedUser.birth)},
+                { assertThat(result?.email).isEqualTo(savedUser.email) },
+                { assertThat(result?.gender).isEqualTo(savedUser.gender) },
+            )
+        }
+
+        @Test
+        @DisplayName("해당 ID 의 회원이 존재하지 않을 경우, null 이 반환된다.")
+        fun return_null_when_not_exist_id() {
+            //arrange
+            val spyRepository = spy(userRepository)
+            val spyUserService = UserService(spyRepository)
+            val testId = "test1"
+
+            //act
+            val result = spyUserService.findByUserId(testId)
+
+            //arrange
+            assertThat(result).isEqualTo(null)
+        }
 
     }
 }

@@ -24,4 +24,9 @@ enum class ErrorType(val status: HttpStatus, val code: String, val message: Stri
         HttpStatus.BAD_REQUEST.reasonPhrase,
         "생년월일 형식은 'yyyy-MM-dd' 형식이어야 합니다.",
     ),
+    NOT_EXIST_USER(
+        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST.reasonPhrase,
+        "해당 회원이 존재하지 않습니다."
+    )
 }

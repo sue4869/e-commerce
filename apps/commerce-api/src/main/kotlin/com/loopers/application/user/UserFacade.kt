@@ -4,8 +4,8 @@ import com.loopers.domain.user.UserCommand
 import com.loopers.domain.user.UserService
 import com.loopers.support.error.CoreException
 import com.loopers.support.error.ErrorType
-import jakarta.transaction.Transactional
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 @Component
 class UserFacade(
@@ -21,4 +21,8 @@ class UserFacade(
 
         return userService.create(command)
     }
+
+    @Transactional(readOnly = true)
+    fun getMyInfo(userId: String): UserCommand.UserInfo =
+        userService.findByUserId(userId) ?: throw CoreException(ErrorType.NOT_EXIST_USER)
 }
