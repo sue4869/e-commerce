@@ -9,7 +9,7 @@ class UserV1Dto {
 
     class Request {
 
-        data class SinUp(
+        data class SignUp(
             @NotBlank
             val userId: String,
             @NotBlank

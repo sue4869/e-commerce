@@ -3,8 +3,7 @@ package com.loopers.interfaces.api.user
 import com.loopers.domain.user.UserService
 import com.loopers.fixture.user.UserFixture
 import com.loopers.interfaces.api.ApiResponse
-import com.loopers.support.TestSupport
-import jakarta.servlet.http.HttpServletRequest
+import com.loopers.support.E2ETestSupport
 import org.springframework.http.HttpHeaders
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
@@ -14,14 +13,11 @@ import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
-import org.springframework.util.MultiValueMapAdapter
-
 import kotlin.test.Test
-
 
 class UserV1ApiE2ETest(
     private val userService: UserService,
-) : TestSupport() {
+) : E2ETestSupport() {
 
     companion object {
         private val ENDPOINT_JOIN = "/api/v1/users"
@@ -74,7 +70,6 @@ class UserV1ApiE2ETest(
 
             //assert
             assertThat(response.statusCode.is4xxClientError).isTrue()
-            println(response.body?.meta?.message)
         }
     }
 

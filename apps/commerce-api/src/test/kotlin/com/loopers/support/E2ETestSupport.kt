@@ -9,7 +9,7 @@ import org.springframework.test.context.TestConstructor
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-class TestSupport {
+class E2ETestSupport {
 
     @Autowired
     protected lateinit var testRestTemplate: TestRestTemplate

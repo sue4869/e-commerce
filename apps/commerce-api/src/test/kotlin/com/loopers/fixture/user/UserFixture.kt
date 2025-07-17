@@ -30,8 +30,8 @@ sealed class UserFixture {
         birthDate: String = this.birth,
         email: String = this.email,
         gender: Gender = this.gender
-    ): UserV1Dto.Request.SinUp {
-        return UserV1Dto.Request.SinUp(
+    ): UserV1Dto.Request.SignUp {
+        return UserV1Dto.Request.SignUp(
             userId = userId,
             birthDate = birthDate,
             email = email,

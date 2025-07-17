@@ -17,9 +17,8 @@ class UserV1Controller(
 ): UserV1ApiSpec {
 
     @PostMapping
-    override fun create(@RequestBody @Valid request: UserV1Dto.Request.SinUp): ApiResponse<UserV1Dto.Response.UserResponse> {
+    override fun create(@RequestBody @Valid request: UserV1Dto.Request.SignUp): ApiResponse<UserV1Dto.Response.UserResponse> {
         return userFacade.signUp(request.toCommand())
-            .let { UserV1Dto.Response.UserResponse.of(it)}
             .let { ApiResponse.success(it) }
     }
 
@@ -29,7 +28,6 @@ class UserV1Controller(
     ): ApiResponse<UserV1Dto.Response.UserResponse> {
         val userId = request.getHeader("X-USER-ID") ?: throw IllegalStateException("X-USER-ID not set")
         return userFacade.getMyInfo(userId)
-            .let { UserV1Dto.Response.UserResponse.of(it) }
             .let { ApiResponse.success(it) }
     }
 }

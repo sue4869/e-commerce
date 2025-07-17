@@ -1,5 +1,6 @@
 package com.loopers.application.user
 
+import com.loopers.domain.user.UserEntity
 import com.loopers.domain.user.UserRepository
 import com.loopers.domain.user.UserService
 import com.loopers.fixture.user.UserFixture
@@ -12,7 +13,11 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertThrows
+import org.mockito.kotlin.argThat
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.spy
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.TestConstructor
 import kotlin.test.Test
@@ -53,6 +58,8 @@ class UserIntegrationTest(
                 { assertThat(result.email).isEqualTo(request.email) },
                 { assertThat(result.gender).isEqualTo(request.gender) },
             )
+            val captor = argumentCaptor<UserEntity>()
+            verify(spyRepository).save(captor.capture())
         }
 
         @Test
