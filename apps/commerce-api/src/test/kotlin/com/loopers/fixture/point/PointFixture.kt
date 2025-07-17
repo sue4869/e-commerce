@@ -13,8 +13,8 @@ sealed class PointFixture {
     fun pointCommand(
         userId: String = this.userId,
         amount: Long = this.amount,
-    ): PointCommand.PointInfo {
-        return PointCommand.PointInfo(
+    ): PointCommand.ChargeInput {
+        return PointCommand.ChargeInput(
             userId = userId,
             amount = amount
         )

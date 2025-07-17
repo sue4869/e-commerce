@@ -1,7 +1,9 @@
 package com.loopers.interfaces.api.point
 
 import com.loopers.domain.point.PointRepository
+import com.loopers.domain.user.UserService
 import com.loopers.fixture.point.PointFixture
+import com.loopers.fixture.user.UserFixture
 import com.loopers.interfaces.api.ApiResponse
 import com.loopers.support.E2ETestSupport
 import org.assertj.core.api.Assertions.assertThat
@@ -16,6 +18,7 @@ import org.springframework.http.MediaType
 import kotlin.test.Test
 
 class PointV1ApiE2ETest(
+    private val userService: UserService,
     private val pointRepository: PointRepository,
 ) : E2ETestSupport() {
 
@@ -71,6 +74,8 @@ class PointV1ApiE2ETest(
         @Test
         fun return_total_amount_after_charge() {
             //arrange
+            val user = UserFixture.Normal.createUserCommand()
+            userService.create(user)
             val point = PointFixture.Normal.pointEntity()
             pointRepository.save(point)
             val headers = HttpHeaders().apply {
@@ -93,6 +98,27 @@ class PointV1ApiE2ETest(
                 { assertThat(response.statusCode.is2xxSuccessful).isTrue },
                 { assertThat(response.body?.data?.amount?.compareTo(totalAmount)).isZero()}
             )
+        }
+
+        @DisplayName("존재하지 않는 유저로 요청할 경우, 404 Not Found 응답을 반환한다.")
+        @Test
+        fun return_404_when_unexisted_user() {
+            //arrange
+            val headers = HttpHeaders().apply {
+                contentType = MediaType.APPLICATION_JSON
+                add("X-USER-ID", "test0")
+            }
+            val chargeRequest = PointFixture.Normal.chargeRequest(
+                amount = 1000L
+            )
+            val httpEntity = HttpEntity(chargeRequest, headers)
+
+            //act
+            val responseType = object : ParameterizedTypeReference<ApiResponse<PointV1Dto.Response.ChargeResponse>>() {}
+            val response = testRestTemplate.exchange(ENDPOINT_POINT, HttpMethod.PATCH, httpEntity, responseType)
+
+            //assert
+            assertThat(response.statusCode.is4xxClientError).isTrue()
         }
     }
 }

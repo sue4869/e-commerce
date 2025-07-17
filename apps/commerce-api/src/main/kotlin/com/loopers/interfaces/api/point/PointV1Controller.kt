@@ -1,6 +1,7 @@
 package com.loopers.interfaces.api.point
 
 import com.loopers.application.point.PointFacade
+import com.loopers.domain.point.PointCommand
 import com.loopers.interfaces.api.ApiResponse
 import com.loopers.support.error.CoreException
 import com.loopers.support.error.ErrorType
@@ -21,12 +22,13 @@ class PointV1Controller(
 
     @GetMapping
     override fun getPoint(request: HttpServletRequest): ApiResponse<PointV1Dto.Response.PointResponse> {
-        val userId = request.getHeader("X-USER-ID") ?: throw CoreException(ErrorType.BAD_REQUEST, "X-USER-ID is missing")
+        val userId = request.getHeader("X-USER-ID") ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID, "X-USER-ID is missing")
         return pointFacade.getPoint(userId).let { ApiResponse.success(it) }
     }
 
     @PatchMapping
     override fun charge(@RequestBody @Valid request: PointV1Dto.Request.ChargeRequest, httpRequest: HttpServletRequest): ApiResponse<PointV1Dto.Response.ChargeResponse> {
-        return ApiResponse.success(PointV1Dto.Response.ChargeResponse(amount = 1023L))
+        val userId = httpRequest.getHeader("X-USER-ID") ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID, "X-USER-ID is missing")
+        return pointFacade.charge(request.toCommand(userId)).let { ApiResponse.success(it) }
     }
 }

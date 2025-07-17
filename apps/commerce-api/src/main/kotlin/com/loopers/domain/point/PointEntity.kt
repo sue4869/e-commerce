@@ -19,4 +19,17 @@ class PointEntity(
     @Column(name = "amount", nullable = false)
     var amount = amount
         private set
+
+    fun updateAmount(amount: Long) {
+        this.amount = amount
+    }
+
+    companion object {
+        fun of(command: PointCommand.ChargeInput): PointEntity {
+            return PointEntity(
+                userId = command.userId,
+                amount = command.amount,
+            )
+        }
+    }
 }

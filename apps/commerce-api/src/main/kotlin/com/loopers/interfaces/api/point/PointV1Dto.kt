@@ -1,8 +1,8 @@
 package com.loopers.interfaces.api.point
 
 import com.loopers.domain.point.PointCommand
+import jakarta.validation.Valid
 import jakarta.validation.constraints.NotNull
-import java.math.BigDecimal
 
 class PointV1Dto {
 
@@ -11,8 +11,13 @@ class PointV1Dto {
         data class ChargeRequest(
             @field:NotNull
             val amount: Long
-        )
-    }
+        ) {
+            fun toCommand(userId: String) = PointCommand.ChargeInput(
+                    userId = userId,
+                    amount = amount,
+                )
+            }
+        }
 
     class Response {
 
@@ -32,6 +37,14 @@ class PointV1Dto {
 
         data class ChargeResponse(
             val amount: Long,
-        )
+        ) {
+            companion object {
+                fun of(command: PointCommand.PointInfo): ChargeResponse {
+                    return ChargeResponse(
+                        amount = command.amount
+                    )
+                }
+            }
+        }
     }
 }
