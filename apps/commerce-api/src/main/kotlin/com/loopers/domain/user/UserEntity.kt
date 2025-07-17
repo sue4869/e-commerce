@@ -4,6 +4,7 @@ import com.loopers.domain.BaseEntity
 import com.loopers.support.error.CoreException
 import com.loopers.support.error.ErrorType
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl.createDate
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
 
@@ -17,15 +18,19 @@ class UserEntity (
     gender: Gender
 ) : BaseEntity() {
 
+    @Column(name = "user_id", unique = true, nullable = false)
     var userId = userId
         protected set
 
+    @Column(name = "birth_date", nullable = false)
     var birthDate = birthDate
         protected set
 
+    @Column(name = "email", nullable = false)
     var email = email
         protected set
 
+    @Column(name = "gender", nullable = false)
     var gender = gender
         protected set
 

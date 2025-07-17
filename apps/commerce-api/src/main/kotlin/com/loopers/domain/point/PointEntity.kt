@@ -1,0 +1,22 @@
+package com.loopers.domain.point
+
+import com.loopers.domain.BaseEntity
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
+import java.math.BigDecimal
+
+@Entity
+@Table(name = "point")
+class PointEntity(
+    userId: String,
+    amount: Long = 0,
+) : BaseEntity() {
+    @Column(name = "user_id", unique = true, nullable = false)
+    var userId = userId
+        private set
+
+    @Column(name = "amount", nullable = false)
+    var amount = amount
+        private set
+}

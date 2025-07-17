@@ -9,7 +9,16 @@ class PointV1Dto {
 
         data class PointResponse(
             val userId: String,
-            val amount: BigDecimal,
-        )
+            val amount: Long,
+        ) {
+            companion object {
+                fun of(command: PointCommand.PointInfo): PointResponse {
+                    return PointResponse(
+                        userId = command.userId,
+                        amount = command.amount
+                    )
+                }
+            }
+        }
     }
 }

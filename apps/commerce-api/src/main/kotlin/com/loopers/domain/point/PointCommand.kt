@@ -6,6 +6,14 @@ class PointCommand {
 
     data class PointInfo(
         val userId: String,
-        val amount: BigDecimal,
-    )
+        val amount: Long,
+    ) {
+
+        companion object {
+            fun of(source: PointEntity): PointInfo = PointInfo (
+                    userId = source.userId,
+                    amount = source.amount,
+                )
+        }
+    }
 }
