@@ -1,7 +1,6 @@
 package com.loopers.interfaces.api.point
 
 import com.loopers.domain.point.PointRepository
-import com.loopers.domain.user.UserService
 import com.loopers.fixture.point.PointFixture
 import com.loopers.interfaces.api.ApiResponse
 import com.loopers.support.E2ETestSupport
@@ -13,10 +12,10 @@ import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
+import org.springframework.http.MediaType
 import kotlin.test.Test
 
 class PointV1ApiE2ETest(
-    private val userService: UserService,
     private val pointRepository: PointRepository,
 ) : E2ETestSupport() {
 
@@ -62,6 +61,38 @@ class PointV1ApiE2ETest(
 
             //assert
             assertThat(response.statusCode.is4xxClientError).isTrue()
+        }
+    }
+
+    @DisplayName("포인트 충전")
+    @Nested
+    inner class Charge {
+        @DisplayName("존재하는 유저가 1000원을 충전할 경우, 충전된 보유 총량을 응답으로 반환한다.")
+        @Test
+        fun return_total_amount_after_charge() {
+            //arrange
+            val point = PointFixture.Normal.pointEntity()
+            pointRepository.save(point)
+            val headers = HttpHeaders().apply {
+                contentType = MediaType.APPLICATION_JSON
+                add("X-USER-ID", point.userId)
+            }
+
+            val chargeRequest = PointFixture.Normal.chargeRequest(
+                amount = 1000L
+            )
+            val httpEntity = HttpEntity(chargeRequest, headers)
+            val totalAmount = point.amount.plus(chargeRequest.amount)
+
+            //act
+            val responseType = object : ParameterizedTypeReference<ApiResponse<PointV1Dto.Response.ChargeResponse>>() {}
+            val response = testRestTemplate.exchange(ENDPOINT_POINT, HttpMethod.PATCH, httpEntity, responseType)
+
+            //assert
+            assertAll(
+                { assertThat(response.statusCode.is2xxSuccessful).isTrue },
+                { assertThat(response.body?.data?.amount?.compareTo(totalAmount)).isZero()}
+            )
         }
     }
 }
