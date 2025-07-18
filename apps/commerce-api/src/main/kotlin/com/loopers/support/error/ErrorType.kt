@@ -35,6 +35,6 @@ enum class ErrorType(val status: HttpStatus, val code: String, val message: Stri
     CHARGE_AMOUNT_MUST_BE_POSITIVE(
         HttpStatus.BAD_REQUEST,
         HttpStatus.BAD_REQUEST.reasonPhrase,
-        "0 이하의 정수로 포인트를 충전할 수 없습니다. "
+        "0 이하의 정수로 포인트를 충전할 수 없습니다."
     )
 }

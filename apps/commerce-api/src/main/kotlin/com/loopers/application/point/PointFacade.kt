@@ -15,9 +15,8 @@ class PointFacade(
     private val userService: UserService,
 ) {
 
-
     @Transactional(readOnly = true)
-    fun getPoint(userId: String): PointV1Dto.Response.PointResponse {
+    fun get(userId: String): PointV1Dto.Response.PointResponse {
         val pointInfo = pointService.findByUserId(userId) ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID,"존재하지 않는 사용자 ID 입니다. 사용자 ID: ${userId}")
         return pointInfo.let { PointV1Dto.Response.PointResponse.of(it) }
     }

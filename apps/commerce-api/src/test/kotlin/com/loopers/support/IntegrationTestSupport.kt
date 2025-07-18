@@ -8,9 +8,10 @@ import org.springframework.test.context.TestConstructor
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @SpringBootTest
-class IntegrationTestSupport(
-    private val databaseCleanUp: DatabaseCleanUp
-) {
+class IntegrationTestSupport {
+
+    @Autowired
+    private lateinit var databaseCleanUp: DatabaseCleanUp
 
     @AfterEach
     fun cleanUp() {

@@ -28,7 +28,6 @@ class UserV1Dto {
                     gender = gender
                 )
             }
-
         }
     }
 
@@ -51,7 +50,5 @@ class UserV1Dto {
                 }
             }
         }
-
     }
-
 }

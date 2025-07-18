@@ -9,10 +9,10 @@ import jakarta.validation.Valid
 @Tag(name = "Point V1 Api", description = "포인트 조회 및 충전")
 interface PointV1ApiSpec {
 
-    fun getPoint(request: HttpServletRequest): ApiResponse<PointV1Dto.Response.PointResponse>
+    fun get(request: HttpServletRequest): ApiResponse<PointV1Dto.Response.PointResponse>
 
     fun charge(
-         @RequestBody @Valid request: PointV1Dto.Request.ChargeRequest, httpRequest: HttpServletRequest
+        @RequestBody @Valid request: PointV1Dto.Request.Charge, httpRequest: HttpServletRequest
      ): ApiResponse<PointV1Dto.Response.ChargeResponse>
-
  }
+

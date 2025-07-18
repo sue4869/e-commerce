@@ -1,14 +1,13 @@
 package com.loopers.interfaces.api.point
 
 import com.loopers.domain.point.PointCommand
-import jakarta.validation.Valid
 import jakarta.validation.constraints.NotNull
 
 class PointV1Dto {
 
     class Request {
 
-        data class ChargeRequest(
+        data class Charge(
             @field:NotNull
             val amount: Long
         ) {

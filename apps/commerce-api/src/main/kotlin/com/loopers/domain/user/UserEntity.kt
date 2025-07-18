@@ -1,9 +1,6 @@
 package com.loopers.domain.user
 
 import com.loopers.domain.BaseEntity
-import com.loopers.support.error.CoreException
-import com.loopers.support.error.ErrorType
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl.createDate
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Table

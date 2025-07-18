@@ -12,9 +12,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertAll
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
-import org.springframework.http.MediaType
 import kotlin.test.Test
 
 class PointV1ApiE2ETest(
@@ -23,7 +21,8 @@ class PointV1ApiE2ETest(
 ) : E2ETestSupport() {
 
     companion object {
-        private val ENDPOINT_POINT = "/api/v1/point"
+        private val ENDPOINT_GET_POINT = "/api/v1/points"
+        private val ENDPOINT_CHARGE = "/api/v1/points/charge"
     }
 
     @DisplayName("포인트 조회")
@@ -36,12 +35,12 @@ class PointV1ApiE2ETest(
             //arrange
             val point = PointFixture.Normal.pointEntity()
             pointRepository.save(point)
-            val headers = HttpHeaders().apply { add("X-USER-ID", point.userId) }
+            val headers = headersWithUserId(point.userId)
             val httpEntity = HttpEntity(null, headers)
 
             //act
             val responseType = object : ParameterizedTypeReference<ApiResponse<PointV1Dto.Response.PointResponse>>() {}
-            val response = testRestTemplate.exchange(ENDPOINT_POINT, HttpMethod.GET, httpEntity, responseType)
+            val response = testRestTemplate.exchange(ENDPOINT_GET_POINT, HttpMethod.GET, httpEntity, responseType)
 
             //assert
             assertAll(
@@ -55,12 +54,11 @@ class PointV1ApiE2ETest(
         @Test
         fun return_400_when_xuser_id_is_not_exist() {
             //arrange
-            val headers = HttpHeaders()
-            val httpEntity = HttpEntity(null, headers)
+            val httpEntity = HttpEntity.EMPTY
 
             //act
             val responseType = object : ParameterizedTypeReference<ApiResponse<PointV1Dto.Response.PointResponse>>() {}
-            val response = testRestTemplate.exchange(ENDPOINT_POINT, HttpMethod.GET, httpEntity, responseType)
+            val response = testRestTemplate.exchange(ENDPOINT_GET_POINT, HttpMethod.GET, httpEntity, responseType)
 
             //assert
             assertThat(response.statusCode.is4xxClientError).isTrue()
@@ -78,11 +76,7 @@ class PointV1ApiE2ETest(
             userService.create(user)
             val point = PointFixture.Normal.pointEntity()
             pointRepository.save(point)
-            val headers = HttpHeaders().apply {
-                contentType = MediaType.APPLICATION_JSON
-                add("X-USER-ID", point.userId)
-            }
-
+            val headers = headersWithUserId( point.userId)
             val chargeRequest = PointFixture.Normal.chargeRequest(
                 amount = 1000L
             )
@@ -91,7 +85,7 @@ class PointV1ApiE2ETest(
 
             //act
             val responseType = object : ParameterizedTypeReference<ApiResponse<PointV1Dto.Response.ChargeResponse>>() {}
-            val response = testRestTemplate.exchange(ENDPOINT_POINT, HttpMethod.PATCH, httpEntity, responseType)
+            val response = testRestTemplate.exchange(ENDPOINT_CHARGE, HttpMethod.POST, httpEntity, responseType)
 
             //assert
             assertAll(
@@ -104,10 +98,7 @@ class PointV1ApiE2ETest(
         @Test
         fun return_404_when_unexisted_user() {
             //arrange
-            val headers = HttpHeaders().apply {
-                contentType = MediaType.APPLICATION_JSON
-                add("X-USER-ID", "test0")
-            }
+            val headers = headersWithUserId("test0")
             val chargeRequest = PointFixture.Normal.chargeRequest(
                 amount = 1000L
             )
@@ -115,7 +106,7 @@ class PointV1ApiE2ETest(
 
             //act
             val responseType = object : ParameterizedTypeReference<ApiResponse<PointV1Dto.Response.ChargeResponse>>() {}
-            val response = testRestTemplate.exchange(ENDPOINT_POINT, HttpMethod.PATCH, httpEntity, responseType)
+            val response = testRestTemplate.exchange(ENDPOINT_CHARGE, HttpMethod.POST, httpEntity, responseType)
 
             //assert
             assertThat(response.statusCode.is4xxClientError).isTrue()

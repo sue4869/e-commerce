@@ -16,5 +16,4 @@ class PointRepositoryImpl(
     override fun save(point: PointEntity) {
         pointJpaRepository.save(point)
     }
-
 }
