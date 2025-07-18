@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
+
 class UserJoinModelTest {
 
     @DisplayName("유저 모델 생성시")
@@ -67,3 +68,4 @@ class UserJoinModelTest {
         }
     }
 }
+

@@ -8,7 +8,6 @@ enum class ErrorType(val status: HttpStatus, val code: String, val message: Stri
     BAD_REQUEST(HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.reasonPhrase, "잘못된 요청입니다."),
     NOT_FOUND(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.reasonPhrase, "존재하지 않는 요청입니다."),
     CONFLICT(HttpStatus.CONFLICT, HttpStatus.CONFLICT.reasonPhrase, "이미 존재하는 리소스입니다."),
-    NOT_FOUND_USER_ID(HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.reasonPhrase, "존재하지 않는 사용자 ID 입니다."),
 
     /**User**/
     INVALID_USER_ID_FORMAT(
@@ -29,12 +28,5 @@ enum class ErrorType(val status: HttpStatus, val code: String, val message: Stri
         HttpStatus.BAD_REQUEST,
         HttpStatus.BAD_REQUEST.reasonPhrase,
         "해당 회원이 존재하지 않습니다."
-    ),
-
-    /**Charge**/
-    CHARGE_AMOUNT_MUST_BE_POSITIVE(
-        HttpStatus.BAD_REQUEST,
-        HttpStatus.BAD_REQUEST.reasonPhrase,
-        "0 이하의 정수로 포인트를 충전할 수 없습니다."
     )
 }

@@ -67,6 +67,7 @@ class UserV1ApiE2ETest(
             val responseType = object : ParameterizedTypeReference<ApiResponse<UserV1Dto.Response.UserResponse>>() {}
             val response = testRestTemplate.exchange(ENDPOINT_JOIN, HttpMethod.POST, httpEntity, responseType)
 
+
             //assert
             assertThat(response.statusCode.is4xxClientError).isTrue()
         }
@@ -83,8 +84,9 @@ class UserV1ApiE2ETest(
             val savedUserCommand = UserFixture.Normal.createUserCommand()
             val savedUser = userService.create(savedUserCommand)
 
+
             //act
-            val headers = headersWithUserId( savedUserCommand.userId)
+            val headers = HttpHeaders().apply { add("X-USER-ID", savedUserCommand.userId) }
             val httpEntity = HttpEntity(null, headers)
             val responseType = object : ParameterizedTypeReference<ApiResponse<UserV1Dto.Response.UserResponse>>() {}
             val response = testRestTemplate.exchange(ENDPOINT_ME, HttpMethod.GET, httpEntity, responseType)
@@ -96,6 +98,7 @@ class UserV1ApiE2ETest(
                 { assertThat(response.body?.data?.birthDate).isEqualTo(savedUser.birth)},
                 { assertThat(response.body?.data?.email).isEqualTo(savedUser.email) },
             )
+
         }
 
         @DisplayName("존재하지 않는 ID 로 조회할 경우, 404 Not Found 응답을 반환한다.")
@@ -105,7 +108,7 @@ class UserV1ApiE2ETest(
             val testId = "test1"
 
             //act
-            val headers = headersWithUserId(testId)
+            val headers = HttpHeaders().apply { add("X-USER-ID", testId) }
             val httpEntity = HttpEntity(null, headers)
             val responseType = object : ParameterizedTypeReference<ApiResponse<UserV1Dto.Response.UserResponse>>() {}
             val response = testRestTemplate.exchange(ENDPOINT_ME, HttpMethod.GET, httpEntity, responseType)
@@ -113,5 +116,6 @@ class UserV1ApiE2ETest(
             //assert
             assertThat(response.statusCode.is4xxClientError).isTrue()
         }
+
     }
 }

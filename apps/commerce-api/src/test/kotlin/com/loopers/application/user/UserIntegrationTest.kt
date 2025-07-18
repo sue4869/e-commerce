@@ -4,23 +4,36 @@ import com.loopers.domain.user.UserEntity
 import com.loopers.domain.user.UserRepository
 import com.loopers.domain.user.UserService
 import com.loopers.fixture.user.UserFixture
-import com.loopers.support.IntegrationTestSupport
 import com.loopers.support.error.CoreException
 import com.loopers.support.error.ErrorType
+import com.loopers.utils.DatabaseCleanUp
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertThrows
+import org.mockito.kotlin.argThat
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.spy
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.TestConstructor
 import kotlin.test.Test
 
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@SpringBootTest
 class UserIntegrationTest(
     private val userFacade: UserFacade,
     private val userRepository: UserRepository,
-): IntegrationTestSupport() {
+    private val databaseCleanUp: DatabaseCleanUp
+) {
+
+    @AfterEach
+    fun cleanup() {
+        databaseCleanUp.truncateAllTables()
+    }
 
     @DisplayName("회원가입")
     @Nested
@@ -106,5 +119,6 @@ class UserIntegrationTest(
             //arrange
             assertThat(result).isEqualTo(null)
         }
+
     }
 }
