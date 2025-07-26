@@ -102,7 +102,7 @@ erDiagram
     OrderItem {
         Bigint id PK
         Bigint order_id FK
-        Bigint product_id FK
+        Bigint product_history_id FK
         BigDecimal unitPrice
         BigDecimal totalPrice
         String status
@@ -123,14 +123,13 @@ erDiagram
 
     %% 상품 관련
     Product ||--o{ ProductLike : liked_by
-    Product ||--o{ OrderItem : ordered_as
     Product ||--o{ ProductHistory : histories
 
     %% 주문 관련
     Order ||--o{ OrderItem : has_items
+    OrderItem ||--o{ ProductHistory : history
 
     %% 브랜드 관련
     Brand ||--o{ Product : owns
-    Brand ||--o{ ProductHistory : owns_history
 
 ```

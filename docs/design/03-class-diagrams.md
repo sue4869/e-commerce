@@ -65,8 +65,9 @@ classDiagram
 
     class Order {
         -id: Long
-        -totalPrice
+        -totalPrice: BigDecimal
         -user: User
+        -status: String
         +getTotalPrice()
         +create()
     }
@@ -77,7 +78,8 @@ classDiagram
         -product: ProductHistory
         -unitPrice: BigDecimal
         -totalPrice: BigDecimal
-        -qty
+        -qty: Int
+        -status: String
         +create()
     }
     
