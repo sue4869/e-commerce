@@ -10,11 +10,8 @@ erDiagram
         String gender
         
         LocalDateTime created_at 
-        String created_by
         LocalDateTime updated_at 
-        String updated_by
-        LocalDateTime deleted_at 
-        String deleted_by
+        LocalDateTime deleted_at
     }
     
     Point {
@@ -23,11 +20,8 @@ erDiagram
         BigDecimal amount
         
         LocalDateTime created_at 
-        String created_by
         LocalDateTime updated_at 
-        String updated_by
         LocalDateTime deleted_at 
-        String deleted_by
     }
     
     Product {
@@ -38,11 +32,8 @@ erDiagram
         Int stock
         
         LocalDateTime created_at 
-        String created_by
         LocalDateTime updated_at 
-        String updated_by
         LocalDateTime deleted_at 
-        String deleted_by
     }
     
     ProductHistory {
@@ -54,11 +45,8 @@ erDiagram
         Int stock
         
         LocalDateTime created_at 
-        String created_by
         LocalDateTime updated_at 
-        String updated_by
         LocalDateTime deleted_at 
-        String deleted_by   
     }
     
     ProductLike {
@@ -67,11 +55,8 @@ erDiagram
         Bigint product_id FK 
         
         LocalDateTime created_at 
-        String created_by
         LocalDateTime updated_at 
-        String updated_by
         LocalDateTime deleted_at 
-        String deleted_by
     }
     
     Brand {
@@ -79,11 +64,8 @@ erDiagram
         String name
         
         LocalDateTime created_at 
-        String created_by
         LocalDateTime updated_at 
-        String updated_by
         LocalDateTime deleted_at 
-        String deleted_by 
     }
     
     Order {
@@ -94,9 +76,7 @@ erDiagram
         BigDecimal sumittedPrice
         
         LocalDateTime created_at 
-        String created_by
         LocalDateTime updated_at 
-        String updated_by
     }
     
     OrderItem {
@@ -109,11 +89,8 @@ erDiagram
         Int qty
         
         LocalDateTime created_at 
-        String created_by 
         LocalDateTime cancelled_at 
-        String cancelled_by
         LocalDateTime updated_at 
-        String updated_by 
     }
     
     %% 유저 관련
