@@ -4,12 +4,13 @@ import com.loopers.domain.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
+import java.math.BigDecimal
 
 @Entity
 @Table(name = "point")
 class PointEntity(
     userId: String,
-    amount: Long = 0,
+    amount: BigDecimal = BigDecimal.ZERO,
 ) : BaseEntity() {
     @Column(name = "user_id", unique = true, nullable = false)
     var userId = userId
@@ -19,7 +20,7 @@ class PointEntity(
     var amount = amount
         private set
 
-    fun updateAmount(amount: Long) {
+    fun updateAmount(amount: BigDecimal) {
         this.amount = amount
     }
 
