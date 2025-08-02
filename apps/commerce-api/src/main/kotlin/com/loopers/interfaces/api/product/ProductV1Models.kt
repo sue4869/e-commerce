@@ -1,0 +1,75 @@
+package com.loopers.interfaces.api.product
+
+import com.loopers.domain.product.ProductCommand
+import com.loopers.domain.product.ProductWithBrandDto
+import com.loopers.domain.product.ProductListGetDto
+import org.springframework.data.domain.Pageable
+import java.math.BigDecimal
+
+
+class ProductV1Models {
+
+    class Request {
+
+        data class GetList(
+            val brandIds: List<Long>,
+            val productId: Long?
+        ) {
+            fun toCommand(pageable: Pageable) = ProductCommand.QueryCriteria (
+                brandIds = brandIds,
+                productId = productId,
+                pageable = pageable
+            )
+        }
+
+    }
+
+    class Response {
+
+        data class GetInfo(
+            val productId: Long,
+            val productName: String,
+            val brandId: Long,
+            val brandName: String,
+            val likeCount: Int,
+            val stock: Int,
+            val price: BigDecimal
+        ) {
+            companion object {
+                fun of(dto: ProductWithBrandDto): GetInfo {
+                    return GetInfo(
+                        productId = dto.productId,
+                        productName = dto.productName,
+                        brandId = dto.brandId,
+                        brandName = dto.brandName,
+                        likeCount = dto.likeCount,
+                        stock = dto.stock,
+                        price = dto.price
+                    )
+                }
+            }
+        }
+
+        data class GetList(
+            val productId: Long,
+            val productName: String,
+            val brandId: Long,
+            val brandName: String,
+            val likeCount: Int,
+            val price: BigDecimal
+        ) {
+            companion object {
+                fun of(dto: ProductListGetDto): GetList {
+                    return GetList(
+                        dto.productId,
+                        dto.productName,
+                        dto.brandId,
+                        dto.brandName,
+                        dto.likeCount,
+                        dto.price
+                    )
+                }
+            }
+        }
+    }
+}

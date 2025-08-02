@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody
 @Tag(name = "User V1 Api", description = "회원가입 및 내정보 조회")
 interface UserV1ApiSpec {
     @Schema(description = "회원 가입")
-    fun create(@RequestBody @Valid request: UserV1Dto.Request.SignUp): ApiResponse<UserV1Dto.Response.UserResponse>
+    fun create(@RequestBody @Valid request: UserV1Models.Request.SignUp): ApiResponse<UserV1Models.Response.Info>
 
     @Schema(description = "내 정보 조회")
-    fun getMyInfo(request: HttpServletRequest): ApiResponse<UserV1Dto.Response.UserResponse>
+    fun getMyInfo(request: HttpServletRequest): ApiResponse<UserV1Models.Response.Info>
 }

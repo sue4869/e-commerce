@@ -16,6 +16,8 @@ dependencies {
 
     // querydsl
     kapt("com.querydsl:querydsl-apt::jakarta")
+    implementation ("com.querydsl:querydsl-jpa::jakarta")
+    implementation ("com.querydsl:querydsl-core")
 
     // test-fixtures
     testImplementation(testFixtures(project(":modules:jpa")))

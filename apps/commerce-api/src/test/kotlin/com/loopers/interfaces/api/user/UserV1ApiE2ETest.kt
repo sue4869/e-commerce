@@ -35,7 +35,7 @@ class UserV1ApiE2ETest(
             val request = UserFixture.Normal.createSignUpRequest()
 
             //act
-            val responseType = object : ParameterizedTypeReference<ApiResponse<UserV1Dto.Response.UserResponse>>() {}
+            val responseType = object : ParameterizedTypeReference<ApiResponse<UserV1Models.Response.Info>>() {}
             val response = testRestTemplate.exchange(ENDPOINT_JOIN, HttpMethod.POST, HttpEntity(request), responseType)
 
             //assert
@@ -64,7 +64,7 @@ class UserV1ApiE2ETest(
             val httpEntity = HttpEntity(request, headers)
 
             //act
-            val responseType = object : ParameterizedTypeReference<ApiResponse<UserV1Dto.Response.UserResponse>>() {}
+            val responseType = object : ParameterizedTypeReference<ApiResponse<UserV1Models.Response.Info>>() {}
             val response = testRestTemplate.exchange(ENDPOINT_JOIN, HttpMethod.POST, httpEntity, responseType)
 
             //assert
@@ -86,7 +86,7 @@ class UserV1ApiE2ETest(
             //act
             val headers = headersWithUserId( savedUserCommand.userId)
             val httpEntity = HttpEntity(null, headers)
-            val responseType = object : ParameterizedTypeReference<ApiResponse<UserV1Dto.Response.UserResponse>>() {}
+            val responseType = object : ParameterizedTypeReference<ApiResponse<UserV1Models.Response.Info>>() {}
             val response = testRestTemplate.exchange(ENDPOINT_ME, HttpMethod.GET, httpEntity, responseType)
 
             //assert
@@ -107,7 +107,7 @@ class UserV1ApiE2ETest(
             //act
             val headers = headersWithUserId(testId)
             val httpEntity = HttpEntity(null, headers)
-            val responseType = object : ParameterizedTypeReference<ApiResponse<UserV1Dto.Response.UserResponse>>() {}
+            val responseType = object : ParameterizedTypeReference<ApiResponse<UserV1Models.Response.Info>>() {}
             val response = testRestTemplate.exchange(ENDPOINT_ME, HttpMethod.GET, httpEntity, responseType)
 
             //assert

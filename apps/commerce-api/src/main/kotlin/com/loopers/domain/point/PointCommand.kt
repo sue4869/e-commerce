@@ -2,12 +2,13 @@ package com.loopers.domain.point
 
 import com.loopers.support.error.CoreException
 import com.loopers.support.error.ErrorType
+import java.math.BigDecimal
 
 class PointCommand {
 
     data class PointInfo(
         val userId: String,
-        val amount: Long,
+        val amount: BigDecimal,
     ) {
 
         companion object {
@@ -20,17 +21,17 @@ class PointCommand {
 
     data class ChargeInput(
         val userId: String,
-        val amount: Long,
+        val amount: BigDecimal,
     ) {
 
         init {
-            require(amount > 0) {
+            require(amount > BigDecimal.ZERO) {
                 throw CoreException(ErrorType.CHARGE_AMOUNT_MUST_BE_POSITIVE)
             }
         }
 
         companion object {
-            fun of(userId: String, amount: Long) = ChargeInput (
+            fun of(userId: String, amount: BigDecimal) = ChargeInput (
                 userId = userId,
                 amount = amount,
             )

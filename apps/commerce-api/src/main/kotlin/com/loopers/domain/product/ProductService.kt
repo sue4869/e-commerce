@@ -1,0 +1,35 @@
+package com.loopers.domain.product
+
+import com.loopers.support.error.CoreException
+import com.loopers.support.error.ErrorType
+import org.springframework.data.domain.Page
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+
+@Transactional(readOnly = true)
+@Service
+class ProductService(
+    val productRepository: ProductRepository,
+) {
+
+    fun getList(command: ProductCommand.QueryCriteria): Page<ProductListGetDto> {
+        return productRepository.findListByCriteria(command)
+    }
+
+    fun getWithBrand(productId: Long): ProductWithBrandDto {
+        val product = productRepository.getWithBrandById(productId)
+        return ProductWithBrandDto.of(product)
+    }
+
+    @Transactional
+    fun like(productId: Long) {
+        val product = productRepository.findById(productId)
+        productRepository.incrementLikeCount(product.id)
+    }
+
+    @Transactional
+    fun decreaseLike(productId: Long) {
+        val product = productRepository.findById(productId)
+        productRepository.decrementLikeCount(product.id)
+    }
+}

@@ -2,7 +2,8 @@ package com.loopers.fixture.user
 
 import com.loopers.domain.user.Gender
 import com.loopers.domain.user.UserCommand
-import com.loopers.interfaces.api.user.UserV1Dto
+import com.loopers.domain.user.UserEntity
+import com.loopers.interfaces.api.user.UserV1Models
 
 sealed class UserFixture {
 
@@ -30,12 +31,26 @@ sealed class UserFixture {
         birthDate: String = this.birth,
         email: String = this.email,
         gender: Gender = this.gender
-    ): UserV1Dto.Request.SignUp {
-        return UserV1Dto.Request.SignUp(
+    ): UserV1Models.Request.SignUp {
+        return UserV1Models.Request.SignUp(
             userId = userId,
             birthDate = birthDate,
             email = email,
             gender = gender
+        )
+    }
+
+    fun createUserEntity(
+        userId: String = this.userId,
+        birthDate: String = this.birth,
+        email: String = this.email,
+        gender: Gender = this.gender
+    ): UserEntity {
+        return UserEntity(
+            userId = userId,
+            birthDate = birthDate,
+            email = email,
+            gender
         )
     }
 

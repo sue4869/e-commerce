@@ -13,6 +13,7 @@ import org.junit.jupiter.api.assertAll
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
+import java.math.BigDecimal
 import kotlin.test.Test
 
 class PointV1ApiE2ETest(
@@ -39,7 +40,7 @@ class PointV1ApiE2ETest(
             val httpEntity = HttpEntity(null, headers)
 
             //act
-            val responseType = object : ParameterizedTypeReference<ApiResponse<PointV1Dto.Response.PointResponse>>() {}
+            val responseType = object : ParameterizedTypeReference<ApiResponse<PointV1Models.Response.Get>>() {}
             val response = testRestTemplate.exchange(ENDPOINT_GET_POINT, HttpMethod.GET, httpEntity, responseType)
 
             //assert
@@ -57,7 +58,7 @@ class PointV1ApiE2ETest(
             val httpEntity = HttpEntity.EMPTY
 
             //act
-            val responseType = object : ParameterizedTypeReference<ApiResponse<PointV1Dto.Response.PointResponse>>() {}
+            val responseType = object : ParameterizedTypeReference<ApiResponse<PointV1Models.Response.Get>>() {}
             val response = testRestTemplate.exchange(ENDPOINT_GET_POINT, HttpMethod.GET, httpEntity, responseType)
 
             //assert
@@ -78,13 +79,13 @@ class PointV1ApiE2ETest(
             pointRepository.save(point)
             val headers = headersWithUserId( point.userId)
             val chargeRequest = PointFixture.Normal.chargeRequest(
-                amount = 1000L
+                amount = BigDecimal.valueOf(1000L)
             )
             val httpEntity = HttpEntity(chargeRequest, headers)
             val totalAmount = point.amount.plus(chargeRequest.amount)
 
             //act
-            val responseType = object : ParameterizedTypeReference<ApiResponse<PointV1Dto.Response.ChargeResponse>>() {}
+            val responseType = object : ParameterizedTypeReference<ApiResponse<PointV1Models.Response.Charge>>() {}
             val response = testRestTemplate.exchange(ENDPOINT_CHARGE, HttpMethod.POST, httpEntity, responseType)
 
             //assert
@@ -100,12 +101,12 @@ class PointV1ApiE2ETest(
             //arrange
             val headers = headersWithUserId("test0")
             val chargeRequest = PointFixture.Normal.chargeRequest(
-                amount = 1000L
+                amount = BigDecimal.valueOf(1000L)
             )
             val httpEntity = HttpEntity(chargeRequest, headers)
 
             //act
-            val responseType = object : ParameterizedTypeReference<ApiResponse<PointV1Dto.Response.ChargeResponse>>() {}
+            val responseType = object : ParameterizedTypeReference<ApiResponse<PointV1Models.Response.Charge>>() {}
             val response = testRestTemplate.exchange(ENDPOINT_CHARGE, HttpMethod.POST, httpEntity, responseType)
 
             //assert

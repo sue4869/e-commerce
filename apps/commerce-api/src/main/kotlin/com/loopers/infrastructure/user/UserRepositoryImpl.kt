@@ -9,8 +9,8 @@ class UserRepositoryImpl(
     private val userJpaRepository: UserJpaRepository
 ): UserRepository {
 
-    override fun save(user: UserEntity) {
-        userJpaRepository.save(user)
+    override fun save(user: UserEntity) : UserEntity {
+        return userJpaRepository.save(user)
     }
 
     override fun findByUserId(userId: String): UserEntity? {

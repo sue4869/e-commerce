@@ -5,7 +5,7 @@ import com.loopers.domain.user.UserCommand
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 
-class UserV1Dto {
+class UserV1Models {
 
     class Request {
 
@@ -33,15 +33,15 @@ class UserV1Dto {
 
     class Response {
 
-        data class UserResponse(
+        data class Info(
             val userId: String,
             val birthDate: String,
             val email: String,
             val gender: Gender
         ) {
             companion object {
-                fun of(command: UserCommand.UserInfo): UserResponse {
-                    return UserResponse(
+                fun of(command: UserCommand.UserInfo): Info {
+                    return Info(
                         userId = command.userId,
                         birthDate = command.birth,
                         email = command.email,
