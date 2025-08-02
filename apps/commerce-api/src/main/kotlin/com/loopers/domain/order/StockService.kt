@@ -24,7 +24,7 @@ class StockService(
             updateStock(product, command.qty)
             product
         }
-        //고민되는 부분 주문 생성했을때와 재고 차감했을때의 history가 다르다.
+
         val hitories = updatedProducts.map { ProductHistoryEntity.of(it) }
         productRepository.saveAll(updatedProducts)
         productHistoryRepository.saveAll(hitories)
@@ -35,7 +35,6 @@ class StockService(
         product.updateStock(qty)
     }
 
-    //고민 부분 , update만 넣을 것인지 따로 분리할껏인지
     fun validateStock(stock: Int, qty: Int) {
         if (stock < qty) {
             throw CoreException(ErrorType.OUT_OF_STOCK)

@@ -1,6 +1,8 @@
 package com.loopers.domain.order
 
 import com.loopers.domain.product.ProductEntity
+import com.loopers.domain.product.ProductHistoryRepository
+import com.loopers.domain.product.ProductRepository
 import com.loopers.support.error.CoreException
 import com.loopers.support.error.ErrorType
 import org.assertj.core.api.Assertions.assertThat
@@ -8,12 +10,19 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
+import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import java.math.BigDecimal
 import kotlin.test.Test
 
 @ExtendWith(MockitoExtension::class)
 class StockServiceTest {
+
+    @Mock
+    lateinit var productRepository: ProductRepository
+
+    @Mock
+    lateinit var productHistoryRepository: ProductHistoryRepository
 
     @InjectMocks
     lateinit var stockService: StockService

@@ -13,6 +13,7 @@ import com.loopers.domain.type.OrderItemStatus
 import org.mockito.kotlin.whenever
 
 import com.loopers.domain.type.PaymentType
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
@@ -39,8 +40,9 @@ class OrderFacadeTest {
     @InjectMocks
     private lateinit var orderFacade: OrderFacade
 
+    @DisplayName("주문 생성 성공 테스트")
     @Test
-    fun `create should process order successfully`() {
+    fun `success_order`() {
         // given
         val userId = "user-123"
         val items = listOf(

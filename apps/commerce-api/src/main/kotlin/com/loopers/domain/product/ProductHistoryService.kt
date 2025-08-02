@@ -17,7 +17,6 @@ class ProductHistoryService(
         return productHistory.map { ProductHistoryDto.of(it) }
     }
 
-    //서비스 내에서 해야할까
     fun validateUnExistedProduct(reqProductIds: Collection<Long>, findProductIds: Collection<Long>) {
         val foundIds = findProductIds
         val missingIds = reqProductIds.filterNot { it in foundIds }

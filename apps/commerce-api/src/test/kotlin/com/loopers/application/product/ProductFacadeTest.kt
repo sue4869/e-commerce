@@ -101,7 +101,7 @@ class ProductFacadeTest(
             )
         }
 
-        @DisplayName("상품 좋아요 취소에 성공하면 상품 좋아요 이력이 삭제된다.")
+        @DisplayName("상품 좋아요 취소에 성공하면 상품 좋아요가 삭제된다.")
         @Test
         fun success_deleteLike() {
             // arrange

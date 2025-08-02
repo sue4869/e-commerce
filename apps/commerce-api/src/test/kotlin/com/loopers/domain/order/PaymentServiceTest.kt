@@ -70,7 +70,7 @@ class PaymentServiceTest {
         verify(paymentService, times(1)).charge(userId, paymentType, orderItems)
     }
 
-    @DisplayName("포인트 부족시 예외가 발생한다.")
+    @DisplayName("포인트 부족시 예외가 발생한다.(NOT_ENOUGH_POINTS)")
     @Test
     fun return_fail_when_point_not_enough() {
 
