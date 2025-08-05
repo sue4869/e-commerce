@@ -74,7 +74,7 @@ class OrderFacadeTest {
         whenever(productHistoryService.getProductsForOrder(listOf(1L, 2L))).thenReturn(productHistoryDtos)
         whenever(orderService.create(orderCommand)).thenReturn(orderId)
         whenever(orderItemService.create(items, orderId, productHistoryDtos)).thenReturn(orderItemDtos)
-        doNothing().whenever(paymentService).charge(userId, orderItemDtos, paymentCommand)
+        doNothing().whenever(paymentService).charge(userId, orderItemDtos.sumOf { it.totalPrice }, paymentCommand)
         doNothing().whenever(stockService).changeStock(orderCommand, listOf(1L, 2L))
 
         // when
@@ -84,7 +84,7 @@ class OrderFacadeTest {
         verify(productHistoryService).getProductsForOrder(listOf(1L, 2L))
         verify(orderService).create(orderCommand)
         verify(orderItemService).create(items, orderId, productHistoryDtos)
-        verify(paymentService).charge(userId, orderItemDtos, paymentCommand)
+        verify(paymentService).charge(userId, orderItemDtos.sumOf { it.totalPrice }, paymentCommand)
         verify(stockService).changeStock(orderCommand, listOf(1L, 2L))
     }
 }
