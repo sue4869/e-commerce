@@ -31,10 +31,49 @@ enum class ErrorType(val status: HttpStatus, val code: String, val message: Stri
         "해당 회원이 존재하지 않습니다."
     ),
 
+    /**Product**/
+    PRODUCT_NOT_FOUND(
+        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST.reasonPhrase,
+        "존재하지 않는 상품입니다"
+    ),
+
     /**Charge**/
     CHARGE_AMOUNT_MUST_BE_POSITIVE(
         HttpStatus.BAD_REQUEST,
         HttpStatus.BAD_REQUEST.reasonPhrase,
         "0 이하의 정수로 포인트를 충전할 수 없습니다."
-    )
+    ),
+    NOT_ENOUGH_POINTS(
+        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST.reasonPhrase,
+        "포인트가 부족합니다."
+    ),
+    INVALID_PAYMENT_TYPE(
+        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST.reasonPhrase,
+        "지원하지 않는 결제 수단입니다"
+    ),
+    INVALID_PAYMENT_PRICE(
+        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST.reasonPhrase,
+        "잘못된 결제금액입니다."
+    ),
+
+
+    /**Stock**/
+    OUT_OF_STOCK(HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST.reasonPhrase, "재고 부족"),
+
+    /**Order**/
+    QTY_MUST_BE_POSITIVE(
+        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST.reasonPhrase,
+        "0 이하의 정수인 QTY는 허용이 안됩니다."
+    ),
+    PRICE_MUST_BE_POSITIVE(
+        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST.reasonPhrase,
+        "0 이하의 정수인 가격은 허용이 안됩니다."
+    ),
 }

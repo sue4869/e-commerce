@@ -19,13 +19,13 @@ class PointV1Controller(
 ) : PointV1ApiSpec {
 
     @GetMapping
-    override fun get(request: HttpServletRequest): ApiResponse<PointV1Dto.Response.PointResponse> {
+    override fun get(request: HttpServletRequest): ApiResponse<PointV1Models.Response.Get> {
         val userId = request.getHeader("X-USER-ID") ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID, "X-USER-ID is missing")
         return pointFacade.get(userId).let { ApiResponse.success(it) }
     }
 
     @PostMapping("/charge")
-    override fun charge(@RequestBody @Valid request: PointV1Dto.Request.Charge, httpRequest: HttpServletRequest): ApiResponse<PointV1Dto.Response.ChargeResponse> {
+    override fun charge(@RequestBody @Valid request: PointV1Models.Request.Charge, httpRequest: HttpServletRequest): ApiResponse<PointV1Models.Response.Charge> {
         val userId = httpRequest.getHeader("X-USER-ID") ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID, "X-USER-ID is missing")
         return pointFacade.charge(request.toCommand(userId)).let { ApiResponse.success(it) }
     }
