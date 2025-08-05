@@ -4,6 +4,7 @@ import com.loopers.domain.order.OrderCommand
 import com.loopers.domain.order.OrderItemService
 import com.loopers.domain.order.OrderService
 import com.loopers.domain.order.StockService
+import com.loopers.domain.payment.PaymentCommand
 import com.loopers.domain.payment.PaymentService
 import com.loopers.domain.product.ProductHistoryService
 import org.springframework.stereotype.Component
@@ -21,18 +22,18 @@ class OrderFacade(
     ) {
 
     @Transactional
-    fun create(command: OrderCommand.Create) {
-        val products = productHistoryService.getProductsForOrder(command.items.map { it.productId })
+    fun create(orderCommand: OrderCommand.Create, paymentCommand: PaymentCommand.Create) {
+        val products = productHistoryService.getProductsForOrder(orderCommand.items.map { it.productId })
         val productIds = products.map { it.productId }
 
         //주문 생성
-        val orderId = orderService.create(command)
-        val orderItems = orderItemService.create(command.items, orderId, products)
+        val orderId = orderService.create(orderCommand)
+        val orderItems = orderItemService.create(orderCommand.items, orderId, products)
 
         //결제
-        paymentService.charge(command.userId, command.paymentType, orderItems)
+        paymentService.charge(orderCommand.userId, orderItems, paymentCommand)
 
         //재고
-        stockService.changeStock(command, productIds)
+        stockService.changeStock(orderCommand, productIds)
     }
 }

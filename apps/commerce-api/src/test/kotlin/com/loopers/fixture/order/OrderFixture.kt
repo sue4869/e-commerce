@@ -18,7 +18,12 @@ sealed class OrderFixture {
                         qty = 2
                     )
                 ),
-                paymentType = PaymentType.POINT
+                payments = listOf(
+                    OrderV1Models.Request.Payment(
+                        type = PaymentType.POINT,
+                        amount = BigDecimal.valueOf(1000),
+                    )
+                )
             )
         }
     }
@@ -38,7 +43,12 @@ sealed class OrderFixture {
                         qty = 3
                     )
                 ),
-                paymentType = PaymentType.POINT
+                payments = listOf(
+                    OrderV1Models.Request.Payment(
+                        type = PaymentType.POINT,
+                        amount = BigDecimal.valueOf(1000),
+                    )
+                )
             )
         }
     }
@@ -53,7 +63,12 @@ sealed class OrderFixture {
                         qty = 1
                     )
                 ),
-                paymentType = PaymentType.POINT
+                payments = listOf(
+                    OrderV1Models.Request.Payment(
+                        type = PaymentType.POINT,
+                        amount = BigDecimal.valueOf(1000),
+                    )
+                )
             )
         }
     }
@@ -68,7 +83,12 @@ sealed class OrderFixture {
                         qty = -1
                     )
                 ),
-                paymentType = PaymentType.POINT
+                payments = listOf(
+                    OrderV1Models.Request.Payment(
+                        type = PaymentType.POINT,
+                        amount = BigDecimal.valueOf(1000),
+                    )
+                )
             )
         }
     }
@@ -77,7 +97,12 @@ sealed class OrderFixture {
         override fun create(): OrderV1Models.Request.Create {
             return OrderV1Models.Request.Create(
                 items = emptyList(),
-                paymentType = PaymentType.POINT
+                payments = listOf(
+                    OrderV1Models.Request.Payment(
+                        type = PaymentType.POINT,
+                        amount = BigDecimal.valueOf(1000),
+                    )
+                )
             )
         }
     }

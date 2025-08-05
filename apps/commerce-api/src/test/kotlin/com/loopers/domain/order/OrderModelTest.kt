@@ -1,7 +1,6 @@
 package com.loopers.domain.order
 
 import com.loopers.fixture.order.OrderFixture
-import com.loopers.interfaces.api.order.OrderV1Models
 import com.loopers.support.error.CoreException
 import com.loopers.support.error.ErrorType
 import org.assertj.core.api.Assertions.assertThat
@@ -23,7 +22,7 @@ class OrderModelTest {
             val request = OrderFixture.InvalidQty.create()
 
             val result = assertThrows<CoreException> {
-                request.toCommand(userId)
+                request.toOrderCommand(userId)
             }
 
             assertThat(result.errorType).isEqualTo(ErrorType.QTY_MUST_BE_POSITIVE)
@@ -36,7 +35,7 @@ class OrderModelTest {
             val request = OrderFixture.InvalidPrice.create()
 
             val result = assertThrows<CoreException> {
-                request.toCommand(userId)
+                request.toOrderCommand(userId)
             }
 
             assertThat(result.errorType).isEqualTo(ErrorType.PRICE_MUST_BE_POSITIVE)

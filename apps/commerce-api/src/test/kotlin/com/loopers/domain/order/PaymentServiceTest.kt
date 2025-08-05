@@ -1,7 +1,8 @@
 package com.loopers.domain.order
 
+import com.loopers.domain.payment.PaymentCommand
 import com.loopers.domain.payment.PaymentService
-import com.loopers.domain.payment.PointCharger
+import com.loopers.domain.payment.PointPaymentProcessor
 import com.loopers.domain.point.PointEntity
 import com.loopers.domain.point.PointRepository
 import com.loopers.domain.type.OrderItemStatus
@@ -31,14 +32,16 @@ class PaymentServiceTest {
     private lateinit var pointRepository: PointRepository
 
     @InjectMocks
-    private lateinit var pointCharger: PointCharger
+    private lateinit var pointPaymentProcessor: PointPaymentProcessor
 
     @DisplayName("결제 서비스 정상 호출")
     @Test
     fun `success_payment`() {
         // given
         val userId = "user-123"
-        val paymentType = PaymentType.POINT
+        val paymentCommand = PaymentCommand.Create(listOf(
+            PaymentCommand.Payment(type = PaymentType.POINT, amount = BigDecimal.valueOf(2000))
+        ))
         val orderItems = listOf(
             OrderItemDto(
                 id = 1L,
@@ -61,13 +64,13 @@ class PaymentServiceTest {
         )
 
         // stub
-        doNothing().`when`(paymentService).charge(userId, paymentType, orderItems)
+        doNothing().`when`(paymentService).charge(userId, orderItems, paymentCommand)
 
         // when
-        paymentService.charge(userId, paymentType, orderItems)
+        paymentService.charge(userId, orderItems, paymentCommand)
 
         // then
-        verify(paymentService, times(1)).charge(userId, paymentType, orderItems)
+        verify(paymentService, times(1)).charge(userId, orderItems, paymentCommand)
     }
 
     @DisplayName("포인트 부족시 예외가 발생한다.(NOT_ENOUGH_POINTS)")
@@ -81,7 +84,7 @@ class PaymentServiceTest {
 
         // when & then
         val exception = assertThrows<CoreException> {
-            pointCharger.validatePoint(point.amount, totalPrice)
+            pointPaymentProcessor.validatePoint(point.amount, totalPrice)
         }
 
         assertThat(exception.errorType).isEqualTo(ErrorType.NOT_ENOUGH_POINTS)
@@ -97,7 +100,7 @@ class PaymentServiceTest {
         val totalPrice = BigDecimal("2000")
 
         // when
-        pointCharger.updatePoint(point, totalPrice)
+        pointPaymentProcessor.updatePoint(point, totalPrice)
 
         // then
         assertThat(point.amount).isEqualTo(BigDecimal("3000"))

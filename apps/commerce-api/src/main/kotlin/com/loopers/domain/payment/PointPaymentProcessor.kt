@@ -1,8 +1,8 @@
 package com.loopers.domain.payment
 
-import com.loopers.domain.order.OrderItemDto
 import com.loopers.domain.point.PointEntity
 import com.loopers.domain.point.PointRepository
+import com.loopers.domain.type.PaymentType
 import com.loopers.support.error.CoreException
 import com.loopers.support.error.ErrorType
 import org.springframework.stereotype.Component
@@ -10,19 +10,20 @@ import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
 
 @Component
-class PointCharger(
+class PointPaymentProcessor(
     private val pointRepository: PointRepository
-): IPaymentCharger {
+): IPaymentProcessor {
+
+    override fun supportType(): PaymentType = PaymentType.POINT
 
     @Transactional
     override fun charge(
         userId: String,
-        orderItems: List<OrderItemDto>,
+        amount: BigDecimal,
     ) {
         val point = pointRepository.findByUserId(userId) ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID,"포인트가 없는 사용자 입니다. 사용자 ID: ${userId}")
-        val totalPrice = orderItems.sumOf { it.totalPrice }
-        validatePoint(point.amount, totalPrice)
-        updatePoint(point, totalPrice)
+        validatePoint(point.amount, amount)
+        updatePoint(point, amount)
     }
 
     fun updatePoint(point: PointEntity, totalPrice: BigDecimal) {

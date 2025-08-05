@@ -6,6 +6,7 @@ import com.loopers.domain.order.OrderItemDto
 import com.loopers.domain.order.OrderItemService
 import com.loopers.domain.order.OrderService
 import com.loopers.domain.order.StockService
+import com.loopers.domain.payment.PaymentCommand
 import com.loopers.domain.payment.PaymentService
 import com.loopers.domain.product.ProductHistoryDto
 import com.loopers.domain.product.ProductHistoryService
@@ -49,8 +50,11 @@ class OrderFacadeTest {
             OrderCommand.Item(productId = 1L, price = BigDecimal(1000), qty = 2),
             OrderCommand.Item(productId = 2L, price = BigDecimal(2000), qty = 1),
         )
-        val paymentType = PaymentType.POINT
-        val command = OrderCommand.Create(userId = userId, items = items, paymentType = paymentType)
+        val payments = listOf(
+            PaymentCommand.Payment(type = PaymentType.POINT, amount = BigDecimal.valueOf(123))
+        )
+        val orderCommand = OrderCommand.Create(userId = userId, items = items)
+        val paymentCommand = PaymentCommand.Create(payments = payments)
 
         val productHistoryDtos = listOf(
             ProductHistoryDto(
@@ -68,20 +72,20 @@ class OrderFacadeTest {
 
         // stubbing
         whenever(productHistoryService.getProductsForOrder(listOf(1L, 2L))).thenReturn(productHistoryDtos)
-        whenever(orderService.create(command)).thenReturn(orderId)
+        whenever(orderService.create(orderCommand)).thenReturn(orderId)
         whenever(orderItemService.create(items, orderId, productHistoryDtos)).thenReturn(orderItemDtos)
-        doNothing().whenever(paymentService).charge(userId, paymentType, orderItemDtos)
-        doNothing().whenever(stockService).changeStock(command, listOf(1L, 2L))
+        doNothing().whenever(paymentService).charge(userId, orderItemDtos, paymentCommand)
+        doNothing().whenever(stockService).changeStock(orderCommand, listOf(1L, 2L))
 
         // when
-        orderFacade.create(command)
+        orderFacade.create(orderCommand, paymentCommand)
 
         // then
         verify(productHistoryService).getProductsForOrder(listOf(1L, 2L))
-        verify(orderService).create(command)
+        verify(orderService).create(orderCommand)
         verify(orderItemService).create(items, orderId, productHistoryDtos)
-        verify(paymentService).charge(userId, paymentType, orderItemDtos)
-        verify(stockService).changeStock(command, listOf(1L, 2L))
+        verify(paymentService).charge(userId, orderItemDtos, paymentCommand)
+        verify(stockService).changeStock(orderCommand, listOf(1L, 2L))
     }
 }
 

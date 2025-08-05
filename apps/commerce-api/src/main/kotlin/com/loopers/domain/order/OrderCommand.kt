@@ -10,8 +10,7 @@ class OrderCommand {
 
     data class Create(
         val userId: String,
-        val items: List<Item>,
-        val paymentType: PaymentType
+        val items: List<Item>
     )
 
     data class Item(

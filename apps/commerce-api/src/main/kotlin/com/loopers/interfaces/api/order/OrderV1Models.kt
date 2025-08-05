@@ -1,9 +1,9 @@
 package com.loopers.interfaces.api.order
 
 import com.loopers.domain.order.OrderCommand
+import com.loopers.domain.payment.PaymentCommand
 import com.loopers.domain.type.PaymentType
 import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.NotNull
 import java.math.BigDecimal
 
 class OrderV1Models {
@@ -13,17 +13,27 @@ class OrderV1Models {
         data class Create(
             @field:NotBlank
             val items: List<Item>,
-            @field:NotNull
-            val paymentType: PaymentType
+            @field:NotBlank
+            val payments: List<Payment>
         ) {
-            fun toCommand(userId: String): OrderCommand.Create {
+            fun toOrderCommand(userId: String): OrderCommand.Create {
                 return OrderCommand.Create(
                     userId = userId,
                     items = items.map { OrderCommand.Item.of(it) },
-                    paymentType = paymentType
+                )
+            }
+
+            fun toPaymentCommand(): PaymentCommand.Create {
+                return PaymentCommand.Create(
+                    payments = payments.map { PaymentCommand.Payment.of(it) },
                 )
             }
         }
+
+        data class Payment(
+            val type: PaymentType,
+            val amount: BigDecimal,
+        )
 
         data class Item(
             val productId: Long,

@@ -49,6 +49,16 @@ enum class ErrorType(val status: HttpStatus, val code: String, val message: Stri
         HttpStatus.BAD_REQUEST.reasonPhrase,
         "포인트가 부족합니다."
     ),
+    INVALID_PAYMENT_TYPE(
+        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST.reasonPhrase,
+        "지원하지 않는 결제 수단입니다"
+    ),
+    INVALID_PAYMENT_PRICE(
+        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST.reasonPhrase,
+        "잘못된 결제금액입니다."
+    ),
 
 
     /**Stock**/
