@@ -7,8 +7,12 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
 import jakarta.persistence.Version
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 import java.math.BigDecimal
 
+@SQLRestriction("deleted_at is null")
+@SQLDelete(sql = "update point set deleted_at = CURRENT_TIMESTAMP where id = ?")
 @Entity
 @Table(name = "point")
 class PointEntity(
