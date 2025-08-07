@@ -76,7 +76,7 @@ class PointIntegrationTest(
     inner class ConcurrencyTest {
 
         @Test
-        fun `포인트 차감 시 하나만 성공한다_나머지는 다 ObjectOptimisticLockingFailureException가 발생한다`() {
+        fun `동시에 포인트 차감 시 하나만 성공한다_나머지는 다 ObjectOptimisticLockingFailureException가 발생한다`() {
             val point = PointFixture.Normal.pointEntity(userId = "user1", amount = BigDecimal.valueOf(100000))
             pointRepository.save(point)
 
@@ -105,7 +105,7 @@ class PointIntegrationTest(
         }
 
         @Test
-        fun `포인트 충전 시 하나만 성공한다_나머지는 다 ObjectOptimisticLockingFailureException가 발생한다`() {
+        fun `동시에 포인트 충전 시 하나만 성공한다_나머지는 다 ObjectOptimisticLockingFailureException가 발생한다`() {
             val point = PointFixture.Normal.pointEntity(userId = "user1", amount = BigDecimal.valueOf(100000))
             pointRepository.save(point)
             val pointCommand = PointFixture.Normal.pointCommand(userId = "user1", amount = BigDecimal.valueOf(1))

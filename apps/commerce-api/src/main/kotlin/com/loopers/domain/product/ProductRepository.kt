@@ -1,6 +1,7 @@
 package com.loopers.domain.product
 
 import org.springframework.data.domain.Page
+import org.springframework.data.repository.query.Param
 
 interface ProductRepository {
 
@@ -13,6 +14,8 @@ interface ProductRepository {
     fun findListByCriteria(command: ProductCommand.QueryCriteria): Page<ProductListGetDto>
 
     fun findByIdIn(ids: Collection<Long>): List<ProductEntity>
+
+    fun findByIdInWithPessimisticLock(ids: Collection<Long>): List<ProductEntity>
 
     fun getWithBrandById(id: Long): ProductEntity
 

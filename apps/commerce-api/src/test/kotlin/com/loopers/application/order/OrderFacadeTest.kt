@@ -1,6 +1,7 @@
 package com.loopers.application.order
 
 
+import com.loopers.domain.brand.BrandEntity
 import com.loopers.domain.order.OrderCommand
 import com.loopers.domain.order.OrderItemDto
 import com.loopers.domain.order.OrderItemService
@@ -8,13 +9,16 @@ import com.loopers.domain.order.OrderService
 import com.loopers.domain.order.StockService
 import com.loopers.domain.payment.PaymentCommand
 import com.loopers.domain.payment.PaymentService
+import com.loopers.domain.product.ProductEntity
 import com.loopers.domain.product.ProductHistoryDto
 import com.loopers.domain.product.ProductHistoryService
 import com.loopers.domain.type.OrderItemStatus
 import org.mockito.kotlin.whenever
 
 import com.loopers.domain.type.PaymentType
+import com.loopers.fixture.product.ProductFixture
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
@@ -23,6 +27,9 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.doNothing
 import org.mockito.kotlin.verify
 import java.math.BigDecimal
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicInteger
 
 @ExtendWith(MockitoExtension::class)
 class OrderFacadeTest {

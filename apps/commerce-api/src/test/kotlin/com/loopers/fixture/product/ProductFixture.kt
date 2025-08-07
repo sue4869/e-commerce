@@ -52,6 +52,19 @@ sealed class ProductFixture {
         )
     }
 
+    fun createByStock(
+        brandId: Long,
+        stock: Int,
+    ): ProductEntity {
+        return ProductEntity(
+            name = name,
+            brandId = brandId,
+            price = price,
+            stock = stock,
+            likeCount = likeCount
+        )
+    }
+
     object Normal : ProductFixture() {
         override val name = "기본 상품"
         override val price = BigDecimal.valueOf(1000.00)
