@@ -20,7 +20,7 @@ interface ProductJpaRepository : JpaRepository<ProductEntity, Long>, ProductRepo
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @QueryHints(
-        value = [QueryHint(name = "javax.persistence.lock.timeout", value = "3000")]
+        value = [QueryHint(name = "jakarta.persistence.lock.timeout", value = "3000")]
     )
     @Query("""
     SELECT p 
