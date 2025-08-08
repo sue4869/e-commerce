@@ -20,8 +20,7 @@ class ProductEntity(
     name: String,
     brandId: Long,
     price: BigDecimal,
-    stock: Int = 0,
-    likeCount: Int = 0,
+    stock: Int = 0
 ) : BaseEntity() {
 
     @Column(name = "name")
@@ -39,9 +38,6 @@ class ProductEntity(
 
     @Column(name = "stock")
     var stock: Int = stock
-
-    @Column(name = "like_count")
-    var likeCount: Int = likeCount
 
     fun updateStock(qty: Int) {
         stock -= qty

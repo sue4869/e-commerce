@@ -29,12 +29,4 @@ interface ProductJpaRepository : JpaRepository<ProductEntity, Long>, ProductRepo
     """)
     fun findByIdInWithPessimisticLock(@Param("ids") ids: Collection<Long>): List<ProductEntity>
 
-
-    @Modifying
-    @Query("UPDATE ProductEntity p SET p.likeCount = p.likeCount + 1 WHERE p.id = :productId")
-    fun incrementLikeCount(productId: Long): Int
-
-    @Modifying
-    @Query("UPDATE ProductEntity p SET p.likeCount = p.likeCount - 1 WHERE p.id = :productId")
-    fun decrementLikeCount(productId: Long): Int
 }

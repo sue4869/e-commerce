@@ -1,15 +1,12 @@
 package com.loopers.application.product
 
-import com.loopers.application.point.PointFacade
 import com.loopers.domain.brand.BrandEntity
 import com.loopers.domain.brand.BrandRepository
-import com.loopers.domain.point.PointRepository
 import com.loopers.domain.product.ProductCommand
-import com.loopers.domain.product.ProductLikeRepository
-import com.loopers.domain.product.ProductLikeService
+import com.loopers.domain.product.ProductCountEntity
+import com.loopers.domain.product.ProductCountRepository
+import com.loopers.domain.product.ProductToUserLikeService
 import com.loopers.domain.product.ProductRepository
-import com.loopers.domain.product.ProductService
-import com.loopers.domain.product.ProductWithBrandDto
 import com.loopers.domain.user.UserRepository
 import com.loopers.fixture.product.ProductFixture
 import com.loopers.fixture.user.UserFixture
@@ -19,10 +16,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertAll
-import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import java.math.BigDecimal
 import kotlin.test.Test
@@ -30,12 +25,13 @@ import kotlin.test.Test
 class ProductFacadeTest(
     private val productFacade: ProductFacade,
     private val productRepository: ProductRepository,
+    private val productCountRepository: ProductCountRepository,
     private val userRepository: UserRepository,
     private val brandRepository: BrandRepository,
 ): IntegrationTestSupport() {
 
     @Autowired
-    private lateinit var productLikeService: ProductLikeService
+    private lateinit var productToUserLikeService: ProductToUserLikeService
 
     @DisplayName("좋아요")
     @Nested
@@ -51,22 +47,24 @@ class ProductFacadeTest(
             val userEntity = UserFixture.Normal.createUserEntity()
             val createdUser = userRepository.save(userEntity)
             val createdProduct = productRepository.save(productEntity)
+            productCountRepository.save(ProductCountEntity(productId = createdProduct.id, likeCount = 0))
             val likeCommand = ProductCommand.Like(createdProduct.id, createdUser.userId)
 
             // act
             productFacade.like(likeCommand)
 
             // assert
-            val productLikes = productLikeService.getMyLikes(createdUser.userId)
+            val productLikes = productToUserLikeService.getMyLikes(createdUser.userId)
 
             // 데이터베이스에서 최신 상태를 직접 조회하여 검증
             val updatedProduct = productRepository.findById(createdProduct.id)
+            val updatedProductCount = productCountRepository.getByProductId(createdProduct.id)
 
             assertAll(
                 { assertThat(productLikes).hasSize(1) },
                 { assertThat(productLikes[0].userId).isEqualTo(createdUser.userId) },
                 { assertThat(productLikes[0].productId).isEqualTo(createdProduct.id) },
-                { assertThat(updatedProduct.likeCount).isEqualTo(1) },
+                { assertThat(updatedProductCount.likeCount).isEqualTo(1) },
             )
         }
 
@@ -80,6 +78,7 @@ class ProductFacadeTest(
             val userEntity = UserFixture.Normal.createUserEntity()
             val createdUser = userRepository.save(userEntity)
             val createdProduct = productRepository.save(productEntity)
+            productCountRepository.save(ProductCountEntity(productId = createdProduct.id, likeCount = 0))
             val likeCommand = ProductCommand.Like(createdProduct.id, createdUser.userId)
 
             // act
@@ -88,16 +87,17 @@ class ProductFacadeTest(
             productFacade.like(likeCommand)
 
             // assert
-            val productLikes = productLikeService.getMyLikes(createdUser.userId)
+            val productLikes = productToUserLikeService.getMyLikes(createdUser.userId)
 
             // 데이터베이스에서 최신 상태를 직접 조회하여 검증
             val updatedProduct = productRepository.findById(createdProduct.id)
+            val updatedProductCount = productCountRepository.getByProductId(createdProduct.id)
 
             assertAll(
                 { assertThat(productLikes).hasSize(1) },
                 { assertThat(productLikes[0].userId).isEqualTo(createdUser.userId) },
                 { assertThat(productLikes[0].productId).isEqualTo(createdProduct.id) },
-                { assertThat(updatedProduct.likeCount).isEqualTo(1) },
+                { assertThat(updatedProductCount.likeCount).isEqualTo(1) },
             )
         }
 
@@ -111,19 +111,21 @@ class ProductFacadeTest(
             val userEntity = UserFixture.Normal.createUserEntity()
             val createdUser = userRepository.save(userEntity)
             val createdProduct = productRepository.save(productEntity)
+            productCountRepository.save(ProductCountEntity(productId = createdProduct.id, likeCount = 0))
             val likeCommand = ProductCommand.Like(createdProduct.id, createdUser.userId)
 
             // act
             productFacade.like(likeCommand)
-            productFacade.deleteLike(likeCommand)
+            productFacade.dislike(likeCommand)
 
             // assert
-            val productLikes = productLikeService.getMyLikes(createdUser.userId)
+            val productLikes = productToUserLikeService.getMyLikes(createdUser.userId)
             val updatedProduct = productRepository.findById(createdProduct.id)
+            val updatedProductCount = productCountRepository.getByProductId(createdProduct.id)
 
             assertAll(
                 { assertThat(productLikes).hasSize(0) },
-                { assertThat(updatedProduct.likeCount).isEqualTo(0) },
+                { assertThat(updatedProductCount.likeCount).isEqualTo(0) },
             )
         }
     }
@@ -140,6 +142,7 @@ class ProductFacadeTest(
             val brand = brandRepository.save(brandTest)
             val productEntity = ProductFixture.Normal.create(brand.id)
             val createdProduct = productRepository.save(productEntity)
+            val createdProductCount = productCountRepository.save(ProductCountEntity(productId = createdProduct.id, likeCount = 0))
 
             // when
             val result = productFacade.get(createdProduct.id)
@@ -147,7 +150,7 @@ class ProductFacadeTest(
             // then
             assertThat(result.productId).isEqualTo(createdProduct.id)
             assertThat(result.productName).isEqualTo(createdProduct.name)
-            assertThat(result.likeCount).isEqualTo(createdProduct.likeCount)
+            assertThat(result.likeCount).isEqualTo(createdProductCount.likeCount)
             assertThat(result.brandId).isEqualTo(createdProduct.brandId)
             assertThat(result.brandName).isEqualTo("test brand")
             assertThat(result.stock).isEqualTo(createdProduct.stock)
@@ -164,6 +167,10 @@ class ProductFacadeTest(
             val productEntity2 = ProductFixture.Normal.createByPrice(brand.id, BigDecimal.valueOf(200))
             val productEntity3 = ProductFixture.Normal.createByPrice(brand.id, BigDecimal.valueOf(100))
             productRepository.saveAll(listOf(productEntity1, productEntity2, productEntity3))
+            val productCount1 = productCountRepository.save(ProductCountEntity(productId = productEntity1.id, likeCount = 0))
+            val productCount2 = productCountRepository.save(ProductCountEntity(productId = productEntity2.id, likeCount = 0))
+            val productCount3 = productCountRepository.save(ProductCountEntity(productId = productEntity3.id, likeCount = 0))
+            productCountRepository.saveAll(listOf(productCount1, productCount2, productCount3))
 
             // act
             val pageRequest = PageRequest.of(0, 10, Sort.by("price").ascending())
@@ -177,7 +184,7 @@ class ProductFacadeTest(
                 { Assertions.assertThat(productsPage.totalElements).isEqualTo(3) },
                 { Assertions.assertThat(productsPage.content[0].price.compareTo(productEntity3.price)).isZero() },
                 { Assertions.assertThat(productsPage.content[0].brandId).isEqualTo(productEntity3.brandId) },
-                { Assertions.assertThat(productsPage.content[0].likeCount).isEqualTo(productEntity3.likeCount) },
+                { Assertions.assertThat(productsPage.content[0].likeCount).isEqualTo(productCount3.likeCount) },
                 { Assertions.assertThat(productsPage.content[0].brandName).isEqualTo("test brand") }
             )
         }
@@ -192,6 +199,10 @@ class ProductFacadeTest(
             val productEntity2 = ProductFixture.Normal.createByPrice(brand.id, BigDecimal.valueOf(200))
             val productEntity3 = ProductFixture.Normal.createByPrice(brand.id, BigDecimal.valueOf(100))
             productRepository.saveAll(listOf(productEntity1, productEntity2, productEntity3))
+            val productCount1 = productCountRepository.save(ProductCountEntity(productId = productEntity1.id, likeCount = 0))
+            val productCount2 = productCountRepository.save(ProductCountEntity(productId = productEntity2.id, likeCount = 0))
+            val productCount3 = productCountRepository.save(ProductCountEntity(productId = productEntity3.id, likeCount = 0))
+            productCountRepository.saveAll(listOf(productCount1, productCount2, productCount3))
 
             // act
             val pageRequest = PageRequest.of(0, 10, Sort.by("price").ascending())
@@ -219,6 +230,10 @@ class ProductFacadeTest(
             val productEntity2 = ProductFixture.Normal.createByPrice(brand.id, BigDecimal.valueOf(200))
             val productEntity3 = ProductFixture.Normal.createByPrice(brand.id, BigDecimal.valueOf(100))
             val created = productRepository.saveAll(listOf(productEntity1, productEntity2, productEntity3)).sortedByDescending { it.id }
+            val productCount1 = productCountRepository.save(ProductCountEntity(productId = productEntity1.id, likeCount = 0))
+            val productCount2 = productCountRepository.save(ProductCountEntity(productId = productEntity2.id, likeCount = 0))
+            val productCount3 = productCountRepository.save(ProductCountEntity(productId = productEntity3.id, likeCount = 0))
+            productCountRepository.saveAll(listOf(productCount1, productCount2, productCount3))
 
             // act
             val pageRequest = PageRequest.of(0, 10, Sort.by("latest").descending())
@@ -242,10 +257,15 @@ class ProductFacadeTest(
             // arrange
             val brandTest = BrandEntity(name = "test brand")
             val brand = brandRepository.save(brandTest)
-            val productEntity1 = ProductFixture.Normal.createByLikeCount(brand.id, 3)
-            val productEntity2 = ProductFixture.Normal.createByLikeCount(brand.id, 2)
-            val productEntity3 = ProductFixture.Normal.createByLikeCount(brand.id, 1)
+            val productEntity1 = ProductFixture.Normal.create(brand.id)
+            val productEntity2 = ProductFixture.Normal.create(brand.id)
+            val productEntity3 = ProductFixture.Normal.create(brand.id)
             productRepository.saveAll(listOf(productEntity1, productEntity2, productEntity3))
+            val productCount1 = productCountRepository.save(ProductCountEntity(productId = productEntity1.id, likeCount = 3))
+            val productCount2 = productCountRepository.save(ProductCountEntity(productId = productEntity2.id, likeCount = 2))
+            val productCount3 = productCountRepository.save(ProductCountEntity(productId = productEntity3.id, likeCount = 1))
+            productCountRepository.saveAll(listOf(productCount1, productCount2, productCount3))
+
 
             // act
             val pageRequest = PageRequest.of(0, 10, Sort.by("likes").descending())
@@ -257,9 +277,9 @@ class ProductFacadeTest(
             assertAll(
                 { Assertions.assertThat(productsPage).hasSize(3) },
                 { Assertions.assertThat(productsPage.totalElements).isEqualTo(3) },
-                { Assertions.assertThat(productsPage.content[0].likeCount).isEqualTo(productEntity1.likeCount) },
-                { Assertions.assertThat(productsPage.content[1].likeCount).isEqualTo(productEntity2.likeCount) },
-                { Assertions.assertThat(productsPage.content[2].likeCount).isEqualTo(productEntity3.likeCount) },
+                { Assertions.assertThat(productsPage.content[0].likeCount).isEqualTo(productCount1.likeCount) },
+                { Assertions.assertThat(productsPage.content[1].likeCount).isEqualTo(productCount2.likeCount) },
+                { Assertions.assertThat(productsPage.content[2].likeCount).isEqualTo(productCount3.likeCount) },
             )
         }
     }

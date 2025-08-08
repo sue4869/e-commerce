@@ -19,7 +19,4 @@ interface ProductRepository {
 
     fun getWithBrandById(id: Long): ProductEntity
 
-    fun incrementLikeCount(productId: Long): Int
-
-    fun decrementLikeCount(productId: Long)
 }

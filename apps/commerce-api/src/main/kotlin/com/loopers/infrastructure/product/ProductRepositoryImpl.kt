@@ -42,12 +42,4 @@ class ProductRepositoryImpl (
     override fun getWithBrandById(id: Long): ProductEntity {
         return productJpaRepository.findWithBrandById(id) ?: throw CoreException(ErrorType.NOT_FOUND, "존재하지 않는 상품입니다.")
     }
-
-    override fun incrementLikeCount(productId: Long): Int {
-        return productJpaRepository.incrementLikeCount(productId)
-    }
-
-    override fun decrementLikeCount(productId: Long) {
-        productJpaRepository.decrementLikeCount(productId)
-    }
 }
