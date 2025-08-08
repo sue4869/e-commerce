@@ -6,8 +6,6 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class ProductCountService(
     private val productCountRepository: ProductCountRepository,
-    private val productRepository: ProductRepository,
-
 ) {
 
     fun getByProductId(productId: Long): ProductCountDto {
@@ -17,16 +15,14 @@ class ProductCountService(
 
     @Transactional
     fun like(productId: Long) {
-        val product = productRepository.findById(productId)
-        val productCount = productCountRepository.getByProductId(product.id)
+        val productCount = productCountRepository.findByProductIdWithPessimisticLock(productId) ?: ProductCountEntity(productId)
         productCount.increaseLike(1)
         productCountRepository.save(productCount)
     }
 
     @Transactional
     fun dislike(productId: Long) {
-        val product = productRepository.findById(productId)
-        val productCount = productCountRepository.getByProductId(product.id)
+        val productCount = productCountRepository.findByProductIdWithPessimisticLock(productId) ?: return
         productCount.decreaseLike(1)
         productCountRepository.save(productCount)
     }

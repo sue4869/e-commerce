@@ -7,16 +7,21 @@ import com.loopers.domain.product.ProductCountEntity
 import com.loopers.domain.product.ProductCountRepository
 import com.loopers.domain.product.ProductToUserLikeService
 import com.loopers.domain.product.ProductRepository
+import com.loopers.domain.product.ProductToUserLikeEntity
+import com.loopers.domain.product.ProductToUserLikeRepository
 import com.loopers.domain.user.UserRepository
 import com.loopers.fixture.product.ProductFixture
 import com.loopers.fixture.user.UserFixture
 import com.loopers.support.IntegrationTestSupport
+import mu.KotlinLogging
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertAll
-import org.springframework.beans.factory.annotation.Autowired
+import org.mockito.Mockito
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import java.math.BigDecimal
@@ -28,10 +33,11 @@ class ProductFacadeTest(
     private val productCountRepository: ProductCountRepository,
     private val userRepository: UserRepository,
     private val brandRepository: BrandRepository,
+    private val productToUserLikeService: ProductToUserLikeService,
+    private val productToUserLikeRepository: ProductToUserLikeRepository
 ): IntegrationTestSupport() {
 
-    @Autowired
-    private lateinit var productToUserLikeService: ProductToUserLikeService
+    private val log = KotlinLogging.logger {}
 
     @DisplayName("좋아요")
     @Nested
@@ -63,7 +69,7 @@ class ProductFacadeTest(
             assertAll(
                 { assertThat(productLikes).hasSize(1) },
                 { assertThat(productLikes[0].userId).isEqualTo(createdUser.userId) },
-                { assertThat(productLikes[0].productId).isEqualTo(createdProduct.id) },
+                { assertThat(productLikes[0].productId).isEqualTo(updatedProduct.id) },
                 { assertThat(updatedProductCount.likeCount).isEqualTo(1) },
             )
         }
@@ -96,7 +102,7 @@ class ProductFacadeTest(
             assertAll(
                 { assertThat(productLikes).hasSize(1) },
                 { assertThat(productLikes[0].userId).isEqualTo(createdUser.userId) },
-                { assertThat(productLikes[0].productId).isEqualTo(createdProduct.id) },
+                { assertThat(productLikes[0].productId).isEqualTo(updatedProduct.id) },
                 { assertThat(updatedProductCount.likeCount).isEqualTo(1) },
             )
         }
@@ -120,7 +126,6 @@ class ProductFacadeTest(
 
             // assert
             val productLikes = productToUserLikeService.getMyLikes(createdUser.userId)
-            val updatedProduct = productRepository.findById(createdProduct.id)
             val updatedProductCount = productCountRepository.getByProductId(createdProduct.id)
 
             assertAll(
@@ -128,6 +133,102 @@ class ProductFacadeTest(
                 { assertThat(updatedProductCount.likeCount).isEqualTo(0) },
             )
         }
+
+        @Test
+        fun `동시에 여러 사용자가 같은 상품에 좋아요 요청이 와도 카운트가 정확하게 증가한다`() {
+            // given
+            val productId = 1L
+            val users = (1..10).map {
+                userRepository.save(UserFixture.Normal.createUserEntity(userId = "user$it"))
+            }
+            val threadCount = users.size
+            productCountRepository.save(ProductCountEntity(productId))
+
+            //when
+            runConcurrentWithIndex(threadCount) { index ->
+                val user = users[index]
+                try {
+                    productFacade.like(ProductCommand.Like(productId, user.userId))
+                } catch (e: Exception) {
+                    log.info("예외 발생: ${e.javaClass.simpleName} - ${e.message}")
+                }
+            }
+
+            // then
+            val productCount = productCountRepository.getByProductId(productId)
+            assertThat(productCount.likeCount).isEqualTo(threadCount)
+        }
+
+        @Test
+        fun `동시에 여러 사용자가 같은 상품에 좋아요 취소 요청이 와도 카운트가 정확하게 감소한다`() {
+            // given
+            val productId = 1L
+            val users = (1..10).map {
+                val userId = "user$it"
+                userRepository.save(UserFixture.Normal.createUserEntity(userId = userId))
+                ProductToUserLikeEntity.of(ProductCommand.Like(productId, userId)).apply { productToUserLikeRepository.save(this) }
+            }
+            val threadCount = users.size
+            productCountRepository.save(ProductCountEntity(productId = productId, likeCount = 100))
+
+            //when
+            runConcurrentWithIndex(threadCount) { index ->
+                val user = users[index]
+                try {
+                    productFacade.dislike(ProductCommand.Like(productId, user.userId))
+                } catch (e: Exception) {
+                    log.info("예외 발생: ${e.javaClass.simpleName} - ${e.message}")
+                }
+            }
+
+            // then
+            val productCount = productCountRepository.getByProductId(productId)
+            log.info("좋아요 수 : $productCount.likeCount")
+            assertThat(productCount.likeCount).isEqualTo(100-threadCount)
+
+        }
+
+        @Test
+        fun `동시에 여러 사용자가 좋아요와 좋아요 취소를 섞어 요청해도 카운트가 정확히 반영된다`() {
+            // given
+            val productId = 1L
+            val totalUsers = 20
+            val users = (1..totalUsers).map {
+                userRepository.save(UserFixture.Normal.createUserEntity(userId = "user$it"))
+            }
+            // 좋아요 초기값 10으로 세팅
+            productCountRepository.save(ProductCountEntity(productId = productId, likeCount = 10))
+            // 좋아요 취소 할 사용자만 미리 좋아요 상태 만들어주기
+            users.filterIndexed { index, _ -> index % 2 == 1 }.forEach { user ->
+                val likeEntity = ProductToUserLikeEntity.of(ProductCommand.Like(productId, user.userId))
+                productToUserLikeRepository.save(likeEntity)
+            }
+
+            // when
+            runConcurrentWithIndex(totalUsers) { index ->
+                val user = users[index]
+                try {
+                    if (index % 2 == 0) {
+                        // 짝수 인덱스는 좋아요
+                        productFacade.like(ProductCommand.Like(productId, user.userId))
+                    } else {
+                        // 홀수 인덱스는 좋아요 취소
+                        productFacade.dislike(ProductCommand.Like(productId, user.userId))
+                    }
+                } catch (e: Exception) {
+                    log.info("예외 발생: ${e.javaClass.simpleName} - ${e.message}")
+                }
+            }
+
+            // then
+            val productCount = productCountRepository.getByProductId(productId)
+            log.info("최종 likeCount = ${productCount.likeCount}")
+
+            // 좋아요 요청 10개, 취소 요청 10개 중 절반씩 실행됐으니 최종 카운트는 10으로 유지돼야 함
+            // 짝수 인덱스 10개가 like, 홀수 인덱스 10개가 dislike 요청이므로 10 + 10 - 10 = 10
+            assertThat(productCount.likeCount).isEqualTo(10)
+        }
+
     }
 
     @DisplayName("상품")
@@ -283,5 +384,7 @@ class ProductFacadeTest(
             )
         }
     }
+
+
 
 }
