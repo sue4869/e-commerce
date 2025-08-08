@@ -15,8 +15,7 @@ class PointService(
     @Transactional
     fun charge(command: PointCommand.ChargeInput): PointCommand.PointInfo {
         val point = pointRepository.findByUserId(command.userId) ?: PointEntity.of(command)
-        val currentPoint = point.amount.plus(command.amount)
-        point.updateAmount(currentPoint)
+        point.charge(command.amount)
         pointRepository.save(point)
 
         return PointCommand.PointInfo.of(point)

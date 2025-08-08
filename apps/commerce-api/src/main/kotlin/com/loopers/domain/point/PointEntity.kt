@@ -1,11 +1,18 @@
 package com.loopers.domain.point
 
 import com.loopers.domain.BaseEntity
+import com.loopers.support.error.CoreException
+import com.loopers.support.error.ErrorType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
+import jakarta.persistence.Version
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 import java.math.BigDecimal
 
+@SQLRestriction("deleted_at is null")
+@SQLDelete(sql = "update point set deleted_at = CURRENT_TIMESTAMP where id = ?")
 @Entity
 @Table(name = "point")
 class PointEntity(
@@ -20,8 +27,16 @@ class PointEntity(
     var amount = amount
         private set
 
-    fun updateAmount(amount: BigDecimal) {
-        this.amount = amount
+    @Version
+    var version: Long? = null
+
+    fun charge(amount: BigDecimal) {
+        this.amount += amount
+    }
+
+    fun use(amount: BigDecimal) {
+        require(this.amount >= amount) { throw CoreException(ErrorType.NOT_ENOUGH_POINTS, "포인트가 부족합니다. 결제액 : $amount, 포인트 : $this.amount") }
+        this.amount -= amount
     }
 
     companion object {
