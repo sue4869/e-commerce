@@ -7,4 +7,6 @@ interface ProductCountRepository {
     fun saveAll(productCounts: List<ProductCountEntity>): List<ProductCountEntity>
 
     fun getByProductId(productId: Long): ProductCountEntity
+
+    fun findByProductIdWithPessimisticLock(productId: Long): ProductCountEntity?
 }

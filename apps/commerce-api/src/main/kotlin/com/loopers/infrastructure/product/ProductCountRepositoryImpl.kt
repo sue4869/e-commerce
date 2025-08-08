@@ -23,4 +23,8 @@ class ProductCountRepositoryImpl (
         return productCountJpaRepository.findByProductId(productId) ?: throw CoreException(ErrorType.NOT_FOUND)
     }
 
+    override fun findByProductIdWithPessimisticLock(productId: Long): ProductCountEntity? {
+        return productCountJpaRepository.findByProductIdWithPessimisticLock(productId)
+    }
+
 }

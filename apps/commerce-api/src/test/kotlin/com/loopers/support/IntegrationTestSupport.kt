@@ -39,4 +39,22 @@ class IntegrationTestSupport {
         executor.shutdown()
     }
 
+    fun runConcurrentWithIndex(threadCount: Int, task: (Int) -> Unit) {
+        val executor = Executors.newFixedThreadPool(threadCount)
+        val latch = CountDownLatch(threadCount)
+
+        repeat(threadCount) { index ->
+            executor.submit {
+                try {
+                    task(index)
+                } finally {
+                    latch.countDown()
+                }
+            }
+        }
+
+        latch.await()
+        executor.shutdown()
+    }
+
 }

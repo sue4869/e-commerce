@@ -11,6 +11,7 @@ import com.loopers.domain.user.UserRepository
 import com.loopers.fixture.product.ProductFixture
 import com.loopers.fixture.user.UserFixture
 import com.loopers.support.IntegrationTestSupport
+import mu.KotlinLogging
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
@@ -28,10 +29,10 @@ class ProductFacadeTest(
     private val productCountRepository: ProductCountRepository,
     private val userRepository: UserRepository,
     private val brandRepository: BrandRepository,
+    private var productToUserLikeService: ProductToUserLikeService
 ): IntegrationTestSupport() {
 
-    @Autowired
-    private lateinit var productToUserLikeService: ProductToUserLikeService
+    private val log = KotlinLogging.logger {}
 
     @DisplayName("좋아요")
     @Nested
@@ -63,7 +64,7 @@ class ProductFacadeTest(
             assertAll(
                 { assertThat(productLikes).hasSize(1) },
                 { assertThat(productLikes[0].userId).isEqualTo(createdUser.userId) },
-                { assertThat(productLikes[0].productId).isEqualTo(createdProduct.id) },
+                { assertThat(productLikes[0].productId).isEqualTo(updatedProduct.id) },
                 { assertThat(updatedProductCount.likeCount).isEqualTo(1) },
             )
         }
@@ -96,7 +97,7 @@ class ProductFacadeTest(
             assertAll(
                 { assertThat(productLikes).hasSize(1) },
                 { assertThat(productLikes[0].userId).isEqualTo(createdUser.userId) },
-                { assertThat(productLikes[0].productId).isEqualTo(createdProduct.id) },
+                { assertThat(productLikes[0].productId).isEqualTo(updatedProduct.id) },
                 { assertThat(updatedProductCount.likeCount).isEqualTo(1) },
             )
         }
@@ -120,7 +121,6 @@ class ProductFacadeTest(
 
             // assert
             val productLikes = productToUserLikeService.getMyLikes(createdUser.userId)
-            val updatedProduct = productRepository.findById(createdProduct.id)
             val updatedProductCount = productCountRepository.getByProductId(createdProduct.id)
 
             assertAll(
@@ -128,6 +128,32 @@ class ProductFacadeTest(
                 { assertThat(updatedProductCount.likeCount).isEqualTo(0) },
             )
         }
+
+        @Test
+        fun `동시에 like 요청이 와도 카운트가 정확하게 증가한다`() {
+            // given
+            val productId = 1L
+            val users = (1..10).map {
+                userRepository.save(UserFixture.Normal.createUserEntity(userId = "user$it"))
+            }
+            val threadCount = users.size
+            productCountRepository.save(ProductCountEntity(productId))
+
+            //when
+            runConcurrentWithIndex(threadCount) { index ->
+                val user = users[index]
+                try {
+                    productFacade.like(ProductCommand.Like(productId, user.userId))
+                } catch (e: Exception) {
+                    log.info("예외 발생: ${e.javaClass.simpleName} - ${e.message}")
+                }
+            }
+
+            // then
+            val productCount = productCountRepository.getByProductId(productId)
+            assertThat(productCount.likeCount).isEqualTo(threadCount)
+        }
+
     }
 
     @DisplayName("상품")
@@ -283,5 +309,7 @@ class ProductFacadeTest(
             )
         }
     }
+
+
 
 }
