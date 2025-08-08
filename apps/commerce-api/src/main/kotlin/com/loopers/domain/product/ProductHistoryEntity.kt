@@ -11,8 +11,7 @@ class ProductHistoryEntity(
     productId: Long,
     name: String,
     brandId: Long,
-    stock: Int = 0,
-    likeCount: Int = 0,
+    stock: Int = 0
 ): BaseEntity() {
 
     @Column(name = "product_id")
@@ -27,16 +26,13 @@ class ProductHistoryEntity(
     @Column(name = "stock")
     var stock: Int = stock
 
-    @Column(name = "like_count")
-    var likeCount: Int = likeCount
-
     companion object {
         fun of(product: ProductEntity): ProductHistoryEntity {
             return ProductHistoryEntity(
                 product.id,
                 product.name,
                 product.brandId,
-                product.likeCount)
+                product.stock)
         }
     }
 }

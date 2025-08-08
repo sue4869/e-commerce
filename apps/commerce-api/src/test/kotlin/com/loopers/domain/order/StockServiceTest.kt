@@ -35,8 +35,7 @@ class StockServiceTest {
             name = "상품",
             brandId = 1L,
             price = BigDecimal(1000),
-            stock = 10,
-            likeCount = 0
+            stock = 10
         )
 
         // when

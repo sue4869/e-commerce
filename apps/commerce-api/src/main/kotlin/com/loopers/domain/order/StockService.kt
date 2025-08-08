@@ -17,7 +17,9 @@ class StockService(
 
     @Transactional
     fun changeStock(command: OrderCommand.Create, productIds: List<Long>) {
-        val idToProduct = productRepository.findByIdIn(productIds).associateBy { it.id }
+
+        val idToProduct = productRepository.findByIdInWithPessimisticLock(productIds.sorted())
+            .associateBy { it.id }
 
         val updatedProducts = command.items.map { command ->
             val product = idToProduct[command.productId] ?: throw CoreException(ErrorType.PRODUCT_NOT_FOUND, "상품이 존재하지 않습니다. id=${command.productId}")

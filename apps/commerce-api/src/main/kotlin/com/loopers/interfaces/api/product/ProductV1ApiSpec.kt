@@ -17,6 +17,6 @@ interface ProductV1ApiSpec {
 
     fun like(request: HttpServletRequest, productId: Long): ApiResponse<Unit>
 
-    fun deleteLike(request: HttpServletRequest, productId: Long): ApiResponse<Unit>
+    fun dislike(request: HttpServletRequest, productId: Long): ApiResponse<Unit>
 
 }

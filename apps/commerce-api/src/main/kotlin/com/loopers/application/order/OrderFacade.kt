@@ -31,7 +31,7 @@ class OrderFacade(
         val orderItems = orderItemService.create(orderCommand.items, orderId, products)
 
         //결제
-        paymentService.charge(orderCommand.userId, orderItems, paymentCommand)
+        paymentService.charge(orderCommand.userId, orderItems.sumOf { it.totalPrice }, paymentCommand)
 
         //재고
         stockService.changeStock(orderCommand, productIds)

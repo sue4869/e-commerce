@@ -59,6 +59,11 @@ enum class ErrorType(val status: HttpStatus, val code: String, val message: Stri
         HttpStatus.BAD_REQUEST.reasonPhrase,
         "잘못된 결제금액입니다."
     ),
+    CONCURRENT_CONFLICT(
+        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST.reasonPhrase,
+        "동시성 문제가 발생하였습니다."
+    ),
 
 
     /**Stock**/

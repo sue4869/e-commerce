@@ -14,15 +14,13 @@ sealed class ProductFixture {
     abstract val name: String
     abstract val price: BigDecimal
     abstract val stock: Int
-    abstract val likeCount: Int
 
     fun create(brandId: Long): ProductEntity {
         return ProductEntity(
             name = name,
             brandId = brandId,
             price = price,
-            stock = stock,
-            likeCount = likeCount
+            stock = stock
         )
     }
 
@@ -34,21 +32,19 @@ sealed class ProductFixture {
             name = name,
             brandId = brandId,
             price = price,
-            stock = stock,
-            likeCount = likeCount
+            stock = stock
         )
     }
 
-    fun createByLikeCount(
+    fun createByStock(
         brandId: Long,
-        likeCount: Int,
+        stock: Int,
     ): ProductEntity {
         return ProductEntity(
             name = name,
             brandId = brandId,
             price = price,
-            stock = stock,
-            likeCount = likeCount
+            stock = stock
         )
     }
 
@@ -56,7 +52,6 @@ sealed class ProductFixture {
         override val name = "기본 상품"
         override val price = BigDecimal.valueOf(1000.00)
         override val stock = 100
-        override val likeCount = 0
     }
 }
 

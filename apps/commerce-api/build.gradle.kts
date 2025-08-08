@@ -21,4 +21,6 @@ dependencies {
 
     // test-fixtures
     testImplementation(testFixtures(project(":modules:jpa")))
+
+    implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
 }

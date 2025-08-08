@@ -4,10 +4,14 @@ import com.loopers.domain.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 
+@SQLRestriction("deleted_at is null")
+@SQLDelete(sql = "update product_to_user_like set deleted_at = CURRENT_TIMESTAMP where id = ?")
 @Entity
-@Table(name = "product_like")
-class ProductLikeEntity(
+@Table(name = "product_to_user_like")
+class ProductToUserLikeEntity(
     userId: String,
     productId: Long
 ) : BaseEntity() {
@@ -20,8 +24,8 @@ class ProductLikeEntity(
 
     companion object {
 
-        fun of(command: ProductCommand.Like): ProductLikeEntity {
-            return ProductLikeEntity(
+        fun of(command: ProductCommand.Like): ProductToUserLikeEntity {
+            return ProductToUserLikeEntity(
                 userId = command.userId,
                 productId = command.productId,
             )

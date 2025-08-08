@@ -1,6 +1,7 @@
 package com.loopers.interfaces.api.product
 
 import com.loopers.domain.product.ProductCommand
+import com.loopers.domain.product.ProductCountDto
 import com.loopers.domain.product.ProductWithBrandDto
 import com.loopers.domain.product.ProductListGetDto
 import org.springframework.data.domain.Pageable
@@ -36,13 +37,13 @@ class ProductV1Models {
             val price: BigDecimal
         ) {
             companion object {
-                fun of(dto: ProductWithBrandDto): GetInfo {
+                fun of(dto: ProductWithBrandDto, productCount: ProductCountDto): GetInfo {
                     return GetInfo(
                         productId = dto.productId,
                         productName = dto.productName,
                         brandId = dto.brandId,
                         brandName = dto.brandName,
-                        likeCount = dto.likeCount,
+                        likeCount = productCount.likeCount,
                         stock = dto.stock,
                         price = dto.price
                     )
