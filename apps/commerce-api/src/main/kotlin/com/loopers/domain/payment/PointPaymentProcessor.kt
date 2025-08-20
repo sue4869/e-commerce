@@ -27,8 +27,7 @@ class PointPaymentProcessor(
     }
 
     fun updatePoint(point: PointEntity, totalPrice: BigDecimal) {
-        val currentPoint = point.amount.minus(totalPrice)
-        point.updateAmount(currentPoint)
+        point.use(totalPrice)
         pointRepository.save(point)
     }
 

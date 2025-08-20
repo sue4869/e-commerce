@@ -9,6 +9,7 @@ import com.loopers.domain.type.OrderItemStatus
 import com.loopers.domain.type.PaymentType
 import com.loopers.support.error.CoreException
 import com.loopers.support.error.ErrorType
+import mu.KotlinLogging
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.assertThrows
@@ -64,13 +65,13 @@ class PaymentServiceTest {
         )
 
         // stub
-        doNothing().`when`(paymentService).charge(userId, orderItems, paymentCommand)
+        doNothing().`when`(paymentService).charge(userId, orderItems.sumOf { it.totalPrice }, paymentCommand)
 
         // when
-        paymentService.charge(userId, orderItems, paymentCommand)
+        paymentService.charge(userId, orderItems.sumOf { it.totalPrice }, paymentCommand)
 
         // then
-        verify(paymentService, times(1)).charge(userId, orderItems, paymentCommand)
+        verify(paymentService, times(1)).charge(userId, orderItems.sumOf { it.totalPrice }, paymentCommand)
     }
 
     @DisplayName("포인트 부족시 예외가 발생한다.(NOT_ENOUGH_POINTS)")
@@ -84,7 +85,7 @@ class PaymentServiceTest {
 
         // when & then
         val exception = assertThrows<CoreException> {
-            pointPaymentProcessor.validatePoint(point.amount, totalPrice)
+            point.use(totalPrice)
         }
 
         assertThat(exception.errorType).isEqualTo(ErrorType.NOT_ENOUGH_POINTS)

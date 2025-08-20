@@ -20,16 +20,4 @@ class ProductService(
         val product = productRepository.getWithBrandById(productId)
         return ProductWithBrandDto.of(product)
     }
-
-    @Transactional
-    fun like(productId: Long) {
-        val product = productRepository.findById(productId)
-        productRepository.incrementLikeCount(product.id)
-    }
-
-    @Transactional
-    fun decreaseLike(productId: Long) {
-        val product = productRepository.findById(productId)
-        productRepository.decrementLikeCount(product.id)
-    }
 }

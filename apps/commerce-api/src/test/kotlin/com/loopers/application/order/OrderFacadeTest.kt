@@ -1,6 +1,5 @@
 package com.loopers.application.order
 
-
 import com.loopers.domain.order.OrderCommand
 import com.loopers.domain.order.OrderItemDto
 import com.loopers.domain.order.OrderItemService
@@ -58,10 +57,10 @@ class OrderFacadeTest {
 
         val productHistoryDtos = listOf(
             ProductHistoryDto(
-                productId = 1L, productHistoryId = 101L, productName = "Product 1", brandId = 10L, stock = 100, likeCount = 5
+                productId = 1L, productHistoryId = 101L, productName = "Product 1", brandId = 10L, stock = 100
             ),
             ProductHistoryDto(
-                productId = 2L, productHistoryId = 102L, productName = "Product 2", brandId = 10L, stock = 50, likeCount = 3
+                productId = 2L, productHistoryId = 102L, productName = "Product 2", brandId = 10L, stock = 50
             ),
         )
         val orderId = 555L
@@ -74,7 +73,7 @@ class OrderFacadeTest {
         whenever(productHistoryService.getProductsForOrder(listOf(1L, 2L))).thenReturn(productHistoryDtos)
         whenever(orderService.create(orderCommand)).thenReturn(orderId)
         whenever(orderItemService.create(items, orderId, productHistoryDtos)).thenReturn(orderItemDtos)
-        doNothing().whenever(paymentService).charge(userId, orderItemDtos, paymentCommand)
+        doNothing().whenever(paymentService).charge(userId, orderItemDtos.sumOf { it.totalPrice }, paymentCommand)
         doNothing().whenever(stockService).changeStock(orderCommand, listOf(1L, 2L))
 
         // when
@@ -84,7 +83,7 @@ class OrderFacadeTest {
         verify(productHistoryService).getProductsForOrder(listOf(1L, 2L))
         verify(orderService).create(orderCommand)
         verify(orderItemService).create(items, orderId, productHistoryDtos)
-        verify(paymentService).charge(userId, orderItemDtos, paymentCommand)
+        verify(paymentService).charge(userId, orderItemDtos.sumOf { it.totalPrice }, paymentCommand)
         verify(stockService).changeStock(orderCommand, listOf(1L, 2L))
     }
 }

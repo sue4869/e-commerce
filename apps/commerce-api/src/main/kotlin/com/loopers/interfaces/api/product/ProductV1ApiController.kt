@@ -41,12 +41,12 @@ class ProductV1ApiController(
     }
 
     @DeleteMapping("/{productId}/likes")
-    override fun deleteLike(
+    override fun dislike(
         request: HttpServletRequest,
         @PathVariable productId: Long,
     ): ApiResponse<Unit> {
         val userId = request.getHeader("X-USER-ID") ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID, "X-USER-ID is missing")
-        return ApiResponse.success(productFacade.deleteLike(ProductCommand.Like(productId, userId)))
+        return ApiResponse.success(productFacade.dislike(ProductCommand.Like(productId, userId)))
     }
 
 }

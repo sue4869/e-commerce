@@ -7,8 +7,12 @@ import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.Table
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 import java.math.BigDecimal
 
+@SQLRestriction("deleted_at is null")
+@SQLDelete(sql = "update shop_order set deleted_at = CURRENT_TIMESTAMP where id = ?")
 @Entity
 @Table(name = "shop_order")
 class OrderEntity(
