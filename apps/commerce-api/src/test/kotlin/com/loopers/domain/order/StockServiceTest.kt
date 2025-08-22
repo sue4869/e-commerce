@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import java.math.BigDecimal
 import kotlin.test.Test
 
 @ExtendWith(MockitoExtension::class)
@@ -22,7 +21,7 @@ class StockServiceTest {
     lateinit var productRepository: ProductRepository
 
     @Mock
-    lateinit var productHistoryRepository: ProductHistoryRepository
+    lateinit var orderItemRepository: OrderItemRepository
 
     @InjectMocks
     lateinit var stockService: StockService
@@ -34,7 +33,7 @@ class StockServiceTest {
         val product = ProductEntity(
             name = "상품",
             brandId = 1L,
-            price = BigDecimal(1000),
+            price = 1000L,
             stock = 10
         )
 

@@ -7,33 +7,33 @@ import com.loopers.domain.order.StockService
 import com.loopers.domain.payment.PaymentCommand
 import com.loopers.domain.payment.PaymentService
 import com.loopers.domain.product.ProductHistoryService
+import com.loopers.domain.type.OrderStatus
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 
 @Transactional(readOnly = true)
 @Component
 class OrderFacade(
-    private val productHistoryService: ProductHistoryService,
     private val orderService: OrderService,
     private val orderItemService: OrderItemService,
-    private val stockService: StockService,
     private val paymentService: PaymentService,
 
     ) {
 
     @Transactional
     fun create(orderCommand: OrderCommand.Create, paymentCommand: PaymentCommand.Create) {
-        val products = productHistoryService.getProductsForOrder(orderCommand.items.map { it.productId })
-        val productIds = products.map { it.productId }
-
         //주문 생성
-        val orderId = orderService.create(orderCommand)
-        val orderItems = orderItemService.create(orderCommand.items, orderId, products)
+        val orderDto = orderService.create(orderCommand)
+        val orderItems = orderItemService.create(orderCommand.items, orderDto.orderId)
 
-        //결제
-        paymentService.charge(orderCommand.userId, orderItems.sumOf { it.totalPrice }, paymentCommand)
+        //결제 요청
+        requirePayment(orderDto.uuid, orderCommand.userId, orderItems.sumOf { it.totalPrice }, paymentCommand)
+        orderService.updateStatus(orderDto.uuid, OrderStatus.PAYMENT_PENDING)
+    }
 
-        //재고
-        stockService.changeStock(orderCommand, productIds)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun requirePayment(orderUUId: String, userId: String, reqTotalPrice: Long, paymentCommand: PaymentCommand.Create) {
+        paymentService.charge(orderUUId, userId, reqTotalPrice, paymentCommand)
     }
 }

@@ -2,22 +2,35 @@ package com.loopers.domain.order
 
 import com.loopers.domain.type.OrderItemStatus
 import com.loopers.domain.type.OrderStatus
-import java.math.BigDecimal
 
 data class OrderDto(
-    val totalPrice: BigDecimal,
+    val orderId: Long,
+    val uuid: String,
+    val userId: String,
+    val totalPrice: Long,
     val status: OrderStatus,
-    val canceledPrice: BigDecimal,
-    val submittedPrice: BigDecimal,
-    val items: List<OrderItemDto> = emptyList(),
-)
+    val canceledPrice: Long?,
+    val submittedPrice: Long?
+) {
+    companion object {
+        fun of(source: OrderEntity) = OrderDto(
+            orderId = source.id,
+            uuid = source.uuid,
+            userId = source.userId,
+            totalPrice = source.totalPrice,
+            status = source.status,
+            canceledPrice = source.canceledPrice,
+            submittedPrice = source.submittedPrice
+        )
+    }
+}
 
 data class OrderItemDto(
     val id: Long,
     val orderId: Long,
-    val productHistoryId: Long,
-    val unitPrice: BigDecimal,
-    val totalPrice: BigDecimal,
+    val productId: Long,
+    val unitPrice: Long,
+    val totalPrice: Long,
     val qty: Int,
     val status: OrderItemStatus,
 ) {
@@ -25,7 +38,7 @@ data class OrderItemDto(
         fun of(source: OrderItemEntity) = OrderItemDto(
             id = source.id,
             orderId = source.orderId,
-            productHistoryId = source.productHistoryId,
+            productId = source.productId,
             unitPrice = source.unitPrice,
             totalPrice = source.totalPrice,
             qty = source.qty,

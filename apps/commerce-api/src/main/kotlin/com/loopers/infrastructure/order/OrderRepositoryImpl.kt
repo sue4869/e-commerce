@@ -13,5 +13,9 @@ class OrderRepositoryImpl(
         return orderJpaRepository.save(order)
     }
 
+    override fun findByUuid(uuid: String): OrderEntity? {
+        return orderJpaRepository.findByUuid(uuid)
+    }
+
 
 }

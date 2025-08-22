@@ -4,6 +4,7 @@ enum class OrderStatus(
     val description: String,
 ) {
     ORDERED("주문 생성"),
+    PAYMENT_PENDING("결제 요청"),
     PAID("결제 완료"),
     CANCELLED("주문 취소"),
     FAILED("주문 실패")
@@ -17,9 +18,8 @@ enum class OrderItemStatus(
     FAILED("주문 실패")
 }
 
-enum class PaymentType(
-    val description: String,
-) {
-    POINT("포인트 결제"),
-    CARD("카드결제")
+enum class CardType {
+    SAMSUNG,
+    KB,
+    HYUNDAI,
 }

@@ -10,7 +10,6 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
-import java.math.BigDecimal
 
 @SQLRestriction("deleted_at is null")
 @SQLDelete(sql = "update product set deleted_at = CURRENT_TIMESTAMP where id = ?")
@@ -19,7 +18,7 @@ import java.math.BigDecimal
 class ProductEntity(
     name: String,
     brandId: Long,
-    price: BigDecimal,
+    price: Long,
     stock: Int = 0
 ) : BaseEntity() {
 
@@ -34,7 +33,7 @@ class ProductEntity(
     var brand: BrandEntity? = null
 
     @Column(name = "price")
-    val price: BigDecimal = price
+    val price: Long = price
 
     @Column(name = "stock")
     var stock: Int = stock

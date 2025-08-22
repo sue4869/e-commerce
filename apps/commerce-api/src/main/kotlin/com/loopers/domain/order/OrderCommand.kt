@@ -1,10 +1,8 @@
 package com.loopers.domain.order
 
-import com.loopers.domain.type.PaymentType
 import com.loopers.interfaces.api.order.OrderV1Models
 import com.loopers.support.error.CoreException
 import com.loopers.support.error.ErrorType
-import java.math.BigDecimal
 
 class OrderCommand {
 
@@ -15,13 +13,13 @@ class OrderCommand {
 
     data class Item(
         val productId: Long,
-        val price: BigDecimal,
+        val price: Long,
         val qty: Int,
     ) {
 
         init {
             require(qty > 0) { throw CoreException(ErrorType.QTY_MUST_BE_POSITIVE) }
-            require(price > BigDecimal.ZERO) { throw CoreException(ErrorType.PRICE_MUST_BE_POSITIVE) }
+            require(price > 0L) { throw CoreException(ErrorType.PRICE_MUST_BE_POSITIVE) }
         }
 
         companion object {

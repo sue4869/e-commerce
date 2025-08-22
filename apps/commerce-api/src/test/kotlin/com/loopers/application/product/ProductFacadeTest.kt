@@ -24,7 +24,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
-import java.math.BigDecimal
 import kotlin.test.Test
 
 class ProductFacadeTest(
@@ -266,9 +265,9 @@ class ProductFacadeTest(
                 // arrange
                 val brandTest = BrandEntity(name = "test brand")
                 val brand = brandRepository.save(brandTest)
-                val productEntity1 = ProductFixture.Normal.createByPrice(brand.id, BigDecimal.valueOf(300))
-                val productEntity2 = ProductFixture.Normal.createByPrice(brand.id, BigDecimal.valueOf(200))
-                val productEntity3 = ProductFixture.Normal.createByPrice(brand.id, BigDecimal.valueOf(100))
+                val productEntity1 = ProductFixture.Normal.createByPrice(brand.id, 300L)
+                val productEntity2 = ProductFixture.Normal.createByPrice(brand.id, 200L)
+                val productEntity3 = ProductFixture.Normal.createByPrice(brand.id, 100L)
                 productRepository.saveAll(listOf(productEntity1, productEntity2, productEntity3))
                 val productCount1 = productCountRepository.save(ProductCountEntity(productId = productEntity1.id, likeCount = 0))
                 val productCount2 = productCountRepository.save(ProductCountEntity(productId = productEntity2.id, likeCount = 0))
@@ -299,9 +298,9 @@ class ProductFacadeTest(
                 // arrange
                 val brandTest = BrandEntity(name = "test brand")
                 val brand = brandRepository.save(brandTest)
-                val productEntity1 = ProductFixture.Normal.createByPrice(brand.id, BigDecimal.valueOf(300))
-                val productEntity2 = ProductFixture.Normal.createByPrice(brand.id, BigDecimal.valueOf(200))
-                val productEntity3 = ProductFixture.Normal.createByPrice(brand.id, BigDecimal.valueOf(100))
+                val productEntity1 = ProductFixture.Normal.createByPrice(brand.id, 300L)
+                val productEntity2 = ProductFixture.Normal.createByPrice(brand.id, 200L)
+                val productEntity3 = ProductFixture.Normal.createByPrice(brand.id, 100L)
                 productRepository.saveAll(listOf(productEntity1, productEntity2, productEntity3))
                 val productCount1 = productCountRepository.save(ProductCountEntity(productId = productEntity1.id, likeCount = 0))
                 val productCount2 = productCountRepository.save(ProductCountEntity(productId = productEntity2.id, likeCount = 0))
@@ -331,9 +330,9 @@ class ProductFacadeTest(
                 // arrange
                 val brandTest = BrandEntity(name = "test brand")
                 val brand = brandRepository.save(brandTest)
-                val productEntity1 = ProductFixture.Normal.createByPrice(brand.id, BigDecimal.valueOf(300))
-                val productEntity2 = ProductFixture.Normal.createByPrice(brand.id, BigDecimal.valueOf(200))
-                val productEntity3 = ProductFixture.Normal.createByPrice(brand.id, BigDecimal.valueOf(100))
+                val productEntity1 = ProductFixture.Normal.createByPrice(brand.id, 300L)
+                val productEntity2 = ProductFixture.Normal.createByPrice(brand.id, 200L)
+                val productEntity3 = ProductFixture.Normal.createByPrice(brand.id, 100L)
                 val created = productRepository.saveAll(listOf(productEntity1, productEntity2, productEntity3)).sortedByDescending { it.id }
                 val productCount1 = productCountRepository.save(ProductCountEntity(productId = productEntity1.id, likeCount = 0))
                 val productCount2 = productCountRepository.save(ProductCountEntity(productId = productEntity2.id, likeCount = 0))

@@ -1,5 +1,9 @@
 package com.loopers.application.payment
 
+import com.loopers.domain.payment.CardType
+import com.loopers.support.error.CoreException
+import com.loopers.support.error.ErrorType
+
 object PaymentCommand {
     data class CreateTransaction(
         val userId: String,

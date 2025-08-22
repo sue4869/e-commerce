@@ -5,6 +5,8 @@ import com.loopers.application.payment.PaymentCommand
 import com.loopers.application.payment.TransactionInfo
 import com.loopers.domain.payment.CardType
 import com.loopers.domain.payment.TransactionStatus
+import com.loopers.support.error.CoreException
+import com.loopers.support.error.ErrorType
 
 object PaymentDto {
     data class PaymentRequest(

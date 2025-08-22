@@ -7,12 +7,11 @@ import jakarta.persistence.Column
 import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
-import java.math.BigDecimal
 
 sealed class ProductFixture {
 
     abstract val name: String
-    abstract val price: BigDecimal
+    abstract val price: Long
     abstract val stock: Int
 
     fun create(brandId: Long): ProductEntity {
@@ -26,7 +25,7 @@ sealed class ProductFixture {
 
     fun createByPrice(
         brandId: Long,
-        price: BigDecimal,
+        price: Long,
     ): ProductEntity {
         return ProductEntity(
             name = name,
@@ -50,7 +49,7 @@ sealed class ProductFixture {
 
     object Normal : ProductFixture() {
         override val name = "기본 상품"
-        override val price = BigDecimal.valueOf(1000.00)
+        override val price = 1000L
         override val stock = 100
     }
 }

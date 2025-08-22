@@ -1,5 +1,9 @@
 package com.loopers.application.payment
 
+import com.loopers.domain.payment.CardType
+import com.loopers.domain.payment.Payment
+import com.loopers.domain.payment.TransactionStatus
+
 /**
  * 트랜잭션 정보
  *

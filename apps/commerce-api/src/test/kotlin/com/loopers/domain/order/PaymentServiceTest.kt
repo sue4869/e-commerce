@@ -20,7 +20,6 @@ import org.mockito.Mockito.doNothing
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
-import java.math.BigDecimal
 import kotlin.test.Test
 
 @ExtendWith(MockitoExtension::class)
@@ -41,37 +40,37 @@ class PaymentServiceTest {
         // given
         val userId = "user-123"
         val paymentCommand = PaymentCommand.Create(listOf(
-            PaymentCommand.Payment(type = PaymentType.POINT, amount = BigDecimal.valueOf(2000))
+            PaymentCommand.Payment(type = PaymentType.POINT, amount = 2000L)
         ))
         val orderItems = listOf(
             OrderItemDto(
                 id = 1L,
                 orderId = 100L,
-                productHistoryId = 200L,
-                unitPrice = BigDecimal("1000.00"),
-                totalPrice = BigDecimal("2000.00"),
+                productId = 200L,
+                unitPrice = 1000L,
+                totalPrice = 2000L,
                 qty = 2,
                 status = OrderItemStatus.ORDERED
             ),
             OrderItemDto(
                 id = 2L,
                 orderId = 100L,
-                productHistoryId = 201L,
-                unitPrice = BigDecimal("1500.00"),
-                totalPrice = BigDecimal("1500.00"),
+                productId = 201L,
+                unitPrice = 1500L,
+                totalPrice = 1500L,
                 qty = 1,
                 status = OrderItemStatus.ORDERED
             )
         )
 
         // stub
-        doNothing().`when`(paymentService).charge(userId, orderItems.sumOf { it.totalPrice }, paymentCommand)
+        doNothing().`when`(paymentService).charge("uuiduuid", userId, orderItems.sumOf { it.totalPrice }, paymentCommand)
 
         // when
-        paymentService.charge(userId, orderItems.sumOf { it.totalPrice }, paymentCommand)
+        paymentService.charge("uuiduuid", userId, orderItems.sumOf { it.totalPrice }, paymentCommand)
 
         // then
-        verify(paymentService, times(1)).charge(userId, orderItems.sumOf { it.totalPrice }, paymentCommand)
+        verify(paymentService, times(1)).charge("uuiduuid", userId, orderItems.sumOf { it.totalPrice }, paymentCommand)
     }
 
     @DisplayName("포인트 부족시 예외가 발생한다.(NOT_ENOUGH_POINTS)")
@@ -80,8 +79,8 @@ class PaymentServiceTest {
 
         // given
         val userId = "user-123"
-        val point = PointEntity(amount = BigDecimal("1000"), userId = userId)
-        val totalPrice = BigDecimal("2000")
+        val point = PointEntity(amount = 1000L, userId = userId)
+        val totalPrice = 2000L
 
         // when & then
         val exception = assertThrows<CoreException> {
@@ -97,14 +96,14 @@ class PaymentServiceTest {
     fun charge_points_and_save() {
         // given
         val userId = "user-123"
-        val point = PointEntity(amount = BigDecimal("5000"), userId = userId)
-        val totalPrice = BigDecimal("2000")
+        val point = PointEntity(amount = 5000L, userId = userId)
+        val totalPrice = 2000L
 
         // when
         pointPaymentProcessor.updatePoint(point, totalPrice)
 
         // then
-        assertThat(point.amount).isEqualTo(BigDecimal("3000"))
+        assertThat(point.amount).isEqualTo(3000L)
         verify(pointRepository).save(point)
     }
 }
