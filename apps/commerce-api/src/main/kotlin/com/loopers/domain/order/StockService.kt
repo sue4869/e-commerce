@@ -4,6 +4,7 @@ import com.loopers.domain.product.ProductEntity
 import com.loopers.domain.product.ProductHistoryEntity
 import com.loopers.domain.product.ProductHistoryRepository
 import com.loopers.domain.product.ProductRepository
+import com.loopers.domain.type.PaymentStatus
 import com.loopers.support.error.CoreException
 import com.loopers.support.error.ErrorType
 import org.springframework.stereotype.Component
@@ -12,24 +13,28 @@ import org.springframework.transaction.annotation.Transactional
 @Component
 class StockService(
     private val productRepository: ProductRepository,
-    private val productHistoryRepository: ProductHistoryRepository,
+    private val orderItemRepository: OrderItemRepository
 ) {
 
     @Transactional
-    fun changeStock(command: OrderCommand.Create, productIds: List<Long>) {
-
-        val idToProduct = productRepository.findByIdInWithPessimisticLock(productIds.sorted())
-            .associateBy { it.id }
-
-        val updatedProducts = command.items.map { command ->
-            val product = idToProduct[command.productId] ?: throw CoreException(ErrorType.PRODUCT_NOT_FOUND, "상품이 존재하지 않습니다. id=${command.productId}")
-            updateStock(product, command.qty)
-            product
+    fun changeStock(status: PaymentStatus, orderId: Long) {
+        if(status == PaymentStatus.FAILED || status == PaymentStatus.PENDING) {
+            return
         }
 
-        val hitories = updatedProducts.map { ProductHistoryEntity.of(it) }
+        val items = orderItemRepository.findByOrderId(orderId)
+        if(items.isEmpty()) {
+            throw CoreException(ErrorType.NOT_FOUND, "해당 주문 아이템을 찾을 수 없습니다. orderId: $orderId")
+        }
+        val idToProduct = productRepository.findByIdInWithPessimisticLock(items.map { it.productId }.sorted())
+            .associateBy { it.id }
+
+        val updatedProducts = items.map { item ->
+            val product = idToProduct[item.productId] ?: throw CoreException(ErrorType.PRODUCT_NOT_FOUND, "상품이 존재하지 않습니다. id=${item.productId}")
+            updateStock(product, item.qty)
+            product
+        }
         productRepository.saveAll(updatedProducts)
-        productHistoryRepository.saveAll(hitories)
     }
 
     fun updateStock(product: ProductEntity, qty: Int) {

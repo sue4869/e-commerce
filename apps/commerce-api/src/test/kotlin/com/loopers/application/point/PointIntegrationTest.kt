@@ -1,8 +1,10 @@
 package com.loopers.application.point
 
+import com.loopers.domain.payment.PaymentCommand
 import com.loopers.domain.payment.PointPaymentProcessor
 import com.loopers.domain.point.PointRepository
 import com.loopers.domain.point.PointService
+import com.loopers.domain.type.PaymentType
 import com.loopers.fixture.point.PointFixture
 import com.loopers.support.IntegrationTestSupport
 import com.loopers.support.error.CoreException
@@ -14,7 +16,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertThrows
 import org.springframework.orm.ObjectOptimisticLockingFailureException
-import java.math.BigDecimal
 import java.util.Collections
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.test.Test
@@ -77,38 +78,39 @@ class PointIntegrationTest(
 
         @Test
         fun `동시에 포인트 차감 시 하나만 성공한다_나머지는 다 ObjectOptimisticLockingFailureException가 발생한다`() {
-            val point = PointFixture.Normal.pointEntity(userId = "user1", amount = BigDecimal.valueOf(100000))
+            val point = PointFixture.Normal.pointEntity(userId = "user1", amount = 100000L)
             pointRepository.save(point)
 
             val threadCount = 5
-            val useAmount = BigDecimal(15)
+            val useAmount = 15L
             val errors = Collections.synchronizedList(mutableListOf<Exception>())
             val successCount = AtomicInteger(0)
 
             runConcurrent(threadCount) {
                 try {
-                    paymentProcessor.charge("user1", useAmount)
+                    val paymentInfo = PaymentCommand.Payment(type = PaymentType.POINT, amount = useAmount)
+                    paymentProcessor.charge("uuiduuid", "user1", paymentInfo)
                     successCount.incrementAndGet()
                 } catch (e: Exception) {
                     errors.add(e)
                 }
             }
 
-            val remaining = pointRepository.findByUserId("user1")?.amount ?: BigDecimal.ZERO
+            val remaining = pointRepository.findByUserId("user1")?.amount ?: 0L
             log.info("성공한 쓰레드 수: ${successCount.get()}")
             log.info("실패한 쓰레드 수: ${errors.size}")
             log.info("최종 잔액: $remaining")
 
             assertThat(successCount.get()).isEqualTo(1)
             assertThat(errors).anyMatch { it is ObjectOptimisticLockingFailureException }
-            assertThat(remaining).isGreaterThanOrEqualTo(BigDecimal.ZERO)
+            assertThat(remaining).isGreaterThanOrEqualTo(0L)
         }
 
         @Test
         fun `동시에 포인트 충전 시 하나만 성공한다_나머지는 다 ObjectOptimisticLockingFailureException가 발생한다`() {
-            val point = PointFixture.Normal.pointEntity(userId = "user1", amount = BigDecimal.valueOf(100000))
+            val point = PointFixture.Normal.pointEntity(userId = "user1", amount = 100000L)
             pointRepository.save(point)
-            val pointCommand = PointFixture.Normal.pointCommand(userId = "user1", amount = BigDecimal.valueOf(1))
+            val pointCommand = PointFixture.Normal.pointCommand(userId = "user1", amount = 1L)
 
             val threadCount = 5
             val errors = Collections.synchronizedList(mutableListOf<Exception>())
@@ -123,7 +125,7 @@ class PointIntegrationTest(
                 }
             }
 
-            val remaining = pointRepository.findByUserId("user1")?.amount ?: BigDecimal.ZERO
+            val remaining = pointRepository.findByUserId("user1")?.amount ?: 0L
             log.info("성공한 쓰레드 수: ${successCount.get()}")
             log.info("실패한 쓰레드 수: ${errors.size}")
             log.info("최종 잔액: $remaining")
@@ -136,13 +138,13 @@ class PointIntegrationTest(
     @Test
     fun `동시에 충전과 사용이 발생할 때 낙관적 락 충돌(ObjectOptimisticLockingFailureException)이 하나는 발생해야 한다`() {
         val userId = "user1"
-        val initialAmount = BigDecimal.valueOf(100000)
+        val initialAmount = 100000L
         val point = PointFixture.Normal.pointEntity(userId = userId, amount = initialAmount)
         pointRepository.save(point)
-        val pointCommand = PointFixture.Normal.pointCommand(userId = "user1", amount = BigDecimal.valueOf(1000))
+        val pointCommand = PointFixture.Normal.pointCommand(userId = "user1", amount = 1000L)
 
         val threadCount = 2
-        val useAmount = BigDecimal.valueOf(1500)
+        val useAmount = 1500L
 
         val errors = Collections.synchronizedList(mutableListOf<Exception>())
         val chargeCount = AtomicInteger(0)
@@ -156,7 +158,8 @@ class PointIntegrationTest(
                     chargeCount.incrementAndGet()
                 } else {
                     // 홀수 스레드는 사용
-                    paymentProcessor.charge("user1", useAmount)
+                    val paymentInfo = PaymentCommand.Payment(type = PaymentType.POINT, amount = useAmount)
+                    paymentProcessor.charge("uuid", "user1", paymentInfo)
                     useCount.incrementAndGet()
                 }
             } catch (e: Exception) {
@@ -164,7 +167,7 @@ class PointIntegrationTest(
             }
         }
 
-        val remaining = pointRepository.findByUserId(userId)?.amount ?: BigDecimal.ZERO
+        val remaining = pointRepository.findByUserId(userId)?.amount ?: 0L
         log.info("충전 성공한 스레드 수: ${chargeCount.get()}")
         log.info("사용 성공한 스레드 수: ${useCount.get()}")
         log.info("실패한 스레드 수: ${errors.size}")
@@ -177,7 +180,7 @@ class PointIntegrationTest(
         assertThat(errors).anyMatch { it is ObjectOptimisticLockingFailureException }
 
         // 최종 잔액은 음수가 될 수 없음
-        assertThat(remaining).isGreaterThanOrEqualTo(BigDecimal.ZERO)
+        assertThat(remaining).isGreaterThanOrEqualTo(0L)
     }
 
 }

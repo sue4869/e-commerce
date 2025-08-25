@@ -9,7 +9,6 @@ import jakarta.persistence.Table
 import jakarta.persistence.Version
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
-import java.math.BigDecimal
 
 @SQLRestriction("deleted_at is null")
 @SQLDelete(sql = "update point set deleted_at = CURRENT_TIMESTAMP where id = ?")
@@ -17,7 +16,7 @@ import java.math.BigDecimal
 @Table(name = "point")
 class PointEntity(
     userId: String,
-    amount: BigDecimal = BigDecimal.ZERO,
+    amount: Long = 0L,
 ) : BaseEntity() {
     @Column(name = "user_id", unique = true, nullable = false)
     var userId = userId
@@ -30,11 +29,11 @@ class PointEntity(
     @Version
     var version: Long? = null
 
-    fun charge(amount: BigDecimal) {
+    fun charge(amount: Long) {
         this.amount += amount
     }
 
-    fun use(amount: BigDecimal) {
+    fun use(amount: Long) {
         require(this.amount >= amount) { throw CoreException(ErrorType.NOT_ENOUGH_POINTS, "포인트가 부족합니다. 결제액 : $amount, 포인트 : $this.amount") }
         this.amount -= amount
     }

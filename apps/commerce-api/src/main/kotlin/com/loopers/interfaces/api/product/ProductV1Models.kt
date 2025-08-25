@@ -5,8 +5,6 @@ import com.loopers.domain.product.ProductCountDto
 import com.loopers.domain.product.ProductWithBrandDto
 import com.loopers.domain.product.ProductListGetDto
 import org.springframework.data.domain.Pageable
-import java.math.BigDecimal
-
 
 class ProductV1Models {
 
@@ -34,7 +32,7 @@ class ProductV1Models {
             val brandName: String,
             val likeCount: Int,
             val stock: Int,
-            val price: BigDecimal
+            val price: Long
         ) {
             companion object {
                 fun of(dto: ProductWithBrandDto, productCount: ProductCountDto): GetInfo {
@@ -57,7 +55,7 @@ class ProductV1Models {
             val brandId: Long,
             val brandName: String,
             val likeCount: Int,
-            val price: BigDecimal
+            val price: Long
         ) {
             companion object {
                 fun of(dto: ProductListGetDto): GetList {

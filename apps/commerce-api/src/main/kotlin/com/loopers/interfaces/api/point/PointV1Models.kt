@@ -2,7 +2,6 @@ package com.loopers.interfaces.api.point
 
 import com.loopers.domain.point.PointCommand
 import jakarta.validation.constraints.NotNull
-import java.math.BigDecimal
 
 class PointV1Models {
 
@@ -10,7 +9,7 @@ class PointV1Models {
 
         data class Charge(
             @field:NotNull
-            val amount: BigDecimal
+            val amount: Long
         ) {
             fun toCommand(userId: String) = PointCommand.ChargeInput(
                     userId = userId,
@@ -23,7 +22,7 @@ class PointV1Models {
 
         data class Get(
             val userId: String,
-            val amount: BigDecimal,
+            val amount: Long,
         ) {
             companion object {
                 fun of(command: PointCommand.PointInfo): Get {
@@ -36,7 +35,7 @@ class PointV1Models {
         }
 
         data class Charge(
-            val amount: BigDecimal,
+            val amount: Long,
         ) {
             companion object {
                 fun of(command: PointCommand.PointInfo): Charge {

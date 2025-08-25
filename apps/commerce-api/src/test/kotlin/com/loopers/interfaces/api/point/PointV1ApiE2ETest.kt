@@ -13,7 +13,6 @@ import org.junit.jupiter.api.assertAll
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
-import java.math.BigDecimal
 import kotlin.test.Test
 
 class PointV1ApiE2ETest(
@@ -79,7 +78,7 @@ class PointV1ApiE2ETest(
             pointRepository.save(point)
             val headers = headersWithUserId( point.userId)
             val chargeRequest = PointFixture.Normal.chargeRequest(
-                amount = BigDecimal.valueOf(1000L)
+                amount = 1000L
             )
             val httpEntity = HttpEntity(chargeRequest, headers)
             val totalAmount = point.amount.plus(chargeRequest.amount)
@@ -101,7 +100,7 @@ class PointV1ApiE2ETest(
             //arrange
             val headers = headersWithUserId("test0")
             val chargeRequest = PointFixture.Normal.chargeRequest(
-                amount = BigDecimal.valueOf(1000L)
+                amount = 1000L
             )
             val httpEntity = HttpEntity(chargeRequest, headers)
 

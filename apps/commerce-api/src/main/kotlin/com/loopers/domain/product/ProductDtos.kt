@@ -1,7 +1,5 @@
 package com.loopers.domain.product
 
-import java.math.BigDecimal
-
 data class ProductHistoryDto(
     val productId: Long,
     val productHistoryId: Long,
@@ -26,7 +24,7 @@ data class ProductWithBrandDto(
     val brandId: Long,
     val brandName: String,
     val stock: Int,
-    val price: BigDecimal
+    val price: Long
 ) {
     companion object {
         fun of(source: ProductEntity): ProductWithBrandDto {
@@ -48,7 +46,7 @@ data class ProductListGetDto(
     val brandId: Long,
     val brandName: String,
     val likeCount: Int,
-    val price: BigDecimal
+    val price: Long
 )
 
 data class ProductToUserLikeDto(

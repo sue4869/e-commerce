@@ -24,6 +24,44 @@ spring:
       - redis.yml
       - monitoring.yml
 
+pg-client:
+  url: http://localhost:8082/api/v1/payments
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 3000
+        readTimeout: 5000
+        loggerLevel: full
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      pgClient:
+        sliding-window-type: count_based
+        sliding-window-size: 10
+        minimum-number-of-calls: 7
+        failure-rate-threshold: 50
+        slow-call-duration-threshold: 2s
+        slow-call-rate-threshold: 50
+        wait-duration-in-open-state: 2s
+        permitted-number-of-calls-in-half-open-state: 1
+        max-wait-duration-in-half-open-state: 1s
+
+  retry:
+    instances:
+      pgRetry:
+        max-attempts: 3
+        wait-duration: 1s
+        retry-exceptions:
+          - feign.FeignException.InternalServerError
+          - feign.RetryableException
+          - java.net.ConnectException
+          - java.net.SocketTimeoutException
+        ignore-exceptions:
+          - feign.FeignException.BadRequest
+        fail-after-max-attempts: true
+
 springdoc:
   use-fqn: true
   swagger-ui:

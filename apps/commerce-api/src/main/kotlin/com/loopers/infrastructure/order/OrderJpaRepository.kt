@@ -4,4 +4,6 @@ import com.loopers.domain.order.OrderEntity
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface OrderJpaRepository: JpaRepository<OrderEntity, Long> {
+
+    fun findByUuid(uuid: String): OrderEntity?
 }

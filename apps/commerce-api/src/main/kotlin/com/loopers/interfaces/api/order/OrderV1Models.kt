@@ -2,9 +2,9 @@ package com.loopers.interfaces.api.order
 
 import com.loopers.domain.order.OrderCommand
 import com.loopers.domain.payment.PaymentCommand
+import com.loopers.domain.type.CardType
 import com.loopers.domain.type.PaymentType
 import jakarta.validation.constraints.NotBlank
-import java.math.BigDecimal
 
 class OrderV1Models {
 
@@ -32,12 +32,14 @@ class OrderV1Models {
 
         data class Payment(
             val type: PaymentType,
-            val amount: BigDecimal,
+            val cardType: CardType? = null,
+            val cardNo: String? = null,
+            val amount: Long,
         )
 
         data class Item(
             val productId: Long,
-            val price: BigDecimal,
+            val price: Long,
             val qty: Int,
         )
     }

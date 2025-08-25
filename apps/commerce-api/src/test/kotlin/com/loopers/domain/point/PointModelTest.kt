@@ -8,7 +8,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.math.BigDecimal
 
 class PointModelTest {
 
@@ -22,7 +21,7 @@ class PointModelTest {
             //arrange
             val userId = "testId"
             val request = PointFixture.Normal.chargeRequest(
-                amount = BigDecimal.valueOf(-2),
+                amount = -2L,
             )
 
             //act

@@ -20,6 +20,12 @@ dependencies {
     implementation ("com.querydsl:querydsl-jpa::jakarta")
     implementation ("com.querydsl:querydsl-core")
 
+    //feign
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+
+    implementation("io.github.resilience4j:resilience4j-spring-boot2:2.1.0")
+    implementation("com.github.f4b6a3:uuid-creator:5.3.7")
+
     // test-fixtures
     testImplementation(testFixtures(project(":modules:jpa")))
     testImplementation(testFixtures(project(":modules:redis")))
