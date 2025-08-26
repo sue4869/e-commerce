@@ -32,16 +32,4 @@ class OrderService(
         order.updateStatus(status)
         orderRepository.save(order)
     }
-
-    @Transactional
-    fun executeAfterPg(status: PaymentStatus, command: PgAfterCommand): Long {
-        val order = orderRepository.findByUuid(command.orderId) ?: throw CoreException(ErrorType.NOT_FOUND,"존재하지 않는 주문입니다. orderUUID: $command.orderId")
-        when (status) {
-            PENDING -> null
-            SUCCESS -> order.updateStatus(OrderStatus.PAID)
-            FAILED -> order.updateStatus(OrderStatus.CANCELLED)
-        }
-        orderRepository.save(order)
-        return order.id
-    }
 }

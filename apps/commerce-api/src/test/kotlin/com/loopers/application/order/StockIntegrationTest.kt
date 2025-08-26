@@ -9,6 +9,7 @@ import com.loopers.domain.order.OrderEntity
 import com.loopers.domain.order.OrderItemEntity
 import com.loopers.domain.order.StockService
 import com.loopers.domain.product.ProductRepository
+import com.loopers.domain.type.OrderStatus
 import com.loopers.domain.type.PaymentStatus
 import com.loopers.fixture.product.ProductFixture
 import com.loopers.support.IntegrationTestSupport
@@ -52,6 +53,7 @@ class StockIntegrationTest(
             )
 
             val order = orderRepository.save(OrderEntity.of(userId = "user-1", totalPrice = 10000))
+            val orderUUId = order.uuid
             orderItemRepository.saveAll(listOf(
                 OrderItemEntity(
                     orderId = order.id!!,
@@ -82,7 +84,7 @@ class StockIntegrationTest(
                 )
 
                 try {
-                    stockService.changeStock(PaymentStatus.SUCCESS, orderId)
+                    stockService.reduceStock(orderUUId, OrderStatus.PAID)
                     successCounter.incrementAndGet()
                 } catch (e: Exception) {
                     println("실패: ${e.message}")
@@ -117,13 +119,14 @@ class StockIntegrationTest(
                 )
             )
             )
+            val orderUUId = order.uuid
             val totalRequestCount = 10
             val successCount = AtomicInteger(0)
             val failCount = AtomicInteger(0)
 
             runConcurrent(totalRequestCount) {
                 try {
-                    stockService.changeStock(PaymentStatus.SUCCESS, order.id)
+                    stockService.reduceStock(orderUUId, OrderStatus.PAID)
                     successCount.incrementAndGet()
                 } catch (e: CoreException) {
                     if (e.errorType == ErrorType.OUT_OF_STOCK) {
@@ -175,7 +178,7 @@ class StockIntegrationTest(
                 readyLatch.countDown()
                 startLatch.await()
                 try {
-                    stockService.changeStock(PaymentStatus.SUCCESS, order1.id!!)
+                    stockService.reduceStock(order1.uuid, OrderStatus.PAID)
                 } finally {
                     endLatch.countDown()
                 }
@@ -185,7 +188,7 @@ class StockIntegrationTest(
                 readyLatch.countDown()
                 startLatch.await()
                 try {
-                    stockService.changeStock(PaymentStatus.SUCCESS, order2.id!!)
+                    stockService.reduceStock(order2.uuid, OrderStatus.PAID)
                 } finally {
                     endLatch.countDown()
                 }

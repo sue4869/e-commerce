@@ -16,4 +16,9 @@ class OrderItemRepositoryImpl(
     override fun findByOrderId(orderId: Long): List<OrderItemEntity> {
         return orderItemJpaRepository.findByOrderId(orderId)
     }
+
+    override fun findByOrderUUId(orderUUId: String): List<OrderItemEntity> {
+        return orderItemJpaRepository.findByOrderUUId(orderUUId)
+    }
+
 }

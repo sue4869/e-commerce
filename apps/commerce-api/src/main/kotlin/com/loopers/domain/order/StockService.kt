@@ -1,10 +1,8 @@
 package com.loopers.domain.order
 
 import com.loopers.domain.product.ProductEntity
-import com.loopers.domain.product.ProductHistoryEntity
-import com.loopers.domain.product.ProductHistoryRepository
 import com.loopers.domain.product.ProductRepository
-import com.loopers.domain.type.PaymentStatus
+import com.loopers.domain.type.OrderStatus
 import com.loopers.support.error.CoreException
 import com.loopers.support.error.ErrorType
 import org.springframework.stereotype.Component
@@ -17,14 +15,14 @@ class StockService(
 ) {
 
     @Transactional
-    fun changeStock(status: PaymentStatus, orderId: Long) {
-        if(status == PaymentStatus.FAILED || status == PaymentStatus.PENDING) {
+    fun reduceStock(orderUUId: String, orderStatus: OrderStatus) {
+        if(orderStatus != OrderStatus.PAID) {
             return
         }
 
-        val items = orderItemRepository.findByOrderId(orderId)
+        val items = orderItemRepository.findByOrderUUId(orderUUId)
         if(items.isEmpty()) {
-            throw CoreException(ErrorType.NOT_FOUND, "해당 주문 아이템을 찾을 수 없습니다. orderId: $orderId")
+            throw CoreException(ErrorType.NOT_FOUND, "해당 주문 아이템을 찾을 수 없습니다. orderUUId: $orderUUId")
         }
         val idToProduct = productRepository.findByIdInWithPessimisticLock(items.map { it.productId }.sorted())
             .associateBy { it.id }
