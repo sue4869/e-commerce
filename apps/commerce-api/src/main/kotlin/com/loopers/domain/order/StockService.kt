@@ -7,6 +7,7 @@ import com.loopers.domain.product.ProductRepository
 import com.loopers.domain.type.OrderStatus
 import com.loopers.support.error.CoreException
 import com.loopers.support.error.ErrorType
+import mu.KotlinLogging
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
@@ -16,6 +17,8 @@ class StockService(
     private val orderItemRepository: OrderItemRepository,
     private val eventPublisher: EventPublisher,
 ) {
+
+    private val log = KotlinLogging.logger {}
 
     @Transactional
     fun reduceStock(orderUUId: String, orderStatus: OrderStatus) {
@@ -43,6 +46,7 @@ class StockService(
             productRepository.saveAll(updatedProducts)
         } catch (ex: Exception) {
             eventPublisher.publish(StockFailedEvent(orderUUId, ex))
+            log.info("publish StockFailedEvent orderUUId: ${orderUUId} error: ${ex.message}")
             throw ex
         }
     }

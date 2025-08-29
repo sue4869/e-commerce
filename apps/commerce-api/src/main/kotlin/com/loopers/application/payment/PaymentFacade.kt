@@ -10,6 +10,7 @@ import com.loopers.domain.type.PaymentStatus
 import com.loopers.domain.type.PaymentStatus.FAILED
 import com.loopers.domain.type.PaymentStatus.PENDING
 import com.loopers.domain.type.PaymentStatus.SUCCESS
+import mu.KotlinLogging
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
@@ -18,6 +19,8 @@ open class PaymentFacade(
     private val afterPgProcessor: AfterPgProcessor,
     private val eventPublisher: EventPublisher,
 ) {
+
+    private val log = KotlinLogging.logger {}
 
     @Transactional
     open fun executeAfterPg(command: PgAfterCommand) {
@@ -34,12 +37,16 @@ open class PaymentFacade(
                         orderUUId = orderId, status = OrderStatus.PAID
                     )
                 )
+                log.info { "publish PaidCompleteEvent orderId: $orderId, status: $paymentStatus" }
             }
-            FAILED -> eventPublisher.publish(
-                PaidFailEvent(
-                    orderUUId = orderId, status = OrderStatus.CANCELLED
+            FAILED -> {
+                eventPublisher.publish(
+                    PaidFailEvent(
+                        orderUUId = orderId, status = OrderStatus.CANCELLED
+                    )
                 )
-            )
+                log.info { "publish PaidFailEvent orderId: $orderId, status: $paymentStatus" }
+            }
         }
     }
 }
