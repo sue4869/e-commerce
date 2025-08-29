@@ -1,7 +1,7 @@
 package com.loopers.domain.event.listener
 
-import com.loopers.domain.event.dto.ProductDislikeEvent
-import com.loopers.domain.event.dto.ProductLikeEvent
+import com.loopers.domain.event.dto.ProductDislikedEvent
+import com.loopers.domain.event.dto.ProductLikedEvent
 import com.loopers.domain.product.ProductCountService
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
@@ -15,13 +15,13 @@ class ProductListener(
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    fun handleAfterLike(event: ProductLikeEvent) {
+    fun handleAfterLike(event: ProductLikedEvent) {
         productCountService.like(event.productId)
     }
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    fun handleAfterDislike(event: ProductDislikeEvent) {
+    fun handleAfterDislike(event: ProductDislikedEvent) {
         productCountService.dislike(event.productId)
     }
 }

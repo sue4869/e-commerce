@@ -1,8 +1,8 @@
 package com.loopers.domain.product
 
 import com.loopers.domain.event.EventPublisher
-import com.loopers.domain.event.dto.ProductDislikeEvent
-import com.loopers.domain.event.dto.ProductLikeEvent
+import com.loopers.domain.event.dto.ProductDislikedEvent
+import com.loopers.domain.event.dto.ProductLikedEvent
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,9 +29,9 @@ class ProductListenerTest {
     fun `ProductLikeEvent 발행 확인`() {
         val productId = 1L
 
-        eventPublisher.publish(ProductLikeEvent(productId))
+        eventPublisher.publish(ProductLikedEvent(productId))
 
-        assertThat(applicationEvents.stream(ProductLikeEvent::class.java))
+        assertThat(applicationEvents.stream(ProductLikedEvent::class.java))
             .anyMatch { it.productId == productId }
     }
 
@@ -39,9 +39,9 @@ class ProductListenerTest {
     fun `ProductDislikeEvent 발행 확인`() {
         val productId = 1L
 
-        eventPublisher.publish(ProductDislikeEvent(productId))
+        eventPublisher.publish(ProductDislikedEvent(productId))
 
-        assertThat(applicationEvents.stream(ProductDislikeEvent::class.java))
+        assertThat(applicationEvents.stream(ProductDislikedEvent::class.java))
             .anyMatch { it.productId == productId }
     }
 }

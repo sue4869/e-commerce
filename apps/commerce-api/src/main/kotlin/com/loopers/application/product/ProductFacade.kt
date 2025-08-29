@@ -1,8 +1,8 @@
 package com.loopers.application.product
 
 import com.loopers.domain.event.EventPublisher
-import com.loopers.domain.event.dto.ProductDislikeEvent
-import com.loopers.domain.event.dto.ProductLikeEvent
+import com.loopers.domain.event.dto.ProductDislikedEvent
+import com.loopers.domain.event.dto.ProductLikedEvent
 import com.loopers.domain.product.ProductCommand
 import com.loopers.domain.product.ProductCountService
 import com.loopers.domain.product.ProductToUserLikeService
@@ -43,8 +43,8 @@ class ProductFacade(
     fun like(command: ProductCommand.Like) {
         userService.findByUserId(command.userId) ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID,"존재하지 않는 사용자 ID 입니다. 사용자 ID: ${command.userId}")
         if (productToUserLikeService.create(command)) {
-            eventPublisher.publish(ProductLikeEvent(command.productId))
-            log.info( "publish ProductLikeEvent productId: ${command.productId}")
+            eventPublisher.publish(ProductLikedEvent(command.productId))
+            log.info( "publish ProductLikedEvent productId: ${command.productId}")
         }
     }
 
@@ -52,8 +52,8 @@ class ProductFacade(
     fun dislike(command: ProductCommand.Like) {
         userService.findByUserId(command.userId) ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID,"존재하지 않는 사용자 ID 입니다. 사용자 ID: ${command.userId}")
         if (productToUserLikeService.delete(command)) {
-            eventPublisher.publish(ProductDislikeEvent(command.productId))
-            log.info( "publish ProductDislikeEvent productId: ${command.productId}")
+            eventPublisher.publish(ProductDislikedEvent(command.productId))
+            log.info( "publish ProductDislikedEvent productId: ${command.productId}")
         }
     }
 }

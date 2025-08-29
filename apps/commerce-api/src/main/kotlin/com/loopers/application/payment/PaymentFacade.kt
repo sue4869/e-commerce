@@ -1,8 +1,8 @@
 package com.loopers.application.payment
 
 import com.loopers.domain.event.EventPublisher
-import com.loopers.domain.event.dto.PaidCompleteEvent
-import com.loopers.domain.event.dto.PaidFailEvent
+import com.loopers.domain.event.dto.PaidCompletedEvent
+import com.loopers.domain.event.dto.PaidFailedEvent
 import com.loopers.domain.payment.AfterPgProcessor
 import com.loopers.domain.payment.PgAfterCommand
 import com.loopers.domain.type.OrderStatus
@@ -33,19 +33,19 @@ open class PaymentFacade(
             PENDING -> null
             SUCCESS -> {
                 eventPublisher.publish(
-                    PaidCompleteEvent(
+                    PaidCompletedEvent(
                         orderUUId = orderId, status = OrderStatus.PAID
                     )
                 )
-                log.info { "publish PaidCompleteEvent orderId: $orderId, status: $paymentStatus" }
+                log.info { "publish PaidCompletedEvent orderId: $orderId, status: $paymentStatus" }
             }
             FAILED -> {
                 eventPublisher.publish(
-                    PaidFailEvent(
+                    PaidFailedEvent(
                         orderUUId = orderId, status = OrderStatus.CANCELLED
                     )
                 )
-                log.info { "publish PaidFailEvent orderId: $orderId, status: $paymentStatus" }
+                log.info { "publish PaidFailedEvent orderId: $orderId, status: $paymentStatus" }
             }
         }
     }

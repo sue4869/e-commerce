@@ -1,8 +1,8 @@
 package com.loopers.domain.event.listener
 
 import com.loopers.domain.coupon.UserToCouponService
-import com.loopers.domain.event.dto.PaidCompleteEvent
-import com.loopers.domain.event.dto.PaidFailEvent
+import com.loopers.domain.event.dto.PaidCompletedEvent
+import com.loopers.domain.event.dto.PaidFailedEvent
 import com.loopers.domain.event.dto.StockFailedEvent
 import com.loopers.domain.order.OrderService
 import com.loopers.domain.order.StockService
@@ -22,7 +22,7 @@ class OrderListener(
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    fun handleAfterPaid(event: PaidCompleteEvent) {
+    fun handleAfterPaid(event: PaidCompletedEvent) {
         val orderDto = orderService.updateStatus(event.orderUUId, event.status)
         stockService.reduceStock(event.orderUUId, event.status)
         orderDto.couponId?.let { userToCouponService.updateStatus(orderDto.userId, orderDto.couponId, IssuedStatus.USED) }
@@ -30,7 +30,7 @@ class OrderListener(
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    fun handleAfterFail(event: PaidFailEvent) {
+    fun handleAfterFail(event: PaidFailedEvent) {
         orderService.updateStatus(event.orderUUId, event.status)
     }
 

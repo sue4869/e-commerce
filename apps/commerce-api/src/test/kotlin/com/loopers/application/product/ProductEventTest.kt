@@ -1,8 +1,8 @@
 package com.loopers.application.product
 
 import com.loopers.domain.event.EventPublisher
-import com.loopers.domain.event.dto.ProductDislikeEvent
-import com.loopers.domain.event.dto.ProductLikeEvent
+import com.loopers.domain.event.dto.ProductDislikedEvent
+import com.loopers.domain.event.dto.ProductLikedEvent
 import com.loopers.domain.product.ProductCommand
 import com.loopers.domain.product.ProductCountService
 import com.loopers.domain.product.ProductService
@@ -12,11 +12,9 @@ import com.loopers.domain.user.UserCommand
 import com.loopers.domain.user.UserService
 import io.mockk.every
 import io.mockk.mockk
-import org.testcontainers.shaded.com.google.common.base.Verify.verify
 import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 
 class ProductEventTest {
 
@@ -58,7 +56,7 @@ class ProductEventTest {
         productFacade.like(command)
 
         // then
-        verify { eventPublisher.publish(ofType(ProductLikeEvent::class)) }
+        verify { eventPublisher.publish(ofType(ProductLikedEvent::class)) }
     }
 
     @Test
@@ -72,7 +70,7 @@ class ProductEventTest {
         productFacade.like(command)
 
         // then
-        verify(exactly = 0) { eventPublisher.publish(ofType(ProductDislikeEvent::class)) }
+        verify(exactly = 0) { eventPublisher.publish(ofType(ProductDislikedEvent::class)) }
     }
 
     @Test
@@ -86,7 +84,7 @@ class ProductEventTest {
         productFacade.dislike(command)
 
         // then
-        verify { eventPublisher.publish(ofType(ProductDislikeEvent::class)) }
+        verify { eventPublisher.publish(ofType(ProductDislikedEvent::class)) }
     }
 
     @Test
@@ -100,7 +98,7 @@ class ProductEventTest {
         productFacade.dislike(command)
 
         // then
-        verify(exactly = 0) { eventPublisher.publish(ofType(ProductDislikeEvent::class)) }
+        verify(exactly = 0) { eventPublisher.publish(ofType(ProductDislikedEvent::class)) }
     }
 
 }

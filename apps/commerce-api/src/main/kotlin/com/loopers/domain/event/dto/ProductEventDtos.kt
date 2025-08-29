@@ -2,10 +2,10 @@ package com.loopers.domain.event.dto
 
 import com.loopers.domain.event.EventPayload
 
-class ProductLikeEvent(
+class ProductLikedEvent(
     val productId: Long
 ): EventPayload
 
-class ProductDislikeEvent(
+class ProductDislikedEvent(
     val productId: Long
 ): EventPayload

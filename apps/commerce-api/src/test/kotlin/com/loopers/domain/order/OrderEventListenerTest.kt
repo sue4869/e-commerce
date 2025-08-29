@@ -1,9 +1,8 @@
 package com.loopers.domain.order
 
 import com.loopers.domain.event.EventPublisher
-import com.loopers.domain.event.dto.PaidCompleteEvent
-import com.loopers.domain.event.dto.PaidFailEvent
-import com.loopers.domain.event.dto.StockFailedEvent
+import com.loopers.domain.event.dto.PaidCompletedEvent
+import com.loopers.domain.event.dto.PaidFailedEvent
 import com.loopers.domain.type.OrderStatus
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -31,9 +30,9 @@ class OrderEventListenerTest {
     fun `PaidCompleteEvent 발행 확인`() {
         val orderUUId = "orderUUId"
 
-        eventPublisher.publish(PaidCompleteEvent(orderUUId, OrderStatus.PAID))
+        eventPublisher.publish(PaidCompletedEvent(orderUUId, OrderStatus.PAID))
 
-        assertThat(applicationEvents.stream(PaidCompleteEvent::class.java))
+        assertThat(applicationEvents.stream(PaidCompletedEvent::class.java))
             .anyMatch { it.orderUUId == orderUUId }
     }
 
@@ -41,9 +40,9 @@ class OrderEventListenerTest {
     fun `PaidFailEvent 발행 확인`() {
         val orderUUId = "orderUUId"
 
-        eventPublisher.publish(PaidFailEvent(orderUUId, OrderStatus.PAID))
+        eventPublisher.publish(PaidFailedEvent(orderUUId, OrderStatus.PAID))
 
-        assertThat(applicationEvents.stream(PaidFailEvent::class.java))
+        assertThat(applicationEvents.stream(PaidFailedEvent::class.java))
             .anyMatch { it.orderUUId == orderUUId }
     }
 

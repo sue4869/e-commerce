@@ -1,9 +1,9 @@
 package com.loopers.domain.event.listener
 
-import com.loopers.domain.event.dto.PaidCompleteEvent
-import com.loopers.domain.event.dto.PaidFailEvent
-import com.loopers.domain.event.dto.ProductDislikeEvent
-import com.loopers.domain.event.dto.ProductLikeEvent
+import com.loopers.domain.event.dto.PaidCompletedEvent
+import com.loopers.domain.event.dto.PaidFailedEvent
+import com.loopers.domain.event.dto.ProductDislikedEvent
+import com.loopers.domain.event.dto.ProductLikedEvent
 import com.loopers.domain.event.dto.StockFailedEvent
 import com.loopers.infrastructure.external.DataPlatformApiClient
 import mu.KotlinLogging
@@ -21,7 +21,7 @@ class DataFlatformListener(
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    fun handle(event: PaidCompleteEvent) {
+    fun handle(event: PaidCompletedEvent) {
         try {
             dataPlatformApiClient.send(event.orderUUId)
         } catch (e: Exception) {
@@ -31,7 +31,7 @@ class DataFlatformListener(
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    fun handle(event: PaidFailEvent) {
+    fun handle(event: PaidFailedEvent) {
         try {
             dataPlatformApiClient.send(event.orderUUId)
         } catch (e: Exception) {
@@ -51,7 +51,7 @@ class DataFlatformListener(
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    fun handle(event: ProductLikeEvent) {
+    fun handle(event: ProductLikedEvent) {
         try {
             dataPlatformApiClient.send(event.productId.toString())
         } catch (e: Exception) {
@@ -61,7 +61,7 @@ class DataFlatformListener(
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    fun handle(event: ProductDislikeEvent) {
+    fun handle(event: ProductDislikedEvent) {
         try {
             dataPlatformApiClient.send(event.productId.toString())
         } catch (e: Exception) {

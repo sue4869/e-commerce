@@ -1,7 +1,7 @@
 package com.loopers.domain.order
 
 import com.loopers.domain.coupon.UserToCouponService
-import com.loopers.domain.event.dto.PaidCompleteEvent
+import com.loopers.domain.event.dto.PaidCompletedEvent
 import com.loopers.domain.event.listener.OrderListener
 import com.loopers.domain.type.IssuedStatus
 import com.loopers.domain.type.OrderStatus
@@ -53,7 +53,7 @@ class OrderListenerHandleTest {
 
         whenever(orderService.updateStatus(uuid, OrderStatus.PAID)).thenReturn(orderDto)
 
-        val event = PaidCompleteEvent(orderUUId = uuid, status = OrderStatus.PAID)
+        val event = PaidCompletedEvent(orderUUId = uuid, status = OrderStatus.PAID)
 
         // when
         eventListener.handleAfterPaid(event)
@@ -85,7 +85,7 @@ class OrderListenerHandleTest {
 
         whenever(orderService.updateStatus(uuid, OrderStatus.PAID)).thenReturn(orderDto)
 
-        val event = PaidCompleteEvent(orderUUId = uuid, status = OrderStatus.PAID)
+        val event = PaidCompletedEvent(orderUUId = uuid, status = OrderStatus.PAID)
 
         // when
         eventListener.handleAfterPaid(event)

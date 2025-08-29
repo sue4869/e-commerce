@@ -2,8 +2,8 @@ package com.loopers.domain.payment
 
 import com.loopers.application.payment.PaymentFacade
 import com.loopers.domain.event.EventPublisher
-import com.loopers.domain.event.dto.PaidCompleteEvent
-import com.loopers.domain.event.dto.PaidFailEvent
+import com.loopers.domain.event.dto.PaidCompletedEvent
+import com.loopers.domain.event.dto.PaidFailedEvent
 import com.loopers.domain.type.CardType
 import com.loopers.domain.type.OrderStatus
 import com.loopers.domain.type.PaymentStatus
@@ -42,7 +42,7 @@ class PaymentEventTest {
         paymentFacade.executeAfterPg(command)
 
         // then
-        val slot = slot<PaidCompleteEvent>()
+        val slot = slot<PaidCompletedEvent>()
         verify(exactly = 1) { eventPublisher.publish(capture(slot)) }
 
         assertThat(slot.captured.orderUUId).isEqualTo("order-123")
@@ -59,7 +59,7 @@ class PaymentEventTest {
         paymentFacade.executeAfterPg(command)
 
         // then
-        val slot = slot<PaidFailEvent>()
+        val slot = slot<PaidFailedEvent>()
         verify(exactly = 1) { eventPublisher.publish(capture(slot)) }
 
         assertThat(slot.captured.orderUUId).isEqualTo("order-456")
