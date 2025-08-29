@@ -1,5 +1,8 @@
 package com.loopers.application.product
 
+import com.loopers.domain.event.EventPublisher
+import com.loopers.domain.event.dto.ProductDislikeEvent
+import com.loopers.domain.event.dto.ProductLikeEvent
 import com.loopers.domain.product.ProductCommand
 import com.loopers.domain.product.ProductCountService
 import com.loopers.domain.product.ProductToUserLikeService
@@ -19,6 +22,7 @@ class ProductFacade(
     private val productToUserLikeService: ProductToUserLikeService,
     private val productCountService: ProductCountService,
     private val userService: UserService,
+    private val eventPublisher: EventPublisher,
 ) {
 
     fun get(productId: Long): ProductV1Models.Response.GetInfo {
@@ -36,7 +40,7 @@ class ProductFacade(
     fun like(command: ProductCommand.Like) {
         userService.findByUserId(command.userId) ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID,"존재하지 않는 사용자 ID 입니다. 사용자 ID: ${command.userId}")
         if (productToUserLikeService.create(command)) {
-            productCountService.like(command.productId)
+            eventPublisher.publish(ProductLikeEvent(command.productId))
         }
     }
 
@@ -44,7 +48,7 @@ class ProductFacade(
     fun dislike(command: ProductCommand.Like) {
         userService.findByUserId(command.userId) ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID,"존재하지 않는 사용자 ID 입니다. 사용자 ID: ${command.userId}")
         if (productToUserLikeService.delete(command)) {
-            productCountService.dislike(command.productId)
+            eventPublisher.publish(ProductDislikeEvent(command.productId))
         }
     }
 }
