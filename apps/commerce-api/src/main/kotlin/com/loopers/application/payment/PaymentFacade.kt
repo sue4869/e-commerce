@@ -1,6 +1,8 @@
 package com.loopers.application.payment
 
-import com.loopers.domain.event.dto.OrderStatusChangeDto
+import com.loopers.domain.event.EventPublisher
+import com.loopers.domain.event.dto.PaidCompleteEvent
+import com.loopers.domain.event.dto.PaidFailEvent
 import com.loopers.domain.payment.AfterPgProcessor
 import com.loopers.domain.payment.PgAfterCommand
 import com.loopers.domain.type.OrderStatus
@@ -8,33 +10,36 @@ import com.loopers.domain.type.PaymentStatus
 import com.loopers.domain.type.PaymentStatus.FAILED
 import com.loopers.domain.type.PaymentStatus.PENDING
 import com.loopers.domain.type.PaymentStatus.SUCCESS
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 @Component
 open class PaymentFacade(
     private val afterPgProcessor: AfterPgProcessor,
-    private val applicationEventPublisher: ApplicationEventPublisher
+    private val eventPublisher: EventPublisher,
 ) {
 
     @Transactional
     open fun executeAfterPg(command: PgAfterCommand) {
-        val status = afterPgProcessor.executeAfterPg(command)
+        val status = afterPgProcessor.updatePaymentStatus(command)
         orderUpdateStatus(command.orderId, status)
     }
 
     private fun orderUpdateStatus(orderId: String, paymentStatus: PaymentStatus) {
-        val status = when (paymentStatus) {
-            PENDING -> OrderStatus.PAYMENT_PENDING
-            SUCCESS -> OrderStatus.PAID
-            FAILED -> OrderStatus.CANCELLED
-        }
-
-        applicationEventPublisher.publishEvent(
-            OrderStatusChangeDto(
-                orderUUId = orderId, status = status
+        when (paymentStatus) {
+            PENDING -> null
+            SUCCESS -> {
+                eventPublisher.publish(
+                    PaidCompleteEvent(
+                        orderUUId = orderId, status = OrderStatus.PAID
+                    )
+                )
+            }
+            FAILED -> eventPublisher.publish(
+                PaidFailEvent(
+                    orderUUId = orderId, status = OrderStatus.CANCELLED
+                )
             )
-        )
+        }
     }
 }

@@ -30,5 +30,7 @@ dependencies {
     testImplementation(testFixtures(project(":modules:jpa")))
     testImplementation(testFixtures(project(":modules:redis")))
 
+    testImplementation("org.awaitility:awaitility-kotlin:4.2.0")
+
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
 }

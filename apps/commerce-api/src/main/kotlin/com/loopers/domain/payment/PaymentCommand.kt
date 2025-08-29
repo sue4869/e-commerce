@@ -9,8 +9,15 @@ import com.loopers.support.error.ErrorType
 class PaymentCommand {
 
     data class Create(
-        val payments: List<Payment>
-    )
+        val payments: List<Payment>,
+        val finalAmount: Long,
+        val originAmount: Long,
+    ) {
+        init {
+            val calculatedAmount = payments.sumOf { it.amount }
+            require(calculatedAmount == originAmount) { "본래 금액이 잘못되었습니다."}
+        }
+    }
 
     data class Payment(
         val type: PaymentType,

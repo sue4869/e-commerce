@@ -27,7 +27,7 @@ class AfterPgProcessor(
     }
 
     @Transactional
-    fun executeAfterPg(command: PgAfterCommand): PaymentStatus {
+    fun updatePaymentStatus(command: PgAfterCommand): PaymentStatus {
         val order = orderRepository.findByUuid(command.orderId) ?: throw CoreException(ErrorType.NOT_FOUND)
         val orderOfPg = pgClient.getPayment(order.userId, command.transactionKey).data ?: throw CoreException(ErrorType.NOT_FOUND)
         handleByStatus(orderOfPg.status, command.orderId)

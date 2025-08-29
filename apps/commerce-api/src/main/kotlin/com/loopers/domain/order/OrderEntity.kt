@@ -18,6 +18,7 @@ import com.github.f4b6a3.uuid.UuidCreator
 class OrderEntity(
     uuid: String,
     userId: String,
+    couponId: Long? = null,
     totalPrice: Long,
     status: OrderStatus = OrderStatus.ORDERED,
     canceledPrice: Long? = null,
@@ -27,8 +28,11 @@ class OrderEntity(
     @Column(name = "uuid")
     val uuid: String = uuid
 
-    @Column(name = "userId")
+    @Column(name = "user_id")
     val userId: String = userId
+
+    @Column(name = "coupon_id")
+    val couponId: Long? = couponId
 
     @Column(name = "total_price")
     val totalPrice: Long = totalPrice
@@ -44,9 +48,10 @@ class OrderEntity(
     val submittedPrice: Long? = submittedPrice
 
     companion object {
-        fun of(userId: String, totalPrice: Long) = OrderEntity(
+        fun of(userId: String, totalPrice: Long, couponId: Long? = null) = OrderEntity(
             uuid = UuidCreator.getTimeOrderedEpoch().toString(),
             userId = userId,
+            couponId = couponId,
             totalPrice = totalPrice,
             submittedPrice = totalPrice
         )

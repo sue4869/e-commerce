@@ -8,6 +8,7 @@ class OrderCommand {
 
     data class Create(
         val userId: String,
+        val couponId: Long? = null,
         val items: List<Item>
     )
 

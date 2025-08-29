@@ -5,6 +5,7 @@ import com.loopers.domain.payment.PaymentCommand
 import com.loopers.domain.type.CardType
 import com.loopers.domain.type.PaymentType
 import jakarta.validation.constraints.NotBlank
+import org.jetbrains.annotations.NotNull
 
 class OrderV1Models {
 
@@ -14,11 +15,17 @@ class OrderV1Models {
             @field:NotBlank
             val items: List<Item>,
             @field:NotBlank
-            val payments: List<Payment>
+            val payments: List<Payment>,
+            val couponId: Long?,
+            @field:NotNull
+            val finalAmount: Long,
+            @field:NotNull
+            val originAmount: Long,
         ) {
             fun toOrderCommand(userId: String): OrderCommand.Create {
                 return OrderCommand.Create(
                     userId = userId,
+                    couponId = couponId,
                     items = items.map { OrderCommand.Item.of(it) },
                 )
             }
@@ -26,6 +33,8 @@ class OrderV1Models {
             fun toPaymentCommand(): PaymentCommand.Create {
                 return PaymentCommand.Create(
                     payments = payments.map { PaymentCommand.Payment.of(it) },
+                    finalAmount = finalAmount,
+                    originAmount = originAmount,
                 )
             }
         }

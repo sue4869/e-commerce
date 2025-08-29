@@ -5,6 +5,7 @@ import com.loopers.domain.type.OrderStatus
 
 data class OrderDto(
     val orderId: Long,
+    val couponId: Long? = null,
     val uuid: String,
     val userId: String,
     val totalPrice: Long,
@@ -15,6 +16,7 @@ data class OrderDto(
     companion object {
         fun of(source: OrderEntity) = OrderDto(
             orderId = source.id,
+            couponId = source.couponId,
             uuid = source.uuid,
             userId = source.userId,
             totalPrice = source.totalPrice,
@@ -46,19 +48,3 @@ data class OrderItemDto(
         )
     }
 }
-
-interface IErrorIdsDto {
-    var ids: MutableList<Long>
-}
-
-data class ProductErrorDto(
-    override var ids: MutableList<Long> = mutableListOf()
-) : IErrorIdsDto
-
-data class StockErrorDto(
-    override var ids: MutableList<Long> = mutableListOf()
-) : IErrorIdsDto
-
-data class PaymentErrorDto(
-    override var ids: MutableList<Long> = mutableListOf()
-) : IErrorIdsDto
