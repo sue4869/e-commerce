@@ -2,7 +2,7 @@ package com.loopers.domain.order
 
 import com.loopers.domain.coupon.UserToCouponService
 import com.loopers.domain.event.dto.PaidCompleteEvent
-import com.loopers.domain.event.order.OrderListener
+import com.loopers.domain.event.listener.OrderListener
 import com.loopers.domain.type.IssuedStatus
 import com.loopers.domain.type.OrderStatus
 import org.junit.jupiter.api.DisplayName

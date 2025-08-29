@@ -1,4 +1,4 @@
-package com.loopers.domain.event.order
+package com.loopers.domain.event.listener
 
 import com.loopers.domain.coupon.UserToCouponService
 import com.loopers.domain.event.dto.PaidCompleteEvent

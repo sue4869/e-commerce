@@ -1,4 +1,4 @@
-package com.loopers.domain.event.order
+package com.loopers.domain.event.listener
 
 import com.loopers.domain.event.dto.ProductDislikeEvent
 import com.loopers.domain.event.dto.ProductLikeEvent
