@@ -1,5 +1,6 @@
 package com.loopers.application.order
 
+import com.loopers.domain.coupon.UserToCouponService
 import com.loopers.domain.order.OrderCommand
 import com.loopers.domain.order.OrderDto
 import com.loopers.domain.order.OrderItemDto
@@ -34,6 +35,9 @@ class OrderFacadeTest {
     @Mock
     private lateinit var paymentService: PaymentService
 
+    @Mock
+    private lateinit var userToCouponService: UserToCouponService
+
     @InjectMocks
     private lateinit var orderFacade: OrderFacade
 
@@ -55,7 +59,9 @@ class OrderFacadeTest {
         )
 
         val paymentCommand = PaymentCommand.Create(
-            payments = listOf(PaymentCommand.Payment(type = PaymentType.POINT, amount = totalPrice))
+            payments = listOf(PaymentCommand.Payment(type = PaymentType.POINT, amount = totalPrice)),
+            finalAmount = totalPrice,
+            originAmount = totalPrice,
         )
 
         val orderDto = OrderDto(orderId = orderId, uuid = orderUUID, userId = userId, totalPrice = totalPrice, status = OrderStatus.ORDERED, canceledPrice = null, submittedPrice = totalPrice)
@@ -68,7 +74,8 @@ class OrderFacadeTest {
         whenever(orderService.create(orderCommand)).thenReturn(orderDto)
         whenever(orderItemService.create(orderCommand.items, orderDto.orderId)).thenReturn(orderItemsDto)
         doNothing().`when`(paymentService).charge(orderUUID, userId, orderItemsDto.sumOf { it.totalPrice }, paymentCommand)
-        doNothing().`when`(orderService).updateStatus(orderUUID, OrderStatus.PAYMENT_PENDING)
+        whenever(orderService.updateStatus(orderUUID, OrderStatus.PAYMENT_PENDING))
+            .thenReturn(orderDto)
 
         // when
         orderFacade.create(orderCommand, paymentCommand)
@@ -79,5 +86,7 @@ class OrderFacadeTest {
         verify(paymentService, times(1)).charge(orderUUID, userId, orderItemsDto.sumOf { it.totalPrice }, paymentCommand)
         verify(orderService, times(1)).updateStatus(orderUUID, OrderStatus.PAYMENT_PENDING)
     }
+
+
 }
 

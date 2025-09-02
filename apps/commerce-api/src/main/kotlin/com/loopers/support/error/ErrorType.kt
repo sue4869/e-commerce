@@ -70,6 +70,9 @@ enum class ErrorType(val status: HttpStatus, val code: String, val message: Stri
     /**Stock**/
     OUT_OF_STOCK(HttpStatus.BAD_REQUEST,
         HttpStatus.BAD_REQUEST.reasonPhrase, "재고 부족"),
+    ONLY_AFTER_PAID(HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST.reasonPhrase, "결제 이후에만 재고 차감할 수 있습니다."
+    ),
 
     /**Order**/
     QTY_MUST_BE_POSITIVE(
@@ -81,5 +84,20 @@ enum class ErrorType(val status: HttpStatus, val code: String, val message: Stri
         HttpStatus.BAD_REQUEST,
         HttpStatus.BAD_REQUEST.reasonPhrase,
         "0 이하의 정수인 가격은 허용이 안됩니다."
+    ),
+    INVALID_COUPON(
+        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST.reasonPhrase,
+        "존재하지 않는 쿠폰입니다."
+    ),
+    USED_COUPON(
+        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST.reasonPhrase,
+        "이미 사용된 쿠폰입니다."
+    ),
+    INVALID_DISCOUNT(
+        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST.reasonPhrase,
+        "잘못된 할인 적용된 금액입니다."
     ),
 }

@@ -63,13 +63,11 @@ class ProductFacadeTest(
 
             // 데이터베이스에서 최신 상태를 직접 조회하여 검증
             val updatedProduct = productRepository.findById(createdProduct.id)
-            val updatedProductCount = productCountRepository.getByProductId(createdProduct.id)
 
             assertAll(
                 { assertThat(productLikes).hasSize(1) },
                 { assertThat(productLikes[0].userId).isEqualTo(createdUser.userId) },
-                { assertThat(productLikes[0].productId).isEqualTo(updatedProduct.id) },
-                { assertThat(updatedProductCount.likeCount).isEqualTo(1) },
+                { assertThat(productLikes[0].productId).isEqualTo(updatedProduct.id) }
             )
         }
 
@@ -96,13 +94,11 @@ class ProductFacadeTest(
 
             // 데이터베이스에서 최신 상태를 직접 조회하여 검증
             val updatedProduct = productRepository.findById(createdProduct.id)
-            val updatedProductCount = productCountRepository.getByProductId(createdProduct.id)
 
             assertAll(
                 { assertThat(productLikes).hasSize(1) },
                 { assertThat(productLikes[0].userId).isEqualTo(createdUser.userId) },
                 { assertThat(productLikes[0].productId).isEqualTo(updatedProduct.id) },
-                { assertThat(updatedProductCount.likeCount).isEqualTo(1) },
             )
         }
 

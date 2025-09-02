@@ -22,7 +22,10 @@ sealed class OrderFixture {
                         type = PaymentType.POINT,
                         amount = 1000L,
                     )
-                )
+                ),
+                couponId = null,
+                finalAmount = 2000L,
+                originAmount = 2000L,
             )
         }
     }
@@ -47,7 +50,10 @@ sealed class OrderFixture {
                         type = PaymentType.POINT,
                         amount = 1000L,
                     )
-                )
+                ),
+                couponId = null,
+                finalAmount = 7000L,
+                originAmount = 7000L,
             )
         }
     }
@@ -67,7 +73,10 @@ sealed class OrderFixture {
                         type = PaymentType.POINT,
                         amount = 1000L,
                     )
-                )
+                ),
+                couponId = null,
+                finalAmount = -100L,
+                originAmount = -100L,
             )
         }
     }
@@ -87,7 +96,10 @@ sealed class OrderFixture {
                         type = PaymentType.POINT,
                         amount = 1000L,
                     )
-                )
+                ),
+                couponId = null,
+                finalAmount = -100L,
+                originAmount = -100L,
             )
         }
     }
@@ -101,7 +113,10 @@ sealed class OrderFixture {
                         type = PaymentType.POINT,
                         amount = 1000L,
                     )
-                )
+                ),
+                couponId = null,
+                finalAmount = 0L,
+                originAmount = 0L,
             )
         }
     }

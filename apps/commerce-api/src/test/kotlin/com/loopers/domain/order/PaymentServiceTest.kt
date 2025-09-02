@@ -5,6 +5,7 @@ import com.loopers.domain.payment.PaymentService
 import com.loopers.domain.payment.PointPaymentProcessor
 import com.loopers.domain.point.PointEntity
 import com.loopers.domain.point.PointRepository
+import com.loopers.domain.type.CardType
 import com.loopers.domain.type.OrderItemStatus
 import com.loopers.domain.type.PaymentType
 import com.loopers.support.error.CoreException
@@ -39,9 +40,14 @@ class PaymentServiceTest {
     fun `success_payment`() {
         // given
         val userId = "user-123"
-        val paymentCommand = PaymentCommand.Create(listOf(
-            PaymentCommand.Payment(type = PaymentType.POINT, amount = 2000L)
-        ))
+        val paymentCommand = PaymentCommand.Create(
+            listOf(
+                PaymentCommand.Payment(type = PaymentType.POINT, amount = 2000L),
+                PaymentCommand.Payment(type = PaymentType.CARD, cardType = CardType.SAMSUNG, cardNo = "1111-2222-3333-444",  amount = 1500L)
+            ),
+            originAmount = 3500L,
+            finalAmount = 3500L
+        )
         val orderItems = listOf(
             OrderItemDto(
                 id = 1L,
