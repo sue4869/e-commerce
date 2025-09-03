@@ -15,7 +15,7 @@ class PaymentCommand {
     ) {
         init {
             val calculatedAmount = payments.sumOf { it.amount }
-            require(calculatedAmount == originAmount) { "본래 금액이 잘못되었습니다."}
+            require(calculatedAmount == originAmount) { "본래 금액이 잘못되었습니다." }
         }
     }
 
@@ -25,14 +25,14 @@ class PaymentCommand {
         val cardNo: String? = null,
         val amount: Long,
     ) {
-        private val REGEX_CARD_NO = Regex("^\\d{4}-\\d{4}-\\d{4}-\\d{4}$")
+        private val regexCardNo = Regex("^\\d{4}-\\d{4}-\\d{4}-\\d{4}$")
 
         init {
             require(amount > 0L) { throw CoreException(ErrorType.INVALID_PAYMENT_PRICE) }
             if (type == PaymentType.CARD) {
                 require(cardType != null) { "cardType must not be null" }
                 require(!cardNo.isNullOrBlank()) { "cardNo must not be null or blank" }
-                require(!REGEX_CARD_NO.matches(cardNo)) { "카드 번호는 xxxx-xxxx-xxxx-xxxx 형식이어야 합니다" }
+                require(!regexCardNo.matches(cardNo)) { "카드 번호는 xxxx-xxxx-xxxx-xxxx 형식이어야 합니다" }
             }
         }
 

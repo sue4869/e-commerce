@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/v1/users")
 class UserV1Controller(
-    private val userFacade: UserFacade
-): UserV1ApiSpec {
+    private val userFacade: UserFacade,
+) : UserV1ApiSpec {
 
     @PostMapping
     override fun create(@RequestBody @Valid request: UserV1Models.Request.SignUp): ApiResponse<UserV1Models.Response.Info> {
@@ -24,7 +24,7 @@ class UserV1Controller(
 
     @GetMapping("/me")
     override fun getMyInfo(
-        request: HttpServletRequest
+        request: HttpServletRequest,
     ): ApiResponse<UserV1Models.Response.Info> {
         val userId = request.getHeader("X-USER-ID") ?: throw IllegalStateException("X-USER-ID not set")
         return userFacade.getMyInfo(userId)

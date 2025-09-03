@@ -12,16 +12,12 @@ import io.github.resilience4j.circuitbreaker.CircuitBreaker
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry
 import io.mockk.every
 import io.mockk.mockk
-import junit.framework.TestCase.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
-import kotlin.concurrent.atomics.AtomicReference
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class PgCircuitBreakerTest(
-
-): IntegrationTestSupport() {
+class PgCircuitBreakerTest() : IntegrationTestSupport() {
 
     @Autowired
     lateinit var processor: CardPaymentProcessor
@@ -41,7 +37,7 @@ class PgCircuitBreakerTest(
         type = PaymentType.CARD,
         amount = 1000L,
         cardNo = "1234567890123456",
-        cardType = CardType.SAMSUNG
+        cardType = CardType.SAMSUNG,
     )
 
     private val cb: CircuitBreaker
@@ -116,5 +112,4 @@ class PgCircuitBreakerTest(
 
         assertEquals(CircuitBreaker.State.OPEN, cb.state)
     }
-
 }

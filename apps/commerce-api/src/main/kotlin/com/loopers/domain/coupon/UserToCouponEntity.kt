@@ -23,20 +23,25 @@ class UserToCouponEntity(
     userId: String,
     issuedStatus: IssuedStatus = IssuedStatus.AVAILABLE,
     issuedAt: LocalDateTime = LocalDateTime.now(),
-    usedAt: LocalDateTime? = null
-): BaseEntity() {
+    usedAt: LocalDateTime? = null,
+) : BaseEntity() {
     @Column(name = "coupon_id")
     val couponId: Long = couponId
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coupon_id", insertable = false, updatable = false)
     var coupon: CouponEntity? = null
+
     @Column(name = "user_id")
     val userId: String = userId
+
     @Enumerated(EnumType.STRING)
     @Column(name = "issued_status")
     var issuedStatus: IssuedStatus = issuedStatus
+
     @Column(name = "issued_at")
     val issuedAt: LocalDateTime? = issuedAt
+
     @Column(name = "used_at")
     var usedAt: LocalDateTime? = usedAt
 

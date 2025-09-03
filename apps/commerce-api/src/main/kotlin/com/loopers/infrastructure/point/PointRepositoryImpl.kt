@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class PointRepositoryImpl(
-    private val pointJpaRepository: PointJpaRepository
-): PointRepository {
+    private val pointJpaRepository: PointJpaRepository,
+) : PointRepository {
 
     override fun findByUserId(userId: String): PointEntity? {
         return pointJpaRepository.findByUserId(userId)

@@ -4,8 +4,7 @@ import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
 
 abstract class CmsQuerydslRepositorySupport(domainClass: Class<*>?) :
-    DefaultQuerydslRepositorySupport(domainClass)
-{
+    DefaultQuerydslRepositorySupport(domainClass) {
     @PersistenceContext(unitName = "entityManagerFactory")
     override fun setEntityManager(entityManager: EntityManager) {
         super.setEntityManager(entityManager)

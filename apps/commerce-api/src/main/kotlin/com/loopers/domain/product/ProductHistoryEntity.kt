@@ -11,8 +11,8 @@ class ProductHistoryEntity(
     productId: Long,
     name: String,
     brandId: Long,
-    stock: Int = 0
-): BaseEntity() {
+    stock: Int = 0,
+) : BaseEntity() {
 
     @Column(name = "product_id")
     val productId: Long = productId
@@ -32,7 +32,8 @@ class ProductHistoryEntity(
                 product.id,
                 product.name,
                 product.brandId,
-                product.stock)
+                product.stock,
+            )
         }
     }
 }

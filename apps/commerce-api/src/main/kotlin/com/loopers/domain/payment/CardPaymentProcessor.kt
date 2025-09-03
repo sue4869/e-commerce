@@ -1,20 +1,16 @@
 package com.loopers.domain.payment
 
-import com.loopers.domain.type.PaymentStatus
 import com.loopers.domain.type.PaymentType
-import com.loopers.support.error.CoreException
-import com.loopers.support.error.ErrorType
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker
 import io.github.resilience4j.retry.annotation.Retry
-import mu.KotlinLogging
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 @Component
 open class CardPaymentProcessor(
     private val pgClient: PgClient,
-    private val afterPgProcessor: AfterPgProcessor
-): IPaymentProcessor {
+    private val afterPgProcessor: AfterPgProcessor,
+) : IPaymentProcessor {
 
     override fun supportType(): PaymentType = PaymentType.CARD
 
@@ -27,7 +23,7 @@ open class CardPaymentProcessor(
             cardType = paymentInfo.cardType!!.toString(),
             cardNo = paymentInfo.cardNo!!,
             amount = paymentInfo.amount,
-            callbackUrl = "http://localhost:8080/api/v1/payment/after"
+            callbackUrl = "http://localhost:8080/api/v1/payment/after",
         )
         pgClient.requestPayment(userId, request)
     }

@@ -45,5 +45,4 @@ class OrderEventListenerTest {
         assertThat(applicationEvents.stream(PaidFailedEvent::class.java))
             .anyMatch { it.orderUUId == orderUUId }
     }
-
 }

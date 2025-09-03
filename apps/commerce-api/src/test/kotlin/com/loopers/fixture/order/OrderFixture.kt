@@ -14,14 +14,14 @@ sealed class OrderFixture {
                     OrderV1Models.Request.Item(
                         productId = 1L,
                         price = 1000L,
-                        qty = 2
-                    )
+                        qty = 2,
+                    ),
                 ),
                 payments = listOf(
                     OrderV1Models.Request.Payment(
                         type = PaymentType.POINT,
                         amount = 1000L,
-                    )
+                    ),
                 ),
                 couponId = null,
                 finalAmount = 2000L,
@@ -37,19 +37,19 @@ sealed class OrderFixture {
                     OrderV1Models.Request.Item(
                         productId = 1L,
                         price = 1000L,
-                        qty = 1
+                        qty = 1,
                     ),
                     OrderV1Models.Request.Item(
                         productId = 2L,
                         price = 2000L,
-                        qty = 3
-                    )
+                        qty = 3,
+                    ),
                 ),
                 payments = listOf(
                     OrderV1Models.Request.Payment(
                         type = PaymentType.POINT,
                         amount = 1000L,
-                    )
+                    ),
                 ),
                 couponId = null,
                 finalAmount = 7000L,
@@ -65,14 +65,14 @@ sealed class OrderFixture {
                     OrderV1Models.Request.Item(
                         productId = 1L,
                         price = -100L,
-                        qty = 1
-                    )
+                        qty = 1,
+                    ),
                 ),
                 payments = listOf(
                     OrderV1Models.Request.Payment(
                         type = PaymentType.POINT,
                         amount = 1000L,
-                    )
+                    ),
                 ),
                 couponId = null,
                 finalAmount = -100L,
@@ -88,14 +88,14 @@ sealed class OrderFixture {
                     OrderV1Models.Request.Item(
                         productId = 1L,
                         price = 100L,
-                        qty = -1
-                    )
+                        qty = -1,
+                    ),
                 ),
                 payments = listOf(
                     OrderV1Models.Request.Payment(
                         type = PaymentType.POINT,
                         amount = 1000L,
-                    )
+                    ),
                 ),
                 couponId = null,
                 finalAmount = -100L,
@@ -112,7 +112,7 @@ sealed class OrderFixture {
                     OrderV1Models.Request.Payment(
                         type = PaymentType.POINT,
                         amount = 1000L,
-                    )
+                    ),
                 ),
                 couponId = null,
                 finalAmount = 0L,

@@ -43,7 +43,7 @@ class StockServiceTest {
             name = "상품",
             brandId = 1L,
             price = 1000L,
-            stock = 10
+            stock = 10,
         )
 
         // when
@@ -56,7 +56,6 @@ class StockServiceTest {
     @Test
     @DisplayName("재고가 부족하면 CoreException이 발생한다")
     fun `validateStock throws exception when stock is insufficient`() {
-
         val exception = assertThrows<CoreException> {
             stockService.validateStock(stock = 3, qty = 5)
         }
@@ -66,7 +65,6 @@ class StockServiceTest {
 
     @Test
     fun `재고 차감 중 예외 발생 시 StockFailedEvent 발행`() {
-
         val orderUUId = "order-123"
 
         whenever(orderItemRepository.findByOrderUUId(orderUUId)).thenReturn(emptyList())

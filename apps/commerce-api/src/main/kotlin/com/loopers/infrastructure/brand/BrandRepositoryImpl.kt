@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class BrandRepositoryImpl(
-    private val brandJpaRepository: BrandJpaRepository
-): BrandRepository {
+    private val brandJpaRepository: BrandJpaRepository,
+) : BrandRepository {
 
     override fun save(brand: BrandEntity): BrandEntity {
         return brandJpaRepository.save(brand)

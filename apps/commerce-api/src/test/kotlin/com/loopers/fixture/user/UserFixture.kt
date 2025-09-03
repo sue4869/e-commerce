@@ -16,13 +16,13 @@ sealed class UserFixture {
         userId: String = this.userId,
         birthDate: String = this.birth,
         email: String = this.email,
-        gender: Gender = this.gender
+        gender: Gender = this.gender,
     ): UserCommand.Create {
         return UserCommand.Create(
             userId = userId,
             birth = birthDate,
             email = email,
-            gender = gender
+            gender = gender,
         )
     }
 
@@ -30,13 +30,13 @@ sealed class UserFixture {
         userId: String = this.userId,
         birthDate: String = this.birth,
         email: String = this.email,
-        gender: Gender = this.gender
+        gender: Gender = this.gender,
     ): UserV1Models.Request.SignUp {
         return UserV1Models.Request.SignUp(
             userId = userId,
             birthDate = birthDate,
             email = email,
-            gender = gender
+            gender = gender,
         )
     }
 
@@ -44,13 +44,13 @@ sealed class UserFixture {
         userId: String = this.userId,
         birthDate: String = this.birth,
         email: String = this.email,
-        gender: Gender = this.gender
+        gender: Gender = this.gender,
     ): UserEntity {
         return UserEntity(
             userId = userId,
             birthDate = birthDate,
             email = email,
-            gender
+            gender,
         )
     }
 
@@ -61,4 +61,3 @@ sealed class UserFixture {
         override val gender = Gender.FEMALE
     }
 }
-

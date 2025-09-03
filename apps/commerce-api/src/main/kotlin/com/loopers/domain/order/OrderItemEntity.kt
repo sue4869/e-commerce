@@ -23,8 +23,8 @@ class OrderItemEntity(
     unitPrice: Long,
     totalPrice: Long,
     qty: Int,
-    status: OrderItemStatus = OrderItemStatus.ORDERED
-): BaseEntity() {
+    status: OrderItemStatus = OrderItemStatus.ORDERED,
+) : BaseEntity() {
 
     @Column(name = "order_id")
     val orderId: Long = orderId
@@ -56,7 +56,7 @@ class OrderItemEntity(
                 productId = command.productId,
                 unitPrice = command.price,
                 totalPrice = command.price * command.qty,
-                qty = command.qty
+                qty = command.qty,
             )
         }
     }

@@ -10,7 +10,7 @@ import jakarta.persistence.EntityManager
 import org.springframework.data.jpa.repository.support.Querydsl
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 
-abstract class DefaultQuerydslRepositorySupport(domainClass: Class<*>?): QuerydslRepositorySupport(domainClass!!) {
+abstract class DefaultQuerydslRepositorySupport(domainClass: Class<*>?) : QuerydslRepositorySupport(domainClass!!) {
     private var querydsl: DefaultQuerydsl? = null
 
     override fun getQuerydsl(): Querydsl? {
@@ -35,10 +35,9 @@ abstract class DefaultQuerydslRepositorySupport(domainClass: Class<*>?): Queryds
             return querydsl
         }
 
-
     class DefaultQuerydsl(
         private val entityManager: EntityManager,
-        builder: PathBuilder<*>
+        builder: PathBuilder<*>,
     ) : Querydsl(entityManager, builder) {
 
         override fun <T> createQuery(): AbstractJPAQuery<T, JPAQuery<T>> {

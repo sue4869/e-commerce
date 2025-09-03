@@ -31,27 +31,26 @@ class UserV1ApiE2ETest(
         @DisplayName("회원 가입이 성공할 경우, 생성된 유저 정보를 응답으로 반환한다.")
         @Test
         fun create_User_after_return_userInfo() {
-            //arrange
+            // arrange
             val request = UserFixture.Normal.createSignUpRequest()
 
-            //act
+            // act
             val responseType = object : ParameterizedTypeReference<ApiResponse<UserV1Models.Response.Info>>() {}
             val response = testRestTemplate.exchange(ENDPOINT_JOIN, HttpMethod.POST, HttpEntity(request), responseType)
 
-            //assert
+            // assert
             assertAll(
                 { assertThat(response.statusCode.is2xxSuccessful).isTrue },
-                { assertThat(response.body?.data?.userId).isEqualTo(request.userId)},
-                { assertThat(response.body?.data?.birthDate).isEqualTo(request.birthDate)},
+                { assertThat(response.body?.data?.userId).isEqualTo(request.userId) },
+                { assertThat(response.body?.data?.birthDate).isEqualTo(request.birthDate) },
                 { assertThat(response.body?.data?.email).isEqualTo(request.email) },
             )
-
         }
 
         @DisplayName("회원 가입 시에 성별이 없을 경우, 400 Bad Request 응답을 반환한다.")
         @Test
         fun return_400_BadRequest_When_gender_null() {
-            //arrange
+            // arrange
             val request = """
                 {
                     "userId": "1234",
@@ -63,11 +62,11 @@ class UserV1ApiE2ETest(
             headers.contentType = MediaType.APPLICATION_JSON
             val httpEntity = HttpEntity(request, headers)
 
-            //act
+            // act
             val responseType = object : ParameterizedTypeReference<ApiResponse<UserV1Models.Response.Info>>() {}
             val response = testRestTemplate.exchange(ENDPOINT_JOIN, HttpMethod.POST, httpEntity, responseType)
 
-            //assert
+            // assert
             assertThat(response.statusCode.is4xxClientError).isTrue()
         }
     }
@@ -79,21 +78,21 @@ class UserV1ApiE2ETest(
         @DisplayName("내 정보 조회에 성공할 경우, 해당하는 유저 정보를 응답으로 반환한다.")
         @Test
         fun create_User_after_return_userInfo() {
-            //arrange
+            // arrange
             val savedUserCommand = UserFixture.Normal.createUserCommand()
             val savedUser = userService.create(savedUserCommand)
 
-            //act
-            val headers = headersWithUserId( savedUserCommand.userId)
+            // act
+            val headers = headersWithUserId(savedUserCommand.userId)
             val httpEntity = HttpEntity(null, headers)
             val responseType = object : ParameterizedTypeReference<ApiResponse<UserV1Models.Response.Info>>() {}
             val response = testRestTemplate.exchange(ENDPOINT_ME, HttpMethod.GET, httpEntity, responseType)
 
-            //assert
+            // assert
             assertAll(
                 { assertThat(response.statusCode.is2xxSuccessful).isTrue },
-                { assertThat(response.body?.data?.userId).isEqualTo(savedUser.userId)},
-                { assertThat(response.body?.data?.birthDate).isEqualTo(savedUser.birth)},
+                { assertThat(response.body?.data?.userId).isEqualTo(savedUser.userId) },
+                { assertThat(response.body?.data?.birthDate).isEqualTo(savedUser.birth) },
                 { assertThat(response.body?.data?.email).isEqualTo(savedUser.email) },
             )
         }
@@ -101,16 +100,16 @@ class UserV1ApiE2ETest(
         @DisplayName("존재하지 않는 ID 로 조회할 경우, 404 Not Found 응답을 반환한다.")
         @Test
         fun return_404_when_not_exist_id() {
-            //arrange
+            // arrange
             val testId = "test1"
 
-            //act
+            // act
             val headers = headersWithUserId(testId)
             val httpEntity = HttpEntity(null, headers)
             val responseType = object : ParameterizedTypeReference<ApiResponse<UserV1Models.Response.Info>>() {}
             val response = testRestTemplate.exchange(ENDPOINT_ME, HttpMethod.GET, httpEntity, responseType)
 
-            //assert
+            // assert
             assertThat(response.statusCode.is4xxClientError).isTrue()
         }
     }

@@ -41,10 +41,10 @@ class CouponServiceTest {
 
         val paymentCommand = PaymentCommand.Create(
             payments = listOf(
-                PaymentCommand.Payment(type = PaymentType.POINT, amount = 5000)
+                PaymentCommand.Payment(type = PaymentType.POINT, amount = 5000),
             ),
             originAmount = 5000,
-            finalAmount = 4000
+            finalAmount = 4000,
         )
 
         assertDoesNotThrow {
@@ -60,10 +60,10 @@ class CouponServiceTest {
 
         val paymentCommand = PaymentCommand.Create(
             payments = listOf(
-                PaymentCommand.Payment(type = PaymentType.POINT, amount = 5000)
+                PaymentCommand.Payment(type = PaymentType.POINT, amount = 5000),
             ),
             originAmount = 5000,
-            finalAmount = 4000
+            finalAmount = 4000,
         )
 
         val ex = assertThrows<CoreException> {
@@ -86,10 +86,10 @@ class CouponServiceTest {
 
         val paymentCommand = PaymentCommand.Create(
             payments = listOf(
-                PaymentCommand.Payment(type = PaymentType.POINT, amount = 5000)
+                PaymentCommand.Payment(type = PaymentType.POINT, amount = 5000),
             ),
             originAmount = 5000,
-            finalAmount = 4000
+            finalAmount = 4000,
         )
 
         val ex = assertThrows<CoreException> {
@@ -112,10 +112,10 @@ class CouponServiceTest {
 
         val paymentCommand = PaymentCommand.Create(
             payments = listOf(
-                PaymentCommand.Payment(type = PaymentType.POINT, amount = 5000)
+                PaymentCommand.Payment(type = PaymentType.POINT, amount = 5000),
             ),
             originAmount = 5000,
-            finalAmount = 4500 // 실제 할인 결과는 4000
+            finalAmount = 4500,
         )
 
         val ex = assertThrows<CoreException> {

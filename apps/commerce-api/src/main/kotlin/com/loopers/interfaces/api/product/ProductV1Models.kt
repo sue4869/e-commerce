@@ -12,15 +12,14 @@ class ProductV1Models {
 
         data class GetList(
             val brandIds: List<Long>,
-            val productId: Long?
+            val productId: Long?,
         ) {
-            fun toCommand(pageable: Pageable) = ProductCommand.QueryCriteria (
+            fun toCommand(pageable: Pageable) = ProductCommand.QueryCriteria(
                 brandIds = brandIds,
                 productId = productId,
-                pageable = pageable
+                pageable = pageable,
             )
         }
-
     }
 
     class Response {
@@ -32,7 +31,7 @@ class ProductV1Models {
             val brandName: String,
             val likeCount: Int,
             val stock: Int,
-            val price: Long
+            val price: Long,
         ) {
             companion object {
                 fun of(dto: ProductWithBrandDto, productCount: ProductCountDto): GetInfo {
@@ -43,7 +42,7 @@ class ProductV1Models {
                         brandName = dto.brandName,
                         likeCount = productCount.likeCount,
                         stock = dto.stock,
-                        price = dto.price
+                        price = dto.price,
                     )
                 }
             }
@@ -55,7 +54,7 @@ class ProductV1Models {
             val brandId: Long,
             val brandName: String,
             val likeCount: Int,
-            val price: Long
+            val price: Long,
         ) {
             companion object {
                 fun of(dto: ProductListGetDto): GetList {
@@ -65,7 +64,7 @@ class ProductV1Models {
                         dto.brandId,
                         dto.brandName,
                         dto.likeCount,
-                        dto.price
+                        dto.price,
                     )
                 }
             }

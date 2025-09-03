@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class PaymentRepositoryImpl(
-    private val paymentJpaRepository: PaymentJpaRepository
-): PaymentRepository {
+    private val paymentJpaRepository: PaymentJpaRepository,
+) : PaymentRepository {
 
     override fun save(payment: PaymentEntity): PaymentEntity {
         return paymentJpaRepository.save(payment)
@@ -20,5 +20,4 @@ class PaymentRepositoryImpl(
     override fun findByOrderUUId(orderUUId: String): List<PaymentEntity> {
         return paymentJpaRepository.findByOrderUUId(orderUUId)
     }
-
 }

@@ -18,18 +18,18 @@ class PointModelTest {
         @DisplayName("0 이하의 정수로 포인트를 충전 시 실패하여 CoreException이 발생한다.")
         @Test
         fun return_fail_when_charging_negative_amount() {
-            //arrange
+            // arrange
             val userId = "testId"
             val request = PointFixture.Normal.chargeRequest(
                 amount = -2L,
             )
 
-            //act
+            // act
             val result = assertThrows<CoreException> {
                 request.toCommand(userId)
             }
 
-            //assert
+            // assert
             assertThat(result.errorType).isEqualTo(ErrorType.CHARGE_AMOUNT_MUST_BE_POSITIVE)
         }
     }

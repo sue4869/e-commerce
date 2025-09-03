@@ -9,7 +9,7 @@ class OrderCommand {
     data class Create(
         val userId: String,
         val couponId: Long? = null,
-        val items: List<Item>
+        val items: List<Item>,
     )
 
     data class Item(
@@ -27,7 +27,7 @@ class OrderCommand {
             fun of(request: OrderV1Models.Request.Item) = Item(
                 productId = request.productId,
                 price = request.price,
-                qty = request.qty
+                qty = request.qty,
             )
         }
     }

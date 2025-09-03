@@ -4,7 +4,6 @@ import com.loopers.domain.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
-import jakarta.persistence.Version
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
 
@@ -15,9 +14,10 @@ import org.hibernate.annotations.SQLRestriction
 class ProductCountEntity(
     productId: Long,
     likeCount: Int = 0,
-): BaseEntity() {
+) : BaseEntity() {
     @Column(name = "product_id", nullable = false, unique = true)
     var productId: Long = productId
+
     @Column(name = "like_count", nullable = false)
     var likeCount: Int = likeCount
 

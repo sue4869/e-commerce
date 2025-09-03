@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 @Component
 class BrandFacade(
-    private val brandService: BrandService
+    private val brandService: BrandService,
 ) {
 
     fun get(brandId: Long): BrandV1Models.Response.Info {

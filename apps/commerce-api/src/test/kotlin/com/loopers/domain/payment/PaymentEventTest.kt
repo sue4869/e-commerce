@@ -14,7 +14,6 @@ import io.mockk.slot
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 
-
 class PaymentEventTest {
 
     private val afterPgProcessor: AfterPgProcessor = mockk()
@@ -22,14 +21,13 @@ class PaymentEventTest {
 
     private val paymentFacade = PaymentFacade(afterPgProcessor, eventPublisher)
 
-
     private fun createCommand(orderId: String) = PgAfterCommand(
         transactionKey = "tx-001",
         orderId = orderId,
         cardType = CardType.SAMSUNG,
         cardNo = "1111-2222-3333-4444",
         amount = 1000L,
-        reason = null
+        reason = null,
     )
 
     @Test
@@ -65,6 +63,4 @@ class PaymentEventTest {
         assertThat(slot.captured.orderUUId).isEqualTo("order-456")
         assertThat(slot.captured.status).isEqualTo(OrderStatus.CANCELLED)
     }
-
-
 }

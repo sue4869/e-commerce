@@ -17,10 +17,10 @@ dependencies {
 
     // querydsl
     kapt("com.querydsl:querydsl-apt::jakarta")
-    implementation ("com.querydsl:querydsl-jpa::jakarta")
-    implementation ("com.querydsl:querydsl-core")
+    implementation("com.querydsl:querydsl-jpa::jakarta")
+    implementation("com.querydsl:querydsl-core")
 
-    //feign
+    // feign
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 
     implementation("io.github.resilience4j:resilience4j-spring-boot2:2.1.0")

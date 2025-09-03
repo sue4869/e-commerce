@@ -8,7 +8,7 @@ enum class OrderStatus(
     PAID("결제 완료"),
     CANCELLED("주문 취소"),
     STOCK_FAILED("재고 문제 발생"),
-    FAILED("주문 실패")
+    FAILED("주문 실패"),
 }
 
 enum class OrderItemStatus(
@@ -16,7 +16,7 @@ enum class OrderItemStatus(
 ) {
     ORDERED("상품 주문"),
     CANCELLED("상품 취소"),
-    FAILED("주문 실패")
+    FAILED("주문 실패"),
 }
 
 enum class CardType {

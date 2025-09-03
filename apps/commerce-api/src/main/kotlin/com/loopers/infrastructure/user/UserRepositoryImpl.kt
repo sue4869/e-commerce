@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component
 
 @Component
 class UserRepositoryImpl(
-    private val userJpaRepository: UserJpaRepository
-): UserRepository {
+    private val userJpaRepository: UserJpaRepository,
+) : UserRepository {
 
-    override fun save(user: UserEntity) : UserEntity {
+    override fun save(user: UserEntity): UserEntity {
         return userJpaRepository.save(user)
     }
 

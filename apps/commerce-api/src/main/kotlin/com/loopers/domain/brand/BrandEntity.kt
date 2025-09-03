@@ -13,7 +13,7 @@ import org.hibernate.annotations.SQLRestriction
 @Table(name = "brand")
 class BrandEntity(
     name: String,
-): BaseEntity() {
+) : BaseEntity() {
 
     @Column(name = "name")
     val name: String = name

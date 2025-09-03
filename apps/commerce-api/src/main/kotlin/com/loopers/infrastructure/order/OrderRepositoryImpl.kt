@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class OrderRepositoryImpl(
-    private val orderJpaRepository: OrderJpaRepository
-): OrderRepository {
+    private val orderJpaRepository: OrderJpaRepository,
+) : OrderRepository {
 
     override fun save(order: OrderEntity): OrderEntity {
         return orderJpaRepository.save(order)
@@ -16,6 +16,4 @@ class OrderRepositoryImpl(
     override fun findByUuid(uuid: String): OrderEntity? {
         return orderJpaRepository.findByUuid(uuid)
     }
-
-
 }

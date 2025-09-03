@@ -23,7 +23,7 @@ class OrderEntity(
     status: OrderStatus = OrderStatus.ORDERED,
     canceledPrice: Long? = null,
     submittedPrice: Long,
-): BaseEntity() {
+) : BaseEntity() {
 
     @Column(name = "uuid")
     val uuid: String = uuid
@@ -53,7 +53,7 @@ class OrderEntity(
             userId = userId,
             couponId = couponId,
             totalPrice = totalPrice,
-            submittedPrice = totalPrice
+            submittedPrice = totalPrice,
         )
     }
 

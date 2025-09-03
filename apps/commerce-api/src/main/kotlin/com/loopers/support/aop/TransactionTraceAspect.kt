@@ -30,7 +30,7 @@ class TransactionTraceAspect {
                 methodName = methodName,
                 arguments = args,
                 rollbackOnly = rollbackOnly,
-                exceptionOccurred = exceptionOccurred
+                exceptionOccurred = exceptionOccurred,
             )
             TransactionTraceHolder.set(traceInfo)
         }

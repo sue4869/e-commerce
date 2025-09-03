@@ -2,7 +2,6 @@ package com.loopers.domain.coupon
 
 import com.loopers.domain.BaseEntity
 import com.loopers.domain.type.DiscountType
-import com.loopers.domain.type.DiscountType.*
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -21,24 +20,28 @@ class CouponEntity(
     discountValue: Long,
     totalCount: Long,
     issuedCount: Long,
-): BaseEntity() {
+) : BaseEntity() {
 
     @Column(name = "name")
     val name: String = name
+
     @Enumerated(EnumType.STRING)
     @Column(name = "discount_type")
     val discountType: DiscountType = discountType
+
     @Column(name = "discount_value")
     val discountValue: Long = discountValue
+
     @Column(name = "total_count")
     val totalCount: Long = totalCount
+
     @Column(name = "issued_count")
     val issuedCount: Long = issuedCount
 
     fun getDiscountResult(orderAmount: Long): Long {
         return when (discountType) {
-            FIXED -> orderAmount - discountValue
-            PERCENTAGE -> orderAmount - (orderAmount * discountValue / 100)
+            DiscountType.FIXED -> orderAmount - discountValue
+            DiscountType.PERCENTAGE -> orderAmount - (orderAmount * discountValue / 100)
         }.coerceAtLeast(0)
     }
 }

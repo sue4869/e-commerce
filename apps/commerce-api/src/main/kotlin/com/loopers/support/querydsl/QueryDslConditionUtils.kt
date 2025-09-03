@@ -18,18 +18,6 @@ fun like(expression: StringExpression, value: String?): BooleanExpression? =
 fun contains(expression: StringExpression, value: String?): BooleanExpression? =
     value?.let { expression.contains(it) }
 
-fun <T> `in`(expression: SimpleExpression<T>, values: Collection<T?>?): BooleanExpression? =
-    if (!values.isNullOrEmpty())
-        expression.`in`(values)
-    else
-        null
-
-fun <T> notIn(expression: SimpleExpression<T>, values: Collection<T?>?): BooleanExpression? =
-    if (!values.isNullOrEmpty())
-        expression.notIn(values)
-    else
-        null
-
 fun <T : Comparable<T>> loe(expression: ComparableExpression<T>, value: T?): BooleanExpression? =
     value?.let { expression.loe(it) }
 
@@ -43,7 +31,8 @@ fun <T : Comparable<T>> gt(expression: ComparableExpression<T>, value: T?): Bool
     value?.let { expression.gt(it) }
 
 fun <T> inOrFalse(expression: SimpleExpression<T>, values: Collection<T?>?): BooleanExpression =
-    if (!values.isNullOrEmpty())
+    if (!values.isNullOrEmpty()) {
         expression.`in`(values)
-    else
+    } else {
         Expressions.FALSE
+    }

@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 @Service
 class PointService(
-    private val pointRepository: PointRepository
+    private val pointRepository: PointRepository,
 ) {
 
     fun findByUserId(userId: String): PointCommand.PointInfo? =

@@ -1,13 +1,11 @@
 package com.loopers.domain.order
 
-import com.loopers.domain.product.ProductHistoryDto
-import com.loopers.domain.type.OrderItemStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 @Service
 class OrderItemService(
-    private val orderItemRepository: OrderItemRepository
+    private val orderItemRepository: OrderItemRepository,
 ) {
 
     @Transactional

@@ -6,7 +6,6 @@ import jakarta.persistence.QueryHint
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Lock
-import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.jpa.repository.QueryHints
 import org.springframework.data.repository.query.Param
@@ -20,13 +19,14 @@ interface ProductJpaRepository : JpaRepository<ProductEntity, Long>, ProductRepo
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @QueryHints(
-        value = [QueryHint(name = "jakarta.persistence.lock.timeout", value = "3000")]
+        value = [QueryHint(name = "jakarta.persistence.lock.timeout", value = "3000")],
     )
-    @Query("""
+    @Query(
+        """
     SELECT p 
     FROM ProductEntity p 
     WHERE p.id IN :ids AND p.deletedAt IS NULL
-    """)
+    """,
+    )
     fun findByIdInWithPessimisticLock(@Param("ids") ids: Collection<Long>): List<ProductEntity>
-
 }

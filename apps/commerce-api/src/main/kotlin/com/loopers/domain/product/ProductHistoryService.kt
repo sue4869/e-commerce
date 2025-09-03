@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 @Service
 class ProductHistoryService(
-    private val productHistoryRepository: ProductHistoryRepository
+    private val productHistoryRepository: ProductHistoryRepository,
 ) {
 
     fun getProductsForOrder(productIds: List<Long>): List<ProductHistoryDto> {

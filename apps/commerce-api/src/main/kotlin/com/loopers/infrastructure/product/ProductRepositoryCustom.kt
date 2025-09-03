@@ -51,8 +51,8 @@ class ProductRepositoryCustomImpl : CmsQuerydslRepositorySupport(ProductEntity::
                     product.brandId,
                     brand.name,
                     productCount.likeCount,
-                    product.price
-                )
+                    product.price,
+                ),
             ).fetch()
 
         return PageableExecutionUtils.getPage(result, command.pageable, from::fetchCount)
@@ -60,15 +60,21 @@ class ProductRepositoryCustomImpl : CmsQuerydslRepositorySupport(ProductEntity::
 
     private fun order(sort: Sort): OrderSpecifier<*> {
         val first = sort.firstOrNull()
-        return if (first != null)
+        return if (first != null) {
             OrderSpecifier(
                 if (first.isAscending) Order.ASC else Order.DESC,
-                if (first.property == "latest") product.id
-                else if (first.property == "price") product.price
-                else if (first.property == "likes") productCount.likeCount
-                else null
+                if (first.property == "latest") {
+                    product.id
+                } else if (first.property == "price") {
+                    product.price
+                } else if (first.property == "likes") {
+                    productCount.likeCount
+                } else {
+                    null
+                },
             )
-        else
+        } else {
             OrderSpecifier(Order.DESC, product.id)
+        }
     }
 }

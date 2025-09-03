@@ -48,7 +48,7 @@ class OrderListenerHandleTest {
             totalPrice = 5000L,
             status = OrderStatus.PAID,
             canceledPrice = null,
-            submittedPrice = 5000L
+            submittedPrice = 5000L,
         )
 
         whenever(orderService.updateStatus(uuid, OrderStatus.PAID)).thenReturn(orderDto)
@@ -80,7 +80,7 @@ class OrderListenerHandleTest {
             totalPrice = 8000L,
             status = OrderStatus.PAID,
             canceledPrice = null,
-            submittedPrice = 8000L
+            submittedPrice = 8000L,
         )
 
         whenever(orderService.updateStatus(uuid, OrderStatus.PAID)).thenReturn(orderDto)
@@ -96,4 +96,3 @@ class OrderListenerHandleTest {
         verify(userToCouponService, never()).updateStatus(any(), any(), any())
     }
 }
-

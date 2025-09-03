@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/v1/brand")
 class BrandV1Controller(
-    private val brandFacade: BrandFacade
+    private val brandFacade: BrandFacade,
 ) {
     @GetMapping("/{brandId}")
     fun get(@PathVariable brandId: Long): ApiResponse<BrandV1Models.Response.Info> {

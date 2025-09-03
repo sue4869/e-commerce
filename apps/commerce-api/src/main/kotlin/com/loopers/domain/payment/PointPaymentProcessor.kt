@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 @Component
 class PointPaymentProcessor(
     private val pointRepository: PointRepository,
-): IPaymentProcessor {
+) : IPaymentProcessor {
 
     override fun supportType(): PaymentType = PaymentType.POINT
 
@@ -21,7 +21,8 @@ class PointPaymentProcessor(
         userId: String,
         paymentInfo: PaymentCommand.Payment,
     ) {
-        val point = pointRepository.findByUserId(userId) ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID,"포인트가 없는 사용자 입니다. 사용자 ID: ${userId}")
+        val point = pointRepository.findByUserId(userId)
+            ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID, "포인트가 없는 사용자 입니다. 사용자 ID: $userId")
         validatePoint(point.amount, paymentInfo.amount)
         updatePoint(point, paymentInfo.amount)
     }
@@ -32,9 +33,9 @@ class PointPaymentProcessor(
     }
 
     fun validatePoint(point: Long, totalPrice: Long) {
-        if(totalPrice == 0L) return
+        if (totalPrice == 0L) return
 
-        if(point < totalPrice) {
+        if (point < totalPrice) {
             throw CoreException(ErrorType.NOT_ENOUGH_POINTS, "포인트가 부족합니다. 결제액 : $totalPrice, 포인트 : $point")
         }
     }

@@ -47,8 +47,7 @@ class AfterPgProcessor(
         paymentRepository.saveAll(payments)
     }
 
-    //TODO 추후 스케줄러를 이용해 배치작업한다.
+    // TODO 추후 스케줄러를 이용해 배치작업한다.
     fun afterCareByBatch() {
-
     }
 }

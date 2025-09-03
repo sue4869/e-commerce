@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 @Service
 class BrandService(
-    private val brandRepository: BrandRepository
+    private val brandRepository: BrandRepository,
 ) {
 
     fun getById(brandId: Long): BrandGetDto {

@@ -25,7 +25,7 @@ class DataFlatformListener(
         try {
             dataPlatformApiClient.send(event.orderUUId)
         } catch (e: Exception) {
-            log.error { "데이터플랫폼 전송 실패 event: $event, error: ${e.message}"}
+            log.error { "데이터플랫폼 전송 실패 event: $event, error: ${e.message}" }
         }
     }
 
@@ -35,7 +35,7 @@ class DataFlatformListener(
         try {
             dataPlatformApiClient.send(event.orderUUId)
         } catch (e: Exception) {
-            log.error { "데이터플랫폼 전송 실패 event: $event, error: ${e.message}"}
+            log.error { "데이터플랫폼 전송 실패 event: $event, error: ${e.message}" }
         }
     }
 
@@ -45,7 +45,7 @@ class DataFlatformListener(
         try {
             dataPlatformApiClient.send(event.orderUUId)
         } catch (e: Exception) {
-            log.error { "데이터플랫폼 전송 실패 event: $event, error: ${e.message}"}
+            log.error { "데이터플랫폼 전송 실패 event: $event, error: ${e.message}" }
         }
     }
 
@@ -55,7 +55,7 @@ class DataFlatformListener(
         try {
             dataPlatformApiClient.send(event.productId.toString())
         } catch (e: Exception) {
-            log.error { "데이터플랫폼 전송 실패 event: $event, error: ${e.message}"}
+            log.error { "데이터플랫폼 전송 실패 event: $event, error: ${e.message}" }
         }
     }
 
@@ -65,7 +65,7 @@ class DataFlatformListener(
         try {
             dataPlatformApiClient.send(event.productId.toString())
         } catch (e: Exception) {
-            log.error { "데이터플랫폼 전송 실패 event: $event, error: ${e.message}"}
+            log.error { "데이터플랫폼 전송 실패 event: $event, error: ${e.message}" }
         }
     }
 }

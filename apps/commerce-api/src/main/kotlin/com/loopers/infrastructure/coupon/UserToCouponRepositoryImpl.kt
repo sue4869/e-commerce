@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class UserToCouponRepositoryImpl(
-    private val userToCouponJpaRepository: UserToCouponJpaRepository
-): UserToCouponRepository {
+    private val userToCouponJpaRepository: UserToCouponJpaRepository,
+) : UserToCouponRepository {
 
     override fun save(userToCoupon: UserToCouponEntity): UserToCouponEntity {
         return userToCouponJpaRepository.save(userToCoupon)
@@ -19,5 +19,4 @@ class UserToCouponRepositoryImpl(
     ): UserToCouponEntity? {
         return userToCouponJpaRepository.findWithCouponByUserIdAndCouponId(userId, couponId)
     }
-
 }

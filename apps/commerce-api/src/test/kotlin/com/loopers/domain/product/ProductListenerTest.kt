@@ -45,6 +45,3 @@ class ProductListenerTest {
             .anyMatch { it.productId == productId }
     }
 }
-
-
-

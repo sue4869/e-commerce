@@ -41,19 +41,21 @@ class ProductFacade(
 
     @Transactional
     fun like(command: ProductCommand.Like) {
-        userService.findByUserId(command.userId) ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID,"존재하지 않는 사용자 ID 입니다. 사용자 ID: ${command.userId}")
+        userService.findByUserId(command.userId)
+            ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID, "존재하지 않는 사용자 ID 입니다. 사용자 ID: ${command.userId}")
         if (productToUserLikeService.create(command)) {
             eventPublisher.publish(ProductLikedEvent(command.productId))
-            log.info( "publish ProductLikedEvent productId: ${command.productId}")
+            log.info("publish ProductLikedEvent productId: ${command.productId}")
         }
     }
 
     @Transactional
     fun dislike(command: ProductCommand.Like) {
-        userService.findByUserId(command.userId) ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID,"존재하지 않는 사용자 ID 입니다. 사용자 ID: ${command.userId}")
+        userService.findByUserId(command.userId)
+            ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID, "존재하지 않는 사용자 ID 입니다. 사용자 ID: ${command.userId}")
         if (productToUserLikeService.delete(command)) {
             eventPublisher.publish(ProductDislikedEvent(command.productId))
-            log.info( "publish ProductDislikedEvent productId: ${command.productId}")
+            log.info("publish ProductDislikedEvent productId: ${command.productId}")
         }
     }
 }

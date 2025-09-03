@@ -6,4 +6,3 @@ package com.loopers.domain.user
  * @param userId 유저 식별자
  */
 data class UserInfo(val userId: String)
-

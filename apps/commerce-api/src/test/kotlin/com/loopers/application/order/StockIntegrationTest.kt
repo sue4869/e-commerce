@@ -10,7 +10,6 @@ import com.loopers.domain.order.OrderItemEntity
 import com.loopers.domain.order.StockService
 import com.loopers.domain.product.ProductRepository
 import com.loopers.domain.type.OrderStatus
-import com.loopers.domain.type.PaymentStatus
 import com.loopers.fixture.product.ProductFixture
 import com.loopers.support.IntegrationTestSupport
 import com.loopers.support.error.CoreException
@@ -34,11 +33,10 @@ class StockIntegrationTest(
     private val brandRepository: BrandRepository,
     private val orderRepository: OrderRepository,
     private val orderItemRepository: OrderItemRepository,
-    private val stockService: StockService
-): IntegrationTestSupport() {
+    private val stockService: StockService,
+) : IntegrationTestSupport() {
 
     private val log = KotlinLogging.logger {}
-
 
     @DisplayName("재고 동시성 테스트")
     @Nested
@@ -49,20 +47,21 @@ class StockIntegrationTest(
             // given
             val brand = brandRepository.save(BrandEntity(name = "브랜드"))
             val product = productRepository.save(
-                ProductFixture.Normal.createByStock(brand.id, stock = 1000)
+                ProductFixture.Normal.createByStock(brand.id, stock = 1000),
             )
 
             val order = orderRepository.save(OrderEntity.of(userId = "user-1", totalPrice = 10000))
             val orderUUId = order.uuid
-            orderItemRepository.saveAll(listOf(
+            orderItemRepository.saveAll(
+                listOf(
                 OrderItemEntity(
                     orderId = order.id!!,
                     productId = product.id!!,
                     unitPrice = 1000L,
                     totalPrice = 1000L * 10,
-                    qty = 10
-                )
-                )
+                    qty = 10,
+                ),
+                ),
             )
             val orderId = order.id
 
@@ -78,9 +77,9 @@ class StockIntegrationTest(
                         OrderCommand.Item(
                             productId = product.id!!,
                             qty = qtyPerRequest,
-                            price = 1000L
-                        )
-                    )
+                            price = 1000L,
+                        ),
+                    ),
                 )
 
                 try {
@@ -106,18 +105,19 @@ class StockIntegrationTest(
             // given
             val brand = brandRepository.save(BrandEntity(name = "브랜드"))
             val product = productRepository.save(
-                ProductFixture.Normal.createByStock(brand.id, stock = 90)
+                ProductFixture.Normal.createByStock(brand.id, stock = 90),
             )
             val order = orderRepository.save(OrderEntity.of(userId = "user-1", totalPrice = 10000))
-            orderItemRepository.saveAll(listOf(
+            orderItemRepository.saveAll(
+                listOf(
                 OrderItemEntity(
                     orderId = order.id,
                     productId = product.id,
                     unitPrice = 1000L,
                     totalPrice = 1000L * 10,
-                    qty = 10
-                )
-            )
+                    qty = 10,
+                ),
+            ),
             )
             val orderUUId = order.uuid
             val totalRequestCount = 10
@@ -156,17 +156,21 @@ class StockIntegrationTest(
 
             // 주문1 생성
             val order1 = orderRepository.save(OrderEntity.of("user-1", totalPrice = 20000))
-            orderItemRepository.saveAll(listOf(
+            orderItemRepository.saveAll(
+                listOf(
                 OrderItemEntity(orderId = order1.id!!, productId = product1.id!!, unitPrice = 1000, totalPrice = 10000, qty = 10),
-                OrderItemEntity(orderId = order1.id!!, productId = product2.id!!, unitPrice = 1000, totalPrice = 10000, qty = 10)
-            ))
+                OrderItemEntity(orderId = order1.id!!, productId = product2.id!!, unitPrice = 1000, totalPrice = 10000, qty = 10),
+            ),
+            )
 
             // 주문2 생성 (상품 순서 반대)
             val order2 = orderRepository.save(OrderEntity.of("user-2", totalPrice = 20000))
-            orderItemRepository.saveAll(listOf(
+            orderItemRepository.saveAll(
+                listOf(
                 OrderItemEntity(orderId = order2.id!!, productId = product2.id!!, unitPrice = 1000, totalPrice = 10000, qty = 10),
-                OrderItemEntity(orderId = order2.id!!, productId = product1.id!!, unitPrice = 1000, totalPrice = 10000, qty = 10)
-            ))
+                OrderItemEntity(orderId = order2.id!!, productId = product1.id!!, unitPrice = 1000, totalPrice = 10000, qty = 10),
+            ),
+            )
 
             val executor = Executors.newFixedThreadPool(2)
             val readyLatch = CountDownLatch(2)

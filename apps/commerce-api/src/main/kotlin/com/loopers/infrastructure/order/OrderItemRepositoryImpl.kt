@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class OrderItemRepositoryImpl(
-    private val orderItemJpaRepository: OrderItemJpaRepository
-): OrderItemRepository {
+    private val orderItemJpaRepository: OrderItemJpaRepository,
+) : OrderItemRepository {
 
     override fun saveAll(orderItemEntities: List<OrderItemEntity>) {
         orderItemJpaRepository.saveAll(orderItemEntities)
@@ -20,5 +20,4 @@ class OrderItemRepositoryImpl(
     override fun findByOrderUUId(orderUUId: String): List<OrderItemEntity> {
         return orderItemJpaRepository.findByOrderUUId(orderUUId)
     }
-
 }

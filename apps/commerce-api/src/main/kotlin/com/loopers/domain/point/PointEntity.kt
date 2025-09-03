@@ -34,7 +34,9 @@ class PointEntity(
     }
 
     fun use(amount: Long) {
-        require(this.amount >= amount) { throw CoreException(ErrorType.NOT_ENOUGH_POINTS, "포인트가 부족합니다. 결제액 : $amount, 포인트 : $this.amount") }
+        require(this.amount >= amount) {
+            throw CoreException(ErrorType.NOT_ENOUGH_POINTS, "포인트가 부족합니다. 결제액 : $amount, 포인트 : $this.amount")
+        }
         this.amount -= amount
     }
 

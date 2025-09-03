@@ -32,35 +32,35 @@ class PointV1ApiE2ETest(
         @DisplayName("포인트 조회에 성공할 경우, 보유 포인트를 응답으로 반환한다.")
         @Test
         fun return_current_point_when_get() {
-            //arrange
+            // arrange
             val point = PointFixture.Normal.pointEntity()
             pointRepository.save(point)
             val headers = headersWithUserId(point.userId)
             val httpEntity = HttpEntity(null, headers)
 
-            //act
+            // act
             val responseType = object : ParameterizedTypeReference<ApiResponse<PointV1Models.Response.Get>>() {}
             val response = testRestTemplate.exchange(ENDPOINT_GET_POINT, HttpMethod.GET, httpEntity, responseType)
 
-            //assert
+            // assert
             assertAll(
                 { assertThat(response.statusCode.is2xxSuccessful).isTrue },
-                { assertThat(response.body?.data?.userId).isEqualTo(point.userId)},
-                { assertThat(response.body?.data?.amount?.compareTo(point.amount)).isZero()}
+                { assertThat(response.body?.data?.userId).isEqualTo(point.userId) },
+                { assertThat(response.body?.data?.amount?.compareTo(point.amount)).isZero() },
             )
         }
 
         @DisplayName("X-USER-ID 헤더가 없을 경우, 400 Bad Request 응답을 반환한다.")
         @Test
         fun return_400_when_xuser_id_is_not_exist() {
-            //arrange
+            // arrange
             val httpEntity = HttpEntity.EMPTY
 
-            //act
+            // act
             val responseType = object : ParameterizedTypeReference<ApiResponse<PointV1Models.Response.Get>>() {}
             val response = testRestTemplate.exchange(ENDPOINT_GET_POINT, HttpMethod.GET, httpEntity, responseType)
 
-            //assert
+            // assert
             assertThat(response.statusCode.is4xxClientError).isTrue()
         }
     }
@@ -71,44 +71,44 @@ class PointV1ApiE2ETest(
         @DisplayName("존재하는 유저가 1000원을 충전할 경우, 충전된 보유 총량을 응답으로 반환한다.")
         @Test
         fun return_total_amount_after_charge() {
-            //arrange
+            // arrange
             val user = UserFixture.Normal.createUserCommand()
             userService.create(user)
             val point = PointFixture.Normal.pointEntity()
             pointRepository.save(point)
-            val headers = headersWithUserId( point.userId)
+            val headers = headersWithUserId(point.userId)
             val chargeRequest = PointFixture.Normal.chargeRequest(
-                amount = 1000L
+                amount = 1000L,
             )
             val httpEntity = HttpEntity(chargeRequest, headers)
             val totalAmount = point.amount.plus(chargeRequest.amount)
 
-            //act
+            // act
             val responseType = object : ParameterizedTypeReference<ApiResponse<PointV1Models.Response.Charge>>() {}
             val response = testRestTemplate.exchange(ENDPOINT_CHARGE, HttpMethod.POST, httpEntity, responseType)
 
-            //assert
+            // assert
             assertAll(
                 { assertThat(response.statusCode.is2xxSuccessful).isTrue },
-                { assertThat(response.body?.data?.amount?.compareTo(totalAmount)).isZero()}
+                { assertThat(response.body?.data?.amount?.compareTo(totalAmount)).isZero() },
             )
         }
 
         @DisplayName("존재하지 않는 유저로 요청할 경우, 404 Not Found 응답을 반환한다.")
         @Test
         fun return_404_when_unexisted_user() {
-            //arrange
+            // arrange
             val headers = headersWithUserId("test0")
             val chargeRequest = PointFixture.Normal.chargeRequest(
-                amount = 1000L
+                amount = 1000L,
             )
             val httpEntity = HttpEntity(chargeRequest, headers)
 
-            //act
+            // act
             val responseType = object : ParameterizedTypeReference<ApiResponse<PointV1Models.Response.Charge>>() {}
             val response = testRestTemplate.exchange(ENDPOINT_CHARGE, HttpMethod.POST, httpEntity, responseType)
 
-            //assert
+            // assert
             assertThat(response.statusCode.is4xxClientError).isTrue()
         }
     }

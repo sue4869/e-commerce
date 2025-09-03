@@ -1,12 +1,6 @@
 package com.loopers.fixture.product
 
-import com.loopers.domain.brand.BrandEntity
 import com.loopers.domain.product.ProductEntity
-import com.loopers.fixture.point.PointFixture
-import jakarta.persistence.Column
-import jakarta.persistence.FetchType
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
 
 sealed class ProductFixture {
 
@@ -19,7 +13,7 @@ sealed class ProductFixture {
             name = name,
             brandId = brandId,
             price = price,
-            stock = stock
+            stock = stock,
         )
     }
 
@@ -31,7 +25,7 @@ sealed class ProductFixture {
             name = name,
             brandId = brandId,
             price = price,
-            stock = stock
+            stock = stock,
         )
     }
 
@@ -43,7 +37,7 @@ sealed class ProductFixture {
             name = name,
             brandId = brandId,
             price = price,
-            stock = stock
+            stock = stock,
         )
     }
 
@@ -53,4 +47,3 @@ sealed class ProductFixture {
         override val stock = 100
     }
 }
-

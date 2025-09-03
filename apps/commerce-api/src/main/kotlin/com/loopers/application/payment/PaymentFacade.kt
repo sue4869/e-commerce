@@ -34,16 +34,18 @@ open class PaymentFacade(
             SUCCESS -> {
                 eventPublisher.publish(
                     PaidCompletedEvent(
-                        orderUUId = orderId, status = OrderStatus.PAID
-                    )
+                        orderUUId = orderId,
+                        status = OrderStatus.PAID,
+                    ),
                 )
                 log.info { "publish PaidCompletedEvent orderId: $orderId, status: $paymentStatus" }
             }
             FAILED -> {
                 eventPublisher.publish(
                     PaidFailedEvent(
-                        orderUUId = orderId, status = OrderStatus.CANCELLED
-                    )
+                        orderUUId = orderId,
+                        status = OrderStatus.CANCELLED,
+                    ),
                 )
                 log.info { "publish PaidFailedEvent orderId: $orderId, status: $paymentStatus" }
             }

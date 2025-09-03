@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @FeignClient(
     name = "pgClient",
-    url = "\${pg-client.url}"
+    url = "\${pg-client.url}",
 )
 interface PgClient {
 
@@ -20,11 +20,11 @@ interface PgClient {
      */
     @PostMapping(
         value = ["/api/v1/payments"],
-        consumes = ["application/json"]
+        consumes = ["application/json"],
     )
     fun requestPayment(
         @RequestHeader("X-USER-ID") userId: String,
-        @RequestBody request: PgRequest
+        @RequestBody request: PgRequest,
     ): ApiResponse<TransactionResponse>
 
     /**
@@ -33,7 +33,7 @@ interface PgClient {
     @GetMapping("/{transactionKey}")
     fun getPayment(
         @RequestHeader("X-USER-ID") userId: String,
-        @PathVariable("transactionKey") transactionKey: String
+        @PathVariable("transactionKey") transactionKey: String,
     ): ApiResponse<TransactionDetailResponse>
 
     /**
@@ -42,7 +42,6 @@ interface PgClient {
     @GetMapping
     fun getPaymentsByOrder(
         @RequestHeader("X-USER-ID") userId: String,
-        @RequestParam("orderId") orderId: String
+        @RequestParam("orderId") orderId: String,
     ): ApiResponse<PgOfOrderResponse>
-
 }

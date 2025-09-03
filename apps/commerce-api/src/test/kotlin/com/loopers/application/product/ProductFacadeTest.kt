@@ -19,9 +19,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertAll
-import org.mockito.Mockito
-import org.mockito.kotlin.any
-import org.mockito.kotlin.doReturn
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import kotlin.test.Test
@@ -33,8 +30,8 @@ class ProductFacadeTest(
     private val userRepository: UserRepository,
     private val brandRepository: BrandRepository,
     private val productToUserLikeService: ProductToUserLikeService,
-    private val productToUserLikeRepository: ProductToUserLikeRepository
-): IntegrationTestSupport() {
+    private val productToUserLikeRepository: ProductToUserLikeRepository,
+) : IntegrationTestSupport() {
 
     private val log = KotlinLogging.logger {}
 
@@ -67,7 +64,7 @@ class ProductFacadeTest(
             assertAll(
                 { assertThat(productLikes).hasSize(1) },
                 { assertThat(productLikes[0].userId).isEqualTo(createdUser.userId) },
-                { assertThat(productLikes[0].productId).isEqualTo(updatedProduct.id) }
+                { assertThat(productLikes[0].productId).isEqualTo(updatedProduct.id) },
             )
         }
 
@@ -131,7 +128,6 @@ class ProductFacadeTest(
 
         @Test
         fun `동시에 like 요청이 와도 카운트가 정확하게 증가한다`() {
-
             fun `동시에 여러 사용자가 같은 상품에 좋아요 요청이 와도 카운트가 정확하게 증가한다`() {
                 // given
                 val productId = 1L
@@ -141,7 +137,7 @@ class ProductFacadeTest(
                 val threadCount = users.size
                 productCountRepository.save(ProductCountEntity(productId))
 
-                //when
+                // when
                 runConcurrentWithIndex(threadCount) { index ->
                     val user = users[index]
                     try {
@@ -168,7 +164,7 @@ class ProductFacadeTest(
                 val threadCount = users.size
                 productCountRepository.save(ProductCountEntity(productId = productId, likeCount = 100))
 
-                //when
+                // when
                 runConcurrentWithIndex(threadCount) { index ->
                     val user = users[index]
                     try {
@@ -182,7 +178,6 @@ class ProductFacadeTest(
                 val productCount = productCountRepository.getByProductId(productId)
                 log.info("좋아요 수 : $productCount.likeCount")
                 assertThat(productCount.likeCount).isEqualTo(100 - threadCount)
-
             }
 
             @Test
@@ -273,7 +268,9 @@ class ProductFacadeTest(
                 // act
                 val pageRequest = PageRequest.of(0, 10, Sort.by("price").ascending())
                 val command = ProductCommand.QueryCriteria(
-                    emptyList(), null, pageRequest
+                    emptyList(),
+                    null,
+                    pageRequest,
                 )
                 val productsPage = productFacade.getList(command)
 
@@ -284,7 +281,7 @@ class ProductFacadeTest(
                     { Assertions.assertThat(productsPage.content[0].price.compareTo(productEntity3.price)).isZero() },
                     { Assertions.assertThat(productsPage.content[0].brandId).isEqualTo(productEntity3.brandId) },
                     { Assertions.assertThat(productsPage.content[0].likeCount).isEqualTo(productCount3.likeCount) },
-                    { Assertions.assertThat(productsPage.content[0].brandName).isEqualTo("test brand") }
+                    { Assertions.assertThat(productsPage.content[0].brandName).isEqualTo("test brand") },
                 )
             }
 
@@ -306,7 +303,9 @@ class ProductFacadeTest(
                 // act
                 val pageRequest = PageRequest.of(0, 10, Sort.by("price").ascending())
                 val command = ProductCommand.QueryCriteria(
-                    emptyList(), null, pageRequest
+                    emptyList(),
+                    null,
+                    pageRequest,
                 )
                 val productsPage = productFacade.getList(command)
 
@@ -338,7 +337,9 @@ class ProductFacadeTest(
                 // act
                 val pageRequest = PageRequest.of(0, 10, Sort.by("latest").descending())
                 val command = ProductCommand.QueryCriteria(
-                    emptyList(), null, pageRequest
+                    emptyList(),
+                    null,
+                    pageRequest,
                 )
                 val productsPage = productFacade.getList(command)
 
@@ -367,11 +368,12 @@ class ProductFacadeTest(
                 val productCount3 = productCountRepository.save(ProductCountEntity(productId = productEntity3.id, likeCount = 1))
                 productCountRepository.saveAll(listOf(productCount1, productCount2, productCount3))
 
-
                 // act
                 val pageRequest = PageRequest.of(0, 10, Sort.by("likes").descending())
                 val command = ProductCommand.QueryCriteria(
-                    emptyList(), null, pageRequest
+                    emptyList(),
+                    null,
+                    pageRequest,
                 )
                 val productsPage = productFacade.getList(command)
 

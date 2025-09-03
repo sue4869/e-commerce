@@ -13,7 +13,7 @@ import org.hibernate.annotations.SQLRestriction
 @Table(name = "product_to_user_like")
 class ProductToUserLikeEntity(
     userId: String,
-    productId: Long
+    productId: Long,
 ) : BaseEntity() {
 
     @Column(name = "user_id")

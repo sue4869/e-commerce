@@ -9,13 +9,14 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UserToCouponService(
-    private val userToCouponRepository: UserToCouponRepository
+    private val userToCouponRepository: UserToCouponRepository,
 ) {
 
     fun validate(userId: String, couponId: Long, paymentCommand: PaymentCommand.Create) {
-        val userToCoupon = userToCouponRepository.findWithCouponByUserIdAndCouponId(userId, couponId) ?: throw CoreException(ErrorType.INVALID_COUPON)
+        val userToCoupon = userToCouponRepository.findWithCouponByUserIdAndCouponId(userId, couponId)
+            ?: throw CoreException(ErrorType.INVALID_COUPON)
 
-        if(userToCoupon.issuedStatus == IssuedStatus.USED) {
+        if (userToCoupon.issuedStatus == IssuedStatus.USED) {
             throw CoreException(ErrorType.USED_COUPON)
         }
 
@@ -27,7 +28,8 @@ class UserToCouponService(
 
     @Transactional
     fun updateStatus(userId: String, couponId: Long, status: IssuedStatus) {
-        val userToCoupon = userToCouponRepository.findWithCouponByUserIdAndCouponId(userId, couponId) ?: throw CoreException(ErrorType.INVALID_COUPON)
+        val userToCoupon = userToCouponRepository.findWithCouponByUserIdAndCouponId(userId, couponId)
+            ?: throw CoreException(ErrorType.INVALID_COUPON)
         userToCoupon.use()
         userToCouponRepository.save(userToCoupon)
     }

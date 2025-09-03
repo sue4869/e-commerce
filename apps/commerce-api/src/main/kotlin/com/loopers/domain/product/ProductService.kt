@@ -1,7 +1,5 @@
 package com.loopers.domain.product
 
-import com.loopers.support.error.CoreException
-import com.loopers.support.error.ErrorType
 import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

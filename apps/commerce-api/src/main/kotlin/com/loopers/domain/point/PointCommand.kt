@@ -11,7 +11,7 @@ class PointCommand {
     ) {
 
         companion object {
-            fun of(source: PointEntity): PointInfo = PointInfo (
+            fun of(source: PointEntity): PointInfo = PointInfo(
                     userId = source.userId,
                     amount = source.amount,
                 )
@@ -30,7 +30,7 @@ class PointCommand {
         }
 
         companion object {
-            fun of(userId: String, amount: Long) = ChargeInput (
+            fun of(userId: String, amount: Long) = ChargeInput(
                 userId = userId,
                 amount = amount,
             )

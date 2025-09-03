@@ -11,7 +11,7 @@ data class OrderDto(
     val totalPrice: Long,
     val status: OrderStatus,
     val canceledPrice: Long?,
-    val submittedPrice: Long?
+    val submittedPrice: Long?,
 ) {
     companion object {
         fun of(source: OrderEntity) = OrderDto(
@@ -22,7 +22,7 @@ data class OrderDto(
             totalPrice = source.totalPrice,
             status = source.status,
             canceledPrice = source.canceledPrice,
-            submittedPrice = source.submittedPrice
+            submittedPrice = source.submittedPrice,
         )
     }
 }

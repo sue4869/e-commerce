@@ -10,7 +10,6 @@ import com.loopers.domain.type.OrderItemStatus
 import com.loopers.domain.type.PaymentType
 import com.loopers.support.error.CoreException
 import com.loopers.support.error.ErrorType
-import mu.KotlinLogging
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.assertThrows
@@ -43,10 +42,10 @@ class PaymentServiceTest {
         val paymentCommand = PaymentCommand.Create(
             listOf(
                 PaymentCommand.Payment(type = PaymentType.POINT, amount = 2000L),
-                PaymentCommand.Payment(type = PaymentType.CARD, cardType = CardType.SAMSUNG, cardNo = "1111-2222-3333-444",  amount = 1500L)
+                PaymentCommand.Payment(type = PaymentType.CARD, cardType = CardType.SAMSUNG, cardNo = "1111-2222-3333-444", amount = 1500L),
             ),
             originAmount = 3500L,
-            finalAmount = 3500L
+            finalAmount = 3500L,
         )
         val orderItems = listOf(
             OrderItemDto(
@@ -56,7 +55,7 @@ class PaymentServiceTest {
                 unitPrice = 1000L,
                 totalPrice = 2000L,
                 qty = 2,
-                status = OrderItemStatus.ORDERED
+                status = OrderItemStatus.ORDERED,
             ),
             OrderItemDto(
                 id = 2L,
@@ -65,8 +64,8 @@ class PaymentServiceTest {
                 unitPrice = 1500L,
                 totalPrice = 1500L,
                 qty = 1,
-                status = OrderItemStatus.ORDERED
-            )
+                status = OrderItemStatus.ORDERED,
+            ),
         )
 
         // stub
@@ -82,7 +81,6 @@ class PaymentServiceTest {
     @DisplayName("포인트 부족시 예외가 발생한다.(NOT_ENOUGH_POINTS)")
     @Test
     fun return_fail_when_point_not_enough() {
-
         // given
         val userId = "user-123"
         val point = PointEntity(amount = 1000L, userId = userId)

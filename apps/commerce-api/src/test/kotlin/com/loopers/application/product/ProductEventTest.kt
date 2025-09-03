@@ -12,7 +12,7 @@ import com.loopers.domain.user.UserCommand
 import com.loopers.domain.user.UserService
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.*
+import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -33,7 +33,7 @@ class ProductEventTest {
             productToUserLikeService,
             productCountService,
             userService,
-            eventPublisher
+            eventPublisher,
         )
     }
 
@@ -42,7 +42,7 @@ class ProductEventTest {
         userId = "userId",
         email = "test@example.com",
         gender = Gender.MALE,
-        birth = "2000-01-01"
+        birth = "2000-01-01",
     )
 
     @Test
@@ -78,7 +78,7 @@ class ProductEventTest {
         // given
         val command = ProductCommand.Like(userId = "userId", productId = 100L)
         every { userService.findByUserId("userId") } returns testUser
-        every { productToUserLikeService.delete(command)} returns true
+        every { productToUserLikeService.delete(command) } returns true
 
         // when
         productFacade.dislike(command)
@@ -100,5 +100,4 @@ class ProductEventTest {
         // then
         verify(exactly = 0) { eventPublisher.publish(ofType(ProductDislikedEvent::class)) }
     }
-
 }

@@ -10,20 +10,23 @@ interface ProductHistoryRepositoryCustom {
     fun findProductIdToHistoryByProductIds(productIds: Collection<Long>): List<ProductHistoryEntity>
 }
 
-class ProductHistoryRepositoryCustomImpl : CmsQuerydslRepositorySupport(ProductHistoryEntity::class.java), ProductHistoryRepositoryCustom {
+class ProductHistoryRepositoryCustomImpl :
+    CmsQuerydslRepositorySupport(
+    ProductHistoryEntity::class.java,
+),
+    ProductHistoryRepositoryCustom {
 
     companion object {
         private val productHistory = QProductHistoryEntity.productHistoryEntity
     }
 
     override fun findProductIdToHistoryByProductIds(productIds: Collection<Long>): List<ProductHistoryEntity> {
-
         val productIdToLatestId: Map<Long, Long> = from(productHistory)
             .where(productHistory.productId.`in`(productIds))
             .groupBy(productHistory.productId)
             .transform(
                 groupBy(productHistory.productId)
-                    .`as`(productHistory.id.max())
+                    .`as`(productHistory.id.max()),
             )
 
         val latestHistories: List<ProductHistoryEntity> = from(productHistory)
@@ -32,5 +35,4 @@ class ProductHistoryRepositoryCustomImpl : CmsQuerydslRepositorySupport(ProductH
 
         return latestHistories
     }
-
 }

@@ -12,8 +12,7 @@ interface PointV1ApiSpec {
     fun get(request: HttpServletRequest): ApiResponse<PointV1Models.Response.Get>
 
     fun charge(
-        @RequestBody @Valid request: PointV1Models.Request.Charge, httpRequest: HttpServletRequest
+        @RequestBody @Valid request: PointV1Models.Request.Charge,
+        httpRequest: HttpServletRequest,
      ): ApiResponse<PointV1Models.Response.Charge>
-
 }
-

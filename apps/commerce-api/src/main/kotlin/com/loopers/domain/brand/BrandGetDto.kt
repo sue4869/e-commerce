@@ -8,7 +8,7 @@ data class BrandGetDto(
         fun of(source: BrandEntity): BrandGetDto {
             return BrandGetDto(
                 id = source.id,
-                name = source.name
+                name = source.name,
             )
         }
     }

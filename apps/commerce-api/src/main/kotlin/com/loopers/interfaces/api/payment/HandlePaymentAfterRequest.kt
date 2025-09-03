@@ -2,7 +2,6 @@ package com.loopers.interfaces.api.payment
 
 import com.loopers.domain.payment.PgAfterCommand
 import com.loopers.domain.type.CardType
-import com.loopers.domain.type.PaymentStatus
 
 data class HandlePaymentAfterRequest(
     val transactionKey: String,

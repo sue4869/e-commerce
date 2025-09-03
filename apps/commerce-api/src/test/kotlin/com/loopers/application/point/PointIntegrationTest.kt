@@ -24,8 +24,8 @@ class PointIntegrationTest(
     private val pointFacade: PointFacade,
     private val pointService: PointService,
     private val pointRepository: PointRepository,
-    private val paymentProcessor: PointPaymentProcessor
-): IntegrationTestSupport() {
+    private val paymentProcessor: PointPaymentProcessor,
+) : IntegrationTestSupport() {
 
     private val log = KotlinLogging.logger {}
 
@@ -36,18 +36,18 @@ class PointIntegrationTest(
         @Test
         @DisplayName("해당 ID 의 회원이 존재할 경우, 보유 포인트가 반환된다.")
         fun return_point_when_user_id_exists() {
-            //arrange
+            // arrange
             val point = PointFixture.Normal.pointEntity()
             pointRepository.save(point)
             val testUserId = point.userId
 
-            //act
+            // act
             val result = pointRepository.findByUserId(testUserId)
 
-            //assert
+            // assert
             assertAll(
-                { assertThat(result?.userId).isEqualTo(testUserId)},
-                { assertThat(result?.amount?.compareTo(point.amount)).isZero() }
+                { assertThat(result?.userId).isEqualTo(testUserId) },
+                { assertThat(result?.amount?.compareTo(point.amount)).isZero() },
             )
         }
     }
@@ -59,15 +59,15 @@ class PointIntegrationTest(
         @Test
         @DisplayName("존재하지 않는 유저 ID 로 충전을 시도한 경우, 실패하여 CoreException 발생.")
         fun return_point_when_user_id_exists() {
-            //arrange
+            // arrange
             val point = PointFixture.Normal.pointCommand()
 
-            //act
+            // act
             val result = assertThrows<CoreException> {
                 pointFacade.charge(point)
             }
 
-            //assert
+            // assert
             assertThat(result.errorType).isEqualTo(ErrorType.NOT_FOUND_USER_ID)
         }
     }
@@ -182,5 +182,4 @@ class PointIntegrationTest(
         // 최종 잔액은 음수가 될 수 없음
         assertThat(remaining).isGreaterThanOrEqualTo(0L)
     }
-
 }

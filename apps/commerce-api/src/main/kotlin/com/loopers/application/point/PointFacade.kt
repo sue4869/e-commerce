@@ -17,13 +17,15 @@ class PointFacade(
 
     @Transactional(readOnly = true)
     fun get(userId: String): PointV1Models.Response.Get {
-        val pointInfo = pointService.findByUserId(userId) ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID,"존재하지 않는 사용자 ID 입니다. 사용자 ID: ${userId}")
+        val pointInfo = pointService.findByUserId(userId)
+            ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID, "존재하지 않는 사용자 ID 입니다. 사용자 ID: $userId")
         return pointInfo.let { PointV1Models.Response.Get.of(it) }
     }
 
     @Transactional
     fun charge(command: PointCommand.ChargeInput): PointV1Models.Response.Charge {
-        userService.findByUserId(command.userId) ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID,"존재하지 않는 사용자 ID 입니다. 사용자 ID: ${command.userId}")
+        userService.findByUserId(command.userId)
+            ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID, "존재하지 않는 사용자 ID 입니다. 사용자 ID: ${command.userId}")
         return pointService.charge(command).let { PointV1Models.Response.Charge.of(it) }
     }
 }

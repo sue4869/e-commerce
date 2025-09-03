@@ -15,7 +15,7 @@ sealed class PointFixture {
     ): PointCommand.ChargeInput {
         return PointCommand.ChargeInput(
             userId = userId,
-            amount = amount
+            amount = amount,
         )
     }
 
@@ -25,7 +25,7 @@ sealed class PointFixture {
     ): PointEntity {
         return PointEntity(
             userId = userId,
-            amount = amount
+            amount = amount,
         )
     }
 
@@ -35,8 +35,8 @@ sealed class PointFixture {
         return PointV1Models.Request.Charge(amount = amount)
     }
 
-    object Normal: PointFixture() {
+    object Normal : PointFixture() {
         override val userId = "user1"
-        override val amount= 23L
+        override val amount = 23L
     }
 }

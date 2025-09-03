@@ -38,6 +38,6 @@ class OrderListener(
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     fun handleStockFailed(event: StockFailedEvent) {
         orderService.updateStatus(event.orderUUId, OrderStatus.STOCK_FAILED)
-        //TODO 결제 취소 pg 요청
+        // TODO 결제 취소 pg 요청
     }
 }

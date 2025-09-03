@@ -15,7 +15,6 @@ class UserFacade(
 
     @Transactional
     fun signUp(command: UserCommand.Create): UserV1Models.Response.Info {
-
         userService.findByUserId(command.userId)?.let {
             throw CoreException(ErrorType.CONFLICT, "이미 회원가입된 사용자입니다.")
         }

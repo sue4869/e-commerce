@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class EventPublisher(
-    private val applicationEventPublisher: ApplicationEventPublisher
+    private val applicationEventPublisher: ApplicationEventPublisher,
 ) {
 
     fun publish(event: EventPayload) {

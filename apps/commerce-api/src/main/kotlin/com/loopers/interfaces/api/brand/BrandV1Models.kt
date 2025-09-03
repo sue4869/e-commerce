@@ -11,7 +11,7 @@ class BrandV1Models {
             val name: String,
         ) {
             companion object {
-                fun of(brand: BrandGetDto) = Info (
+                fun of(brand: BrandGetDto) = Info(
                     id = brand.id,
                     name = brand.name,
                 )

@@ -32,7 +32,6 @@ data class PgOfOrderResponse(
     val transactions: List<TransactionResponse>,
 )
 
-
 data class PgAfterCommand(
     val transactionKey: String,
     val orderId: String,

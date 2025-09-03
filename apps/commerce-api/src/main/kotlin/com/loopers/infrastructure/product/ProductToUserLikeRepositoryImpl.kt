@@ -5,9 +5,9 @@ import com.loopers.domain.product.ProductToUserLikeRepository
 import org.springframework.stereotype.Component
 
 @Component
-class ProductToUserLikeRepositoryImpl (
-    private val productToUserLikeJpaRepository: ProductToUserLikeJpaRepository
-): ProductToUserLikeRepository {
+class ProductToUserLikeRepositoryImpl(
+    private val productToUserLikeJpaRepository: ProductToUserLikeJpaRepository,
+) : ProductToUserLikeRepository {
 
     override fun findByUserIdAndProductId(
         userId: String,

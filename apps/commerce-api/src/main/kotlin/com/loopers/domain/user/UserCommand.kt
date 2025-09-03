@@ -13,17 +13,17 @@ class UserCommand {
         init {
             require(userId.isNotBlank()) { "User id must not be blank" }
             require(email.isNotBlank()) { "User email must not be blank" }
-            require(birth.isNotBlank()) { "Birth must not be blank"}
+            require(birth.isNotBlank()) { "Birth must not be blank" }
 
-            require (userId.matches(USER_ID_REGEX.toRegex())) {
+            require(userId.matches(USER_ID_REGEX.toRegex())) {
                 throw CoreException(ErrorType.INVALID_USER_ID_FORMAT)
             }
 
-            require (birth.matches(BIRTH_REGEX.toRegex())) {
+            require(birth.matches(BIRTH_REGEX.toRegex())) {
                 throw CoreException(ErrorType.INVALID_USER_BIRTH_DAY_FORMAT)
             }
 
-            require (email.matches(EMAIL_REGEX.toRegex())) {
+            require(email.matches(EMAIL_REGEX.toRegex())) {
                 throw CoreException(ErrorType.INVALID_USER_EMAIL_FORMAT)
             }
         }
@@ -49,7 +49,7 @@ class UserCommand {
                     userId = user.userId,
                     email = user.email,
                     gender = user.gender,
-                    birth = user.birthDate
+                    birth = user.birthDate,
                 )
             }
         }

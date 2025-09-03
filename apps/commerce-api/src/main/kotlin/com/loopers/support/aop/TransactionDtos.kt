@@ -1,6 +1,5 @@
 package com.loopers.support.aop
 
-
 data class TransactionTraceInfo(
     val methodName: String,
     val arguments: Array<Any>,

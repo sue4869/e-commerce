@@ -10,9 +10,9 @@ import org.springframework.data.domain.Page
 import org.springframework.stereotype.Component
 
 @Component
-class ProductRepositoryImpl (
-    private val productJpaRepository: ProductJpaRepository
-): ProductRepository {
+class ProductRepositoryImpl(
+    private val productJpaRepository: ProductJpaRepository,
+) : ProductRepository {
 
     override fun save(product: ProductEntity): ProductEntity {
         return productJpaRepository.save(product)

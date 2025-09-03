@@ -11,11 +11,11 @@ import org.hibernate.annotations.SQLRestriction
 @SQLDelete(sql = "update member set deleted_at = CURRENT_TIMESTAMP where id = ?")
 @Entity
 @Table(name = "member")
-class UserEntity (
+class UserEntity(
     userId: String,
     birthDate: String,
     email: String,
-    gender: Gender
+    gender: Gender,
 ) : BaseEntity() {
 
     @Column(name = "user_id", unique = true, nullable = false)
@@ -40,7 +40,7 @@ class UserEntity (
                 userId = command.userId,
                 birthDate = command.birth,
                 email = command.email,
-                gender = command.gender
+                gender = command.gender,
             )
         }
     }

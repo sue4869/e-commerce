@@ -33,7 +33,7 @@ class StockService(
             }
 
             val idToProduct = productRepository.findByIdInWithPessimisticLock(
-                items.map { it.productId }.sorted()
+                items.map { it.productId }.sorted(),
             ).associateBy { it.id }
 
             val updatedProducts = items.map { item ->
@@ -46,7 +46,7 @@ class StockService(
             productRepository.saveAll(updatedProducts)
         } catch (ex: Exception) {
             eventPublisher.publish(StockFailedEvent(orderUUId, ex))
-            log.info("publish StockFailedEvent orderUUId: ${orderUUId} error: ${ex.message}")
+            log.info("publish StockFailedEvent orderUUId: $orderUUId error: ${ex.message}")
             throw ex
         }
     }

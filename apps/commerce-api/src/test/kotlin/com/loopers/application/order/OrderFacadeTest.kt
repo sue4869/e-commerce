@@ -54,8 +54,8 @@ class OrderFacadeTest {
             userId = userId,
             items = listOf(
                 OrderCommand.Item(productId = 1L, qty = 2, price = 1000L),
-                OrderCommand.Item(productId = 2L, qty = 1, price = 3000L)
-            )
+                OrderCommand.Item(productId = 2L, qty = 1, price = 3000L),
+            ),
         )
 
         val paymentCommand = PaymentCommand.Create(
@@ -67,7 +67,7 @@ class OrderFacadeTest {
         val orderDto = OrderDto(orderId = orderId, uuid = orderUUID, userId = userId, totalPrice = totalPrice, status = OrderStatus.ORDERED, canceledPrice = null, submittedPrice = totalPrice)
         val orderItemsDto = listOf(
             OrderItemDto(id = 1L, orderId = orderId, productId = 1L, unitPrice = 1000L, totalPrice = 2000L, qty = 2, status = OrderItemStatus.ORDERED),
-            OrderItemDto(id = 2L, orderId = orderId, productId = 2L, unitPrice = 3000L, totalPrice = 3000L, qty = 1, status = OrderItemStatus.ORDERED)
+            OrderItemDto(id = 2L, orderId = orderId, productId = 2L, unitPrice = 3000L, totalPrice = 3000L, qty = 1, status = OrderItemStatus.ORDERED),
         )
 
         // stubbing
@@ -86,7 +86,4 @@ class OrderFacadeTest {
         verify(paymentService, times(1)).charge(orderUUID, userId, orderItemsDto.sumOf { it.totalPrice }, paymentCommand)
         verify(orderService, times(1)).updateStatus(orderUUID, OrderStatus.PAYMENT_PENDING)
     }
-
-
 }
-

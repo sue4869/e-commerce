@@ -19,7 +19,7 @@ class ProductEntity(
     name: String,
     brandId: Long,
     price: Long,
-    stock: Int = 0
+    stock: Int = 0,
 ) : BaseEntity() {
 
     @Column(name = "name")
@@ -42,4 +42,3 @@ class ProductEntity(
         stock -= qty
     }
 }
-

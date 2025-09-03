@@ -5,7 +5,7 @@ data class ProductHistoryDto(
     val productHistoryId: Long,
     val productName: String,
     val brandId: Long,
-    val stock: Int
+    val stock: Int,
 ) {
     companion object {
         fun of(source: ProductHistoryEntity) = ProductHistoryDto(
@@ -13,7 +13,7 @@ data class ProductHistoryDto(
             productHistoryId = source.id,
             productName = source.name,
             brandId = source.brandId,
-            stock = source.stock
+            stock = source.stock,
         )
     }
 }
@@ -24,7 +24,7 @@ data class ProductWithBrandDto(
     val brandId: Long,
     val brandName: String,
     val stock: Int,
-    val price: Long
+    val price: Long,
 ) {
     companion object {
         fun of(source: ProductEntity): ProductWithBrandDto {
@@ -34,7 +34,7 @@ data class ProductWithBrandDto(
                 brandId = source.brandId,
                 brandName = source.brand!!.name,
                 stock = source.stock,
-                price = source.price
+                price = source.price,
             )
         }
     }
@@ -46,7 +46,7 @@ data class ProductListGetDto(
     val brandId: Long,
     val brandName: String,
     val likeCount: Int,
-    val price: Long
+    val price: Long,
 )
 
 data class ProductToUserLikeDto(
@@ -56,5 +56,5 @@ data class ProductToUserLikeDto(
 
 data class ProductCountDto(
     val productId: Long,
-    val likeCount: Int
+    val likeCount: Int,
 )

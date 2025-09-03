@@ -9,7 +9,7 @@ class PointV1Models {
 
         data class Charge(
             @field:NotNull
-            val amount: Long
+            val amount: Long,
         ) {
             fun toCommand(userId: String) = PointCommand.ChargeInput(
                     userId = userId,
@@ -28,7 +28,7 @@ class PointV1Models {
                 fun of(command: PointCommand.PointInfo): Get {
                     return Get(
                         userId = command.userId,
-                        amount = command.amount
+                        amount = command.amount,
                     )
                 }
             }
@@ -40,7 +40,7 @@ class PointV1Models {
             companion object {
                 fun of(command: PointCommand.PointInfo): Charge {
                     return Charge(
-                        amount = command.amount
+                        amount = command.amount,
                     )
                 }
             }

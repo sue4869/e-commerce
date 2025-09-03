@@ -7,9 +7,9 @@ import com.loopers.support.error.ErrorType
 import org.springframework.stereotype.Component
 
 @Component
-class ProductCountRepositoryImpl (
-    private val productCountJpaRepository: ProductCountJpaRepository
-): ProductCountRepository {
+class ProductCountRepositoryImpl(
+    private val productCountJpaRepository: ProductCountJpaRepository,
+) : ProductCountRepository {
 
     override fun save(productCount: ProductCountEntity): ProductCountEntity {
         return productCountJpaRepository.save(productCount)
@@ -26,5 +26,4 @@ class ProductCountRepositoryImpl (
     override fun findByProductIdWithPessimisticLock(productId: Long): ProductCountEntity? {
         return productCountJpaRepository.findByProductIdWithPessimisticLock(productId)
     }
-
 }

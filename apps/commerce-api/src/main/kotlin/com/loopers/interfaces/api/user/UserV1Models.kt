@@ -17,7 +17,7 @@ class UserV1Models {
             @NotBlank
             val email: String,
             @NotNull
-            val gender: Gender
+            val gender: Gender,
         ) {
 
             fun toCommand(): UserCommand.Create {
@@ -25,7 +25,7 @@ class UserV1Models {
                     userId = userId,
                     birth = birthDate,
                     email = email,
-                    gender = gender
+                    gender = gender,
                 )
             }
         }
@@ -37,7 +37,7 @@ class UserV1Models {
             val userId: String,
             val birthDate: String,
             val email: String,
-            val gender: Gender
+            val gender: Gender,
         ) {
             companion object {
                 fun of(command: UserCommand.UserInfo): Info {
@@ -45,7 +45,7 @@ class UserV1Models {
                         userId = command.userId,
                         birthDate = command.birth,
                         email = command.email,
-                        gender = command.gender
+                        gender = command.gender,
                     )
                 }
             }

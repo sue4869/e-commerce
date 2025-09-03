@@ -22,4 +22,3 @@ open class PaymentGatewayApplication {
 fun main(args: Array<String>) {
     runApplication<PaymentGatewayApplication>(*args)
 }
-

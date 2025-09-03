@@ -18,16 +18,19 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/v1/products")
 class ProductV1ApiController(
-    private val productFacade: ProductFacade
-): ProductV1ApiSpec {
+    private val productFacade: ProductFacade,
+) : ProductV1ApiSpec {
 
     @GetMapping("/{productId}")
-    override fun get(@PathVariable productId: Long) : ApiResponse<ProductV1Models.Response.GetInfo> {
+    override fun get(@PathVariable productId: Long): ApiResponse<ProductV1Models.Response.GetInfo> {
         return ApiResponse.success(productFacade.get(productId))
     }
 
     @GetMapping
-    override fun getList(@ParameterObject request: ProductV1Models.Request.GetList, @ParameterObject pageable: Pageable): ApiResponse<Page<ProductV1Models.Response.GetList>> {
+    override fun getList(
+        @ParameterObject request: ProductV1Models.Request.GetList,
+        @ParameterObject pageable: Pageable,
+    ): ApiResponse<Page<ProductV1Models.Response.GetList>> {
         return ApiResponse.success(productFacade.getList(request.toCommand(pageable)))
     }
 
@@ -48,5 +51,4 @@ class ProductV1ApiController(
         val userId = request.getHeader("X-USER-ID") ?: throw CoreException(ErrorType.NOT_FOUND_USER_ID, "X-USER-ID is missing")
         return ApiResponse.success(productFacade.dislike(ProductCommand.Like(productId, userId)))
     }
-
 }

@@ -8,7 +8,7 @@ class UserService(
     private val userRepository: UserRepository,
 ) {
 
-    fun findByUserId(userId : String): UserCommand.UserInfo? {
+    fun findByUserId(userId: String): UserCommand.UserInfo? {
         return userRepository.findByUserId(userId)?.let { user -> UserCommand.UserInfo.of(user) }
     }
 

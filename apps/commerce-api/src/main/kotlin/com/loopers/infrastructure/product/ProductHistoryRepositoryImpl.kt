@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class ProductHistoryRepositoryImpl(
-    private val productHistoryJpaRepository: ProductHistoryJpaRepository
-): ProductHistoryRepository {
+    private val productHistoryJpaRepository: ProductHistoryJpaRepository,
+) : ProductHistoryRepository {
 
     override fun saveAll(productHistory: List<ProductHistoryEntity>): List<ProductHistoryEntity> {
         return productHistoryJpaRepository.saveAll(productHistory)

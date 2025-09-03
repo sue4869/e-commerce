@@ -20,10 +20,9 @@ class OrderItemRepositoryCustomImpl : CmsQuerydslRepositorySupport(OrderItemEnti
         val result = from(orderItem)
             .innerJoin(order).on(orderItem.orderId.eq(order.id))
             .where(
-                order.uuid.eq(orderUUId)
+                order.uuid.eq(orderUUId),
             ).fetch()
 
         return result
     }
-
 }

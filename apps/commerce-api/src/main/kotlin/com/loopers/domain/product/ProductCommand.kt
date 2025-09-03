@@ -7,10 +7,10 @@ class ProductCommand {
     data class QueryCriteria(
         val brandIds: List<Long>,
         val productId: Long?,
-        val pageable: Pageable
+        val pageable: Pageable,
     )
 
-    data class Like (
+    data class Like(
         val productId: Long,
         val userId: String,
     )
