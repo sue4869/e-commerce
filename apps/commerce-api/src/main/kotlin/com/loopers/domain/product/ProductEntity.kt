@@ -38,7 +38,8 @@ class ProductEntity(
     @Column(name = "stock")
     var stock: Int = stock
 
-    fun updateStock(qty: Int) {
+    fun updateStock(qty: Int): Int {
         stock -= qty
+        return qty
     }
 }

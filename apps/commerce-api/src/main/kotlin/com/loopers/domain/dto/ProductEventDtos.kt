@@ -1,6 +1,7 @@
-package com.loopers.domain.event.dto
+package com.loopers.domain.dto
 
 import com.loopers.domain.event.EventPayload
+import com.loopers.domain.event.EventType
 
 class ProductLikedEvent(
     val productId: Long,
@@ -8,4 +9,9 @@ class ProductLikedEvent(
 
 class ProductDislikedEvent(
     val productId: Long,
+) : EventPayload
+
+class ProductKafkaEvent(
+    val productId: Long,
+    val event: EventType,
 ) : EventPayload

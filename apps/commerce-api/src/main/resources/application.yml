@@ -24,6 +24,12 @@ spring:
       - redis.yml
       - monitoring.yml
 
+application:
+  kafka-topic:
+    payment-event: payment-event
+    product-like-event: product-like-event
+    stock-event: stock-event
+
 pg-client:
   url: http://localhost:8082/api/v1/payments
 feign:

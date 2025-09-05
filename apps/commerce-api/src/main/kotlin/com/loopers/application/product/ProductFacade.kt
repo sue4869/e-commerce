@@ -1,8 +1,11 @@
 package com.loopers.application.product
 
 import com.loopers.domain.event.EventPublisher
-import com.loopers.domain.event.dto.ProductDislikedEvent
-import com.loopers.domain.event.dto.ProductLikedEvent
+import com.loopers.domain.dto.ProductDislikedEvent
+import com.loopers.domain.dto.ProductKafkaEvent
+import com.loopers.domain.dto.ProductLikedEvent
+import com.loopers.domain.event.EventType
+import com.loopers.domain.event.KafkaEventPublisher
 import com.loopers.domain.product.ProductCommand
 import com.loopers.domain.product.ProductCountService
 import com.loopers.domain.product.ProductToUserLikeService
@@ -12,9 +15,13 @@ import com.loopers.interfaces.api.product.ProductV1Models
 import com.loopers.support.error.CoreException
 import com.loopers.support.error.ErrorType
 import mu.KotlinLogging
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.Page
+import org.springframework.kafka.support.KafkaHeaders
+import org.springframework.messaging.support.MessageBuilder
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
+import java.util.UUID
 
 @Transactional(readOnly = true)
 @Component
@@ -24,6 +31,8 @@ class ProductFacade(
     private val productCountService: ProductCountService,
     private val userService: UserService,
     private val eventPublisher: EventPublisher,
+    private val kafkaEventPublisher: KafkaEventPublisher,
+    @Value("\${application.kafka-topic.product-like-event:product-like-event}") private val productKafkaTopicName: String,
 ) {
 
     private val log = KotlinLogging.logger {}
@@ -46,6 +55,7 @@ class ProductFacade(
         if (productToUserLikeService.create(command)) {
             eventPublisher.publish(ProductLikedEvent(command.productId))
             log.info("publish ProductLikedEvent productId: ${command.productId}")
+            publishKafka(command.productId, EventType.PRODUCT_LIKED)
         }
     }
 
@@ -56,6 +66,28 @@ class ProductFacade(
         if (productToUserLikeService.delete(command)) {
             eventPublisher.publish(ProductDislikedEvent(command.productId))
             log.info("publish ProductDislikedEvent productId: ${command.productId}")
+            publishKafka(command.productId, EventType.PRODUCT_UNLIKED)
         }
+    }
+
+    private fun publishKafka(productId: Long, eventType: EventType) {
+        val messageKey = buildString {
+            append(productId.toString())
+            append(eventType.name)
+            append(UUID.randomUUID())
+        }
+
+        kafkaEventPublisher.send(
+            MessageBuilder
+                .withPayload(
+                    ProductKafkaEvent(
+                        productId = productId,
+                        event = eventType,
+                    )
+                )
+                .setHeader(KafkaHeaders.TOPIC, productKafkaTopicName)
+                .setHeader(KafkaHeaders.KEY, messageKey)
+                .build()
+        )
     }
 }
