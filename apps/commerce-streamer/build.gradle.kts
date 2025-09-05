@@ -14,6 +14,7 @@ dependencies {
     // web
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
 
     // querydsl
     kapt("com.querydsl:querydsl-apt::jakarta")

@@ -1,8 +1,8 @@
 package com.loopers.domain.product
 
 import com.loopers.domain.event.EventPublisher
-import com.loopers.domain.event.dto.ProductDislikedEvent
-import com.loopers.domain.event.dto.ProductLikedEvent
+import com.loopers.domain.dto.ProductDislikedEvent
+import com.loopers.domain.dto.ProductLikedEvent
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired

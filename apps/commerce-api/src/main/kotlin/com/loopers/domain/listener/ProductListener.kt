@@ -1,7 +1,7 @@
-package com.loopers.domain.event.listener
+package com.loopers.domain.listener
 
-import com.loopers.domain.event.dto.ProductDislikedEvent
-import com.loopers.domain.event.dto.ProductLikedEvent
+import com.loopers.domain.dto.ProductDislikedEvent
+import com.loopers.domain.dto.ProductLikedEvent
 import com.loopers.domain.product.ProductCountService
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service

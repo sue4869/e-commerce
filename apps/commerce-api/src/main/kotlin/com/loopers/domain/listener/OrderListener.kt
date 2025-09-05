@@ -1,9 +1,9 @@
-package com.loopers.domain.event.listener
+package com.loopers.domain.listener
 
 import com.loopers.domain.coupon.UserToCouponService
-import com.loopers.domain.event.dto.PaidCompletedEvent
-import com.loopers.domain.event.dto.PaidFailedEvent
-import com.loopers.domain.event.dto.StockFailedEvent
+import com.loopers.domain.dto.PaidCompletedEvent
+import com.loopers.domain.dto.PaidFailedEvent
+import com.loopers.domain.dto.StockFailedEvent
 import com.loopers.domain.order.OrderService
 import com.loopers.domain.order.StockService
 import com.loopers.domain.type.IssuedStatus

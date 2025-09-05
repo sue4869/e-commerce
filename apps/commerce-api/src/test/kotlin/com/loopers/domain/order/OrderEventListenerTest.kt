@@ -1,8 +1,8 @@
 package com.loopers.domain.order
 
 import com.loopers.domain.event.EventPublisher
-import com.loopers.domain.event.dto.PaidCompletedEvent
-import com.loopers.domain.event.dto.PaidFailedEvent
+import com.loopers.domain.dto.PaidCompletedEvent
+import com.loopers.domain.dto.PaidFailedEvent
 import com.loopers.domain.type.OrderStatus
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach

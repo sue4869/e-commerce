@@ -2,8 +2,8 @@ package com.loopers.domain.payment
 
 import com.loopers.application.payment.PaymentFacade
 import com.loopers.domain.event.EventPublisher
-import com.loopers.domain.event.dto.PaidCompletedEvent
-import com.loopers.domain.event.dto.PaidFailedEvent
+import com.loopers.domain.dto.PaidCompletedEvent
+import com.loopers.domain.dto.PaidFailedEvent
 import com.loopers.domain.type.CardType
 import com.loopers.domain.type.OrderStatus
 import com.loopers.domain.type.PaymentStatus

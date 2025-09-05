@@ -2,11 +2,11 @@ server:
   shutdown: graceful
   tomcat:
     threads:
-      max: 200 # ?? ?? ??? ? (default : 200)
-      min-spare: 10 # ?? ?? ??? ? (default : 10)
-    connection-timeout: 1m # ?? ???? (ms) (default : 60000ms = 1m)
-    max-connections: 8192 # ?? ?? ?? ? (default : 8192)
-    accept-count: 100 # ?? ? ?? (default : 100)
+      max: 200
+      min-spare: 10
+    connection-timeout: 1m
+    max-connections: 8192
+    accept-count: 100
     keep-alive-timeout: 60s # 60s
   max-http-request-header-size: 8KB
 
@@ -24,6 +24,14 @@ spring:
       - kafka.yml
       - logging.yml
       - monitoring.yml
+
+application:
+  kafka-topic:
+    payment-event: payment-event
+    product-like-event: product-like-event
+    stock-event: stock-event
+    product-view: product-view
+    order-event: order-event
 
 demo-kafka:
   test:

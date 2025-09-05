@@ -1,8 +1,8 @@
 package com.loopers.domain.order
 
 import com.loopers.domain.coupon.UserToCouponService
-import com.loopers.domain.event.dto.PaidCompletedEvent
-import com.loopers.domain.event.listener.OrderListener
+import com.loopers.domain.dto.PaidCompletedEvent
+import com.loopers.domain.listener.OrderListener
 import com.loopers.domain.type.IssuedStatus
 import com.loopers.domain.type.OrderStatus
 import org.junit.jupiter.api.DisplayName

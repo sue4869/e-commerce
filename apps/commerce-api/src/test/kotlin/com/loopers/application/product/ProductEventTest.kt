@@ -1,8 +1,8 @@
 package com.loopers.application.product
 
 import com.loopers.domain.event.EventPublisher
-import com.loopers.domain.event.dto.ProductDislikedEvent
-import com.loopers.domain.event.dto.ProductLikedEvent
+import com.loopers.domain.dto.ProductDislikedEvent
+import com.loopers.domain.dto.ProductLikedEvent
 import com.loopers.domain.product.ProductCommand
 import com.loopers.domain.product.ProductCountService
 import com.loopers.domain.product.ProductService
