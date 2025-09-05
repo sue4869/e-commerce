@@ -10,11 +10,35 @@ import jakarta.persistence.Table
 @Entity
 @Table(name = "event_log")
 class AuditLogEntity(
-    val eventId: String,
+    orderUUId: String? = null,
+    productId: String? = null,
+    eventType: EventType,
+    topic: String,
+    message: String,
+) : BaseEntity() {
+
+    val orderUUId: String? = orderUUId
+    val productId: String? = productId
     @Enumerated(EnumType.STRING)
-    val eventType: EventType,
-    val topic: String,
-    val partitionNo: Int,
-    val offsetNo: Long,
-    val payload: String,
-) : BaseEntity()
+    val eventType: EventType = eventType
+    val topic: String = topic
+    val message: String = message
+
+    companion object {
+        fun of(
+            orderUUId: String?,
+            productId: String?,
+            eventType: EventType,
+            topic: String,
+            message: String,
+        ):AuditLogEntity {
+            return AuditLogEntity(
+            orderUUId = orderUUId,
+            productId = productId,
+            eventType = eventType,
+            topic = topic,
+            message = message,
+            )
+        }
+    }
+}

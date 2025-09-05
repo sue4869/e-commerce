@@ -23,8 +23,13 @@ data class StockChangedEvent(
     val orderUUId: String,
 ) : EventPayload
 
+data class OrderEvent(
+    val orderUUId: String,
+) : EventPayload
+
 class OrderKafkaEvent(
     val orderUUId: String,
     val productId: Long? = null,
     val event: EventType,
+    val message: String? = null,
 ) : EventPayload

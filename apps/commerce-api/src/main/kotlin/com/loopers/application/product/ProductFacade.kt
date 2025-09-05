@@ -32,7 +32,8 @@ class ProductFacade(
     private val userService: UserService,
     private val eventPublisher: EventPublisher,
     private val kafkaEventPublisher: KafkaEventPublisher,
-    @Value("\${application.kafka-topic.product-like-event:product-like-event}") private val productKafkaTopicName: String,
+    @Value("\${application.kafka-topic.product-like-event:product-like-event}") private val productLikeKafkaTopicName: String,
+    @Value("\${application.kafka-topic.product-view:product-view}") private val productViewKafkaTopicName: String,
 ) {
 
     private val log = KotlinLogging.logger {}
@@ -40,6 +41,7 @@ class ProductFacade(
     fun get(productId: Long): ProductV1Models.Response.GetInfo {
         val source = productService.getWithBrand(productId)
         val countDto = productCountService.getByProductId(productId)
+        publishKafka(productId, EventType.PRODUCT_VIEW, productViewKafkaTopicName)
         return ProductV1Models.Response.GetInfo.of(source, countDto)
     }
 
@@ -55,7 +57,7 @@ class ProductFacade(
         if (productToUserLikeService.create(command)) {
             eventPublisher.publish(ProductLikedEvent(command.productId))
             log.info("publish ProductLikedEvent productId: ${command.productId}")
-            publishKafka(command.productId, EventType.PRODUCT_LIKED)
+            publishKafka(command.productId, EventType.PRODUCT_LIKED, productLikeKafkaTopicName)
         }
     }
 
@@ -66,11 +68,11 @@ class ProductFacade(
         if (productToUserLikeService.delete(command)) {
             eventPublisher.publish(ProductDislikedEvent(command.productId))
             log.info("publish ProductDislikedEvent productId: ${command.productId}")
-            publishKafka(command.productId, EventType.PRODUCT_UNLIKED)
+            publishKafka(command.productId, EventType.PRODUCT_UNLIKED, productLikeKafkaTopicName)
         }
     }
 
-    private fun publishKafka(productId: Long, eventType: EventType) {
+    private fun publishKafka(productId: Long, eventType: EventType, topicName: String) {
         val messageKey = buildString {
             append(productId.toString())
             append(eventType.name)
@@ -83,10 +85,11 @@ class ProductFacade(
                     ProductKafkaEvent(
                         productId = productId,
                         event = eventType,
+                        message = messageKey,
                     )
                 )
-                .setHeader(KafkaHeaders.TOPIC, productKafkaTopicName)
-                .setHeader(KafkaHeaders.KEY, messageKey)
+                .setHeader(KafkaHeaders.TOPIC, topicName)
+                .setHeader(KafkaHeaders.KEY, productId)
                 .build()
         )
     }

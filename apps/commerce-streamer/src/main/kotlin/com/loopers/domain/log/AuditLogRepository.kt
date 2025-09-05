@@ -1,3 +1,8 @@
 package com.loopers.domain.log
 
-interface AuditLogRepository
+interface AuditLogRepository {
+
+    fun save(auditLogEntity: AuditLogEntity)
+
+    fun existsByMessage(messageId: String): Boolean
+}

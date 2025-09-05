@@ -1,3 +1,9 @@
 package com.loopers.domain.event
 
-interface EventHandledRepository
+import com.loopers.domain.log.AuditLogEntity
+
+interface EventHandledRepository {
+    fun save(eventHandledEntity: EventHandledEntity)
+
+    fun existByMessage(message: String): Boolean
+}

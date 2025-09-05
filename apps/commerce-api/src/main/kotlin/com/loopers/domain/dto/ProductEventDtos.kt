@@ -11,7 +11,12 @@ class ProductDislikedEvent(
     val productId: Long,
 ) : EventPayload
 
+class ProductViewEvent(
+    val productId: Long,
+) : EventPayload
+
 class ProductKafkaEvent(
     val productId: Long,
     val event: EventType,
+    val message: String,
 ) : EventPayload

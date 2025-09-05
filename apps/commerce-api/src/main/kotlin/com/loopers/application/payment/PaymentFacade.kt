@@ -76,10 +76,11 @@ open class PaymentFacade(
                     OrderKafkaEvent(
                         orderUUId = orderId,
                         event = event,
+                        message = messageKey,
                     )
                 )
                 .setHeader(KafkaHeaders.TOPIC, paymentKafkaTopicName)
-                .setHeader(KafkaHeaders.KEY, messageKey)
+                .setHeader(KafkaHeaders.KEY, orderId)
                 .build()
         )
     }

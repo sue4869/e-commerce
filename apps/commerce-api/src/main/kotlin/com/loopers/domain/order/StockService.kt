@@ -91,10 +91,11 @@ class StockService(
                         orderUUId = orderUUId,
                         productId = productId,
                         event = event,
+                        message = messageKey,
                     )
                 )
                 .setHeader(KafkaHeaders.TOPIC, stockKafkaTopicName)
-                .setHeader(KafkaHeaders.KEY, messageKey)
+                .setHeader(KafkaHeaders.KEY, productId)
                 .build()
         )
     }
