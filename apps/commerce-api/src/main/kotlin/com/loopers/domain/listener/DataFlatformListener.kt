@@ -1,10 +1,10 @@
-package com.loopers.domain.event.listener
+package com.loopers.domain.listener
 
-import com.loopers.domain.event.dto.PaidCompletedEvent
-import com.loopers.domain.event.dto.PaidFailedEvent
-import com.loopers.domain.event.dto.ProductDislikedEvent
-import com.loopers.domain.event.dto.ProductLikedEvent
-import com.loopers.domain.event.dto.StockFailedEvent
+import com.loopers.domain.dto.PaidCompletedEvent
+import com.loopers.domain.dto.PaidFailedEvent
+import com.loopers.domain.dto.ProductDislikedEvent
+import com.loopers.domain.dto.ProductLikedEvent
+import com.loopers.domain.dto.StockFailedEvent
 import com.loopers.infrastructure.external.DataPlatformApiClient
 import mu.KotlinLogging
 import org.springframework.scheduling.annotation.Async
