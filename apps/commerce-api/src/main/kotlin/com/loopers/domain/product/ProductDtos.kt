@@ -23,16 +23,18 @@ data class ProductWithBrandDto(
     val productName: String,
     val brandId: Long,
     val brandName: String,
+    val rank: Long?,
     val stock: Int,
     val price: Long,
 ) {
     companion object {
-        fun of(source: ProductEntity): ProductWithBrandDto {
+        fun of(source: ProductEntity, rank: Long?): ProductWithBrandDto {
             return ProductWithBrandDto(
                 productId = source.id,
                 productName = source.name,
                 brandId = source.brandId,
                 brandName = source.brand!!.name,
+                rank = rank,
                 stock = source.stock,
                 price = source.price,
             )
@@ -57,4 +59,11 @@ data class ProductToUserLikeDto(
 data class ProductCountDto(
     val productId: Long,
     val likeCount: Int,
+)
+
+data class ProductRankDto(
+    val rank: Int,
+    val productId: Long,
+    val productName: String,
+    val score: Double,
 )

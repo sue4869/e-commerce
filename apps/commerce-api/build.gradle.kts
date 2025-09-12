@@ -11,7 +11,7 @@ dependencies {
     implementation(project(":supports:monitoring"))
 
     // kafka
-    implementation("org.springframework.kafka:spring-kafka:3.1.5")
+    implementation("org.springframework.kafka:spring-kafka:3.2.0")
 
     // web
     implementation("org.springframework.boot:spring-boot-starter-web")

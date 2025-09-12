@@ -4,6 +4,7 @@ import com.loopers.application.payment.PaymentFacade
 import com.loopers.domain.event.EventPublisher
 import com.loopers.domain.dto.PaidCompletedEvent
 import com.loopers.domain.dto.PaidFailedEvent
+import com.loopers.domain.event.KafkaEventPublisher
 import com.loopers.domain.type.CardType
 import com.loopers.domain.type.OrderStatus
 import com.loopers.domain.type.PaymentStatus
@@ -18,8 +19,10 @@ class PaymentEventTest {
 
     private val afterPgProcessor: AfterPgProcessor = mockk()
     private val eventPublisher: EventPublisher = mockk(relaxed = true)
+    private val kafkaEventPublisher: KafkaEventPublisher = mockk(relaxed = true)
 
-    private val paymentFacade = PaymentFacade(afterPgProcessor, eventPublisher)
+    private val paymentFacade = PaymentFacade(
+        afterPgProcessor, eventPublisher, kafkaEventPublisher, paymentKafkaTopicName = "payment-event")
 
     private fun createCommand(orderId: String) = PgAfterCommand(
         transactionKey = "tx-001",

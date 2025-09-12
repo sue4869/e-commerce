@@ -3,8 +3,10 @@ package com.loopers.application.product
 import com.loopers.domain.event.EventPublisher
 import com.loopers.domain.dto.ProductDislikedEvent
 import com.loopers.domain.dto.ProductLikedEvent
+import com.loopers.domain.event.KafkaEventPublisher
 import com.loopers.domain.product.ProductCommand
 import com.loopers.domain.product.ProductCountService
+import com.loopers.domain.product.ProductRankService
 import com.loopers.domain.product.ProductService
 import com.loopers.domain.product.ProductToUserLikeService
 import com.loopers.domain.user.Gender
@@ -22,7 +24,9 @@ class ProductEventTest {
     private val productToUserLikeService = mockk<ProductToUserLikeService>()
     private val productCountService = mockk<ProductCountService>()
     private val userService = mockk<UserService>()
+    private val productRankService = mockk<ProductRankService>()
     private val eventPublisher = mockk<EventPublisher>(relaxed = true)
+    private val kafkaEventPublisher = mockk<KafkaEventPublisher>(relaxed = true)
 
     private lateinit var productFacade: ProductFacade
 
@@ -33,7 +37,11 @@ class ProductEventTest {
             productToUserLikeService,
             productCountService,
             userService,
+            productRankService,
             eventPublisher,
+            kafkaEventPublisher,
+            productLikeKafkaTopicName = "product-like-event",
+            productViewKafkaTopicName = "product-view"
         )
     }
 

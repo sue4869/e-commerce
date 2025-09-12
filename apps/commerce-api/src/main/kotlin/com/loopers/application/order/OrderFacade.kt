@@ -56,7 +56,7 @@ class OrderFacade(
             append(UUID.randomUUID())
         }
 
-        val items = if(event == EventType.ORDERED) items.map { OrderItemEventDto(it.productId, it.qty) } else null
+        val items = if(event == EventType.ORDERED) items.map { OrderItemEventDto(it.productId, it.unitPrice,it.qty) } else null
         kafkaEventPublisher.send(
             MessageBuilder
                 .withPayload(
