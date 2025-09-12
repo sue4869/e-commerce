@@ -2,6 +2,7 @@ package com.loopers.domain.order
 
 import com.loopers.domain.event.EventPublisher
 import com.loopers.domain.dto.StockFailedEvent
+import com.loopers.domain.event.KafkaEventPublisher
 import com.loopers.domain.product.ProductEntity
 import com.loopers.domain.product.ProductRepository
 import com.loopers.support.error.CoreException
@@ -31,6 +32,9 @@ class StockServiceTest {
     @Mock
     lateinit var eventPublisher: EventPublisher
 
+    @Mock
+    lateinit var kafkaEventPublisher: KafkaEventPublisher
+
     @InjectMocks
     lateinit var stockService: StockService
 
@@ -46,7 +50,7 @@ class StockServiceTest {
         )
 
         // when
-        stockService.updateStock(product, 3)
+        stockService.updateStock("order123", product, 3)
 
         // then
         assertThat(product.stock).isEqualTo(7)

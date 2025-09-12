@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDate
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -32,6 +34,14 @@ class ProductV1ApiController(
         @ParameterObject pageable: Pageable,
     ): ApiResponse<Page<ProductV1Models.Response.GetList>> {
         return ApiResponse.success(productFacade.getList(request.toCommand(pageable)))
+    }
+
+    @GetMapping("/ranking-daily")
+    override fun getRankingDaily(
+        @RequestParam date: LocalDate,
+        @ParameterObject pageable: Pageable
+    ): ApiResponse<Page<ProductV1Models.Response.GetRank>> {
+        return ApiResponse.success(productFacade.getRankingDaily(ProductCommand.RankingDaily(date, pageable)))
     }
 
     @GetMapping("/{productId}/likes")

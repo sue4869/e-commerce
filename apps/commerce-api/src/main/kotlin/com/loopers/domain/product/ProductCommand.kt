@@ -1,6 +1,7 @@
 package com.loopers.domain.product
 
 import org.springframework.data.domain.Pageable
+import java.time.LocalDate
 
 class ProductCommand {
 
@@ -13,5 +14,10 @@ class ProductCommand {
     data class Like(
         val productId: Long,
         val userId: String,
+    )
+
+    data class RankingDaily(
+        val date: LocalDate,
+        val pageable: Pageable
     )
 }

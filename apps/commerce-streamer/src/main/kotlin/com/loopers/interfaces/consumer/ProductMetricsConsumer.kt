@@ -5,6 +5,7 @@ import com.loopers.domain.EventType
 import com.loopers.domain.event.EventHandledEntity
 import com.loopers.domain.event.EventHandledService
 import com.loopers.domain.metrics.ProductMetricsService
+import com.loopers.domain.ranking.ProductRankingService
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.kafka.annotation.KafkaListener
@@ -15,7 +16,8 @@ import kotlin.collections.forEach
 @Component
 class ProductMetricsConsumer(
     private val productMetricsService: ProductMetricsService,
-    private val eventHandledService: EventHandledService
+    private val eventHandledService: EventHandledService,
+    private val productRankingService: ProductRankingService,
 ) {
 
     private val log = KotlinLogging.logger {}
@@ -35,30 +37,28 @@ class ProductMetricsConsumer(
         records.forEach { record ->
             val key = record.key()
             val payloadJson = record.value()
-            val payloadNode = jacksonObjectMapper().readTree(payloadJson)
+            val event = jacksonObjectMapper().readValue(payloadJson, MetricKafkaEvent::class.java)
 
-            val productId = payloadNode["productId"]?.asText()?.toLongOrNull() ?: throw IllegalArgumentException("Product ID could not be found")
-            val eventType = payloadNode["event"]?.asText()?.let { EventType.valueOf(it) }
-            val message = payloadNode["message"]?.asText()
+            val productId = event.productId ?: throw IllegalArgumentException("Product ID could not be found")
+            val eventType = event.eventType
+            val message = event.message ?: throw IllegalArgumentException("Message could not be found")
 
-            if (eventType != null && message != null) {
-
-                val alreadyProcessed = eventHandledService.isMessageProcessed(message)
-                if (alreadyProcessed) {
-                    log.info("Skipping duplicate message | message: $message")
-                    return@forEach
-                }
-
-                productMetricsService.handle(eventType, productId)
-                eventHandledService.save(
-                    EventHandledEntity.of(
-                        key = key,
-                    eventType = eventType,
-                    topic = record.topic(),
-                    message = message
-                    )
-                )
+            val alreadyProcessed = eventHandledService.isMessageProcessed(message)
+            if (alreadyProcessed) {
+                log.info("Skipping duplicate message | message: $message")
+                return@forEach
             }
+
+            productMetricsService.handle(eventType, productId)
+            productRankingService.rank(event)
+            eventHandledService.save(
+                EventHandledEntity.of(
+                    key = key,
+                eventType = eventType,
+                topic = record.topic(),
+                message = message
+                )
+            )
         }
         acknowledgment.acknowledge()
     }

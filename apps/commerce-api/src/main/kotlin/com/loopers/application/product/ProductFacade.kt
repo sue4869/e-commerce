@@ -8,6 +8,7 @@ import com.loopers.domain.event.EventType
 import com.loopers.domain.event.KafkaEventPublisher
 import com.loopers.domain.product.ProductCommand
 import com.loopers.domain.product.ProductCountService
+import com.loopers.domain.product.ProductRankService
 import com.loopers.domain.product.ProductToUserLikeService
 import com.loopers.domain.product.ProductService
 import com.loopers.domain.user.UserService
@@ -30,6 +31,7 @@ class ProductFacade(
     private val productToUserLikeService: ProductToUserLikeService,
     private val productCountService: ProductCountService,
     private val userService: UserService,
+    private val productRankService: ProductRankService,
     private val eventPublisher: EventPublisher,
     private val kafkaEventPublisher: KafkaEventPublisher,
     @Value("\${application.kafka-topic.product-like-event:product-like-event}") private val productLikeKafkaTopicName: String,
@@ -48,6 +50,11 @@ class ProductFacade(
     fun getList(command: ProductCommand.QueryCriteria): Page<ProductV1Models.Response.GetList> {
         val sourcePage = productService.getList(command)
         return sourcePage.map { ProductV1Models.Response.GetList.of(it) }
+    }
+
+    fun getRankingDaily(command: ProductCommand.RankingDaily): Page<ProductV1Models.Response.GetRank> {
+        val sourcePage = productRankService.getRankingDaily(command)
+        return sourcePage.map { ProductV1Models.Response.GetRank.of(it) }
     }
 
     @Transactional
