@@ -27,9 +27,16 @@ data class OrderEvent(
     val orderUUId: String,
 ) : EventPayload
 
-class OrderKafkaEvent(
+data class OrderKafkaEvent(
     val orderUUId: String,
     val productId: Long? = null,
+    val items: List<OrderItemEventDto>? = null,
     val event: EventType,
     val message: String? = null,
 ) : EventPayload
+
+data class OrderItemEventDto(
+    val productId: Long,
+    val price: Long,
+    val qty: Int,
+)

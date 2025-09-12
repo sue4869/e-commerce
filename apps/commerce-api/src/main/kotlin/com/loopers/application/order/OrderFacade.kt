@@ -1,10 +1,12 @@
 package com.loopers.application.order
 
 import com.loopers.domain.coupon.UserToCouponService
+import com.loopers.domain.dto.OrderItemEventDto
 import com.loopers.domain.dto.OrderKafkaEvent
 import com.loopers.domain.event.EventType
 import com.loopers.domain.event.KafkaEventPublisher
 import com.loopers.domain.order.OrderCommand
+import com.loopers.domain.order.OrderItemDto
 import com.loopers.domain.order.OrderItemService
 import com.loopers.domain.order.OrderService
 import com.loopers.domain.payment.PaymentCommand
@@ -36,7 +38,7 @@ class OrderFacade(
         // 주문 생성
         val orderDto = orderService.create(orderCommand)
         val orderItems = orderItemService.create(orderCommand.items, orderDto.orderId)
-        publishKafka(orderDto.uuid, EventType.ORDERED)
+        publishKafka(orderDto.uuid, orderItems, EventType.ORDERED)
         // 결제 요청
         requirePayment(orderDto.uuid, orderCommand.userId, orderItems.sumOf { it.totalPrice }, paymentCommand)
         orderService.updateStatus(orderDto.uuid, OrderStatus.PAYMENT_PENDING)
@@ -47,19 +49,21 @@ class OrderFacade(
         paymentService.charge(orderUUId, userId, reqTotalPrice, paymentCommand)
     }
 
-    private fun publishKafka(orderId: String, event: EventType) {
+    private fun publishKafka(orderId: String, items: List<OrderItemDto>, event: EventType) {
         val messageKey = buildString {
             append(orderId)
             append(event.name)
             append(UUID.randomUUID())
         }
 
+        val items = if(event == EventType.ORDERED) items.map { OrderItemEventDto(it.productId, it.qty) } else null
         kafkaEventPublisher.send(
             MessageBuilder
                 .withPayload(
                     OrderKafkaEvent(
                         orderUUId = orderId,
                         event = event,
+                        items = items ,
                         message = messageKey,
                     )
                 )
